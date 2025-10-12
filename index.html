@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pristine Document Manager</title>
+    
+    <link rel="icon" type="image/png" href="https://www.pristinepearlpharma.in/images/alt-logo.png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            /* Modern Color Palette */
+            --primary-color: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --secondary-bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --text-secondary: #64748b;
+            --placeholder-color: #94a3b8;
+            --border-color: #e2e8f0;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --radius: 12px;
+            --radius-sm: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0f4f8 0%, #f8fafc 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Main Container */
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-xl);
+            overflow: hidden;
+        }
+
+        /* Header */
+        .app-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-size: cover;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* === LOGO UPDATE 2/2: STYLING FOR IMAGE LOGO === */
+        .app-logo {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2rem;
+            backdrop-filter: blur(10px);
+            padding: 10px; /* Added padding for the image inside the container */
+        }
+        
+        .app-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Ensure the whole logo fits */
+        }
+        /* ================================================ */
+
+        .app-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            letter-spacing: -0.025em;
+        }
+
+        .app-subtitle {
+            font-size: 1.1rem;
+            font-weight: 400;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 40px;
+        }
+
+        /* Form Sections */
+        .form-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-left: 0; 
+            border-left: none; 
+        }
+
+        .section-title i {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-label i {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+        }
+
+        select, input[type="text"], input[type="date"], textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            background-color: var(--card-bg);
+            font-size: 1rem;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            text-transform: uppercase; 
+        }
+        
+        input[type="date"] {
+            text-transform: none;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            max-height: 200px;
+            text-transform: none; 
+        }
+        
+        select:focus, input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 16px;
+            text-transform: none; 
+        }
+
+        .doc-field input[readonly] {
+            background-color: #f0f7ff;
+            border-color: #dbeafe;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* Document Rows */
+        .document-rows-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .document-row {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .document-row:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .document-row-header {
+            background: #f8fafc;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+            user-select: none;
+        }
+
+        .row-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .row-number {
+            background: var(--primary-color);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .row-preview {
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .toggle-icon {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .document-row.collapsed .toggle-icon {
+            transform: rotate(-90deg);
+        }
+
+        .document-row-content {
+            padding: 30px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            max-height: 1000px;
+            opacity: 1;
+            overflow: hidden;
+            transition: all 0.4s ease-in-out;
+        }
+
+        .document-row.collapsed .document-row-content {
+            max-height: 0;
+            opacity: 0;
+            padding: 0 30px;
+        }
+
+        .doc-field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .doc-field:nth-child(5), /* Remarks */
+        .doc-field:nth-child(6) { /* Document File/Upload */
+            grid-column: span 2;
+        }
+        
+        /* File Upload */
+        .file-upload-wrapper {
+            grid-column: 1 / -1;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-control-container {
+            display: flex;
+            align-items: center;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            background-color: var(--card-bg);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .file-control-container:hover {
+            border-color: var(--primary-color);
+        }
+
+        .file-name-display {
+            flex-grow: 1;
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            color: var(--text-color);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .custom-file-upload {
+            padding: 14px 20px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .custom-file-upload:hover {
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
+            transform: none;
+        }
+
+        /* Buttons */
+        .delete-row-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .delete-row-btn:hover {
+            background: #dc2626;
+            transform: scale(1.1);
+        }
+
+        .add-row-btn {
+            width: 100%;
+            padding: 18px 24px;
+            background: linear-gradient(135deg, var(--success-color) 0%, #059669 100%);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .add-row-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .submit-section {
+            padding-top: 40px;
+            margin-top: 40px;
+            border-top: 2px dashed var(--border-color);
+            text-align: center;
+        }
+
+        .submit-btn {
+            padding: 18px 50px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-lg);
+            width: 100%; /* Make full width on desktop for better separation */
+            max-width: 400px; /* Limit max width for visual appeal */
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .submit-btn:active {
+            transform: translateY(-1px);
+        }
+        
+        /* === NEW BUTTON STYLE === */
+        .view-docs-btn {
+            margin-top: 20px; /* Space between upload and view button */
+            background: linear-gradient(135deg, #64748b 0%, #475569 100%); /* Secondary/Neutral Color */
+            box-shadow: var(--shadow-md);
+        }
+
+        .view-docs-btn:hover {
+            background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
+        }
+        /* ======================== */
+
+        /* Status Message */
+        .status-message {
+            margin-top: 24px;
+            padding: 20px;
+            border-radius: var(--radius-sm);
+            text-align: center;
+            display: none;
+            font-weight: 600;
+            position: relative;
+            animation: fadeInSlide 0.4s ease-out forwards;
+        }
+
+        .status-message.show {
+            display: block;
+        }
+
+        .status-message.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .status-message.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .status-message.loading {
+            background: #fffbe6;
+            color: #78350f;
+            border: 1px solid #fde68a;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background-color: #e5e7eb;
+            border-radius: 3px;
+            margin-top: 15px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-light) 100%);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .status-message.loading .progress-container {
+            display: block;
+        }
+
+        /* Animations */
+        @keyframes fadeInSlide {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .app-header {
+                padding: 30px 20px;
+            }
+
+            .app-title {
+                font-size: 2rem;
+            }
+
+            .main-content {
+                padding: 24px;
+            }
+
+            .document-row-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 20px;
+            }
+
+            .file-upload-wrapper {
+                grid-column: 1;
+            }
+            
+            .doc-field:nth-child(5), /* Remarks */
+            .doc-field:nth-child(6) { /* Document File/Upload */
+                grid-column: span 1;
+            }
+
+            .submit-btn, .view-docs-btn {
+                width: 100%;
+                max-width: none; /* Override max-width for full mobile width */
+                padding: 16px 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .app-title {
+                font-size: 1.75rem;
+            }
+
+            .section-title {
+                font-size: 1.2rem;
+            }
+
+            select, input[type="text"], input[type="date"], textarea {
+                padding: 12px 14px;
+            }
+
+            .document-row-header {
+                padding: 16px;
+            }
+
+            .document-row-content {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-content">
+                <div class="app-logo">
+                    <img src="https://www.pristinepearlpharma.in/images/alt-logo.png" alt="Pristine Pearl Pharma Logo">
+                </div>
+                <h1 class="app-title">PRISTINE - DOCUMENT CLOUD </h1>
+                <p class="app-subtitle"></p>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <form id="uploadForm">
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-building"></i>
+                        Company Information
+                    </h2>
+                    <div class="form-group">
+                        <label class="form-label" for="companySelect">
+                            <i class="fas fa-landmark"></i>
+                            Company Name
+                        </label>
+                        <select id="companySelect" required>
+                            <option value="" disabled selected>Select your company</option>
+                            <option value="Pristine Pearl">Pristine Pearl</option>
+                            <option value="Pharmahub">Pharmahub</option>
+                            <option value="Emerald">Emerald</option>
+                            <option value="Sapphire">Sapphire</option>
+                            <option value="Pristine Prints">Pristine Prints</option>
+                            <option value="Amber">Amber</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-file-contract"></i>
+                        Document Details
+                    </h2>
+                    
+                    <div class="document-rows-container" id="documentRows">
+                        </div>
+
+                    <button type="button" class="add-row-btn" id="addRowBtn">
+                        <i class="fas fa-plus-circle"></i>
+                        Add New Document
+                    </button>
+                </div>
+
+                <div class="submit-section">
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-rocket"></i>
+                        Upload
+                    </button>
+                    <button type="button" id="viewDocsBtn" class="submit-btn view-docs-btn">
+                        <i class="fas fa-eye"></i>
+                        View Documents
+                    </button>
+                    </div>
+            </form>
+
+            <div id="statusMessage" class="status-message">
+                <div id="progressBarContainer" class="progress-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const documentRowsContainer = document.getElementById('documentRows');
+        const addRowBtn = document.getElementById('addRowBtn');
+        const companySelect = document.getElementById('companySelect');
+        const form = document.getElementById('uploadForm');
+        // Progress Bar elements
+        const statusMessage = document.getElementById('statusMessage');
+        const progressBarContainer = document.getElementById('progressBarContainer');
+        const progressBar = document.getElementById('progressBar');
+        // NEW BUTTON REFERENCE
+        const viewDocsBtn = document.getElementById('viewDocsBtn');
+
+        // Mappings for Document Code Prefixes (From original logic)
+        const prefixMap = {
+            'Pristine Pearl': 'PRL',
+            'Pharmahub': 'HUB',
+            'Emerald': 'EMD',
+            'Sapphire': 'SPR',
+            'Pristine Prints': 'PNT',
+            'Amber': 'AMB'
+        };
+
+        /**
+         * Converts YYYY-MM-DD format (from input date) to DD/MM/YYYY string.
+         * If the date is empty, returns an empty string.
+         * @param {string} yyyymmdd - The date string in YYYY-MM-DD format.
+         * @returns {string} The date string in DD/MM/YYYY format, or empty string.
+         */
+        function formatDate(yyyymmdd) {
+            if (!yyyymmdd) {
+                return '';
+            }
+            // Split the YYYY-MM-DD string
+            const parts = yyyymmdd.split('-'); 
+            // Rearrange to DD/MM/YYYY
+            return `${parts[2]}/${parts[1]}/${parts[0]}`; 
+        }
+
+        /**
+         * Generates a unique 4-digit number and prepends the company code.
+         */
+        function generateDocCode(companyCode) {
+            const uniqueNum = Math.floor(1000 + Math.random() * 9000); 
+            return `${companyCode}-${uniqueNum}`;
+        }
+        
+        /**
+         * Updates the sequential number for each document row.
+         */
+        function updateRowNumbers() {
+            documentRowsContainer.querySelectorAll('.document-row').forEach((row, index) => {
+                const rowNumber = row.querySelector('.row-number');
+                if (rowNumber) {
+                    rowNumber.textContent = index + 1;
+                }
+            });
+        }
+
+        /**
+         * Creates and returns the HTML for a single document row.
+         */
+        function createDocumentRow() {
+            const companyName = companySelect.value;
+            const companyPrefix = prefixMap[companyName] || '???';
+            const docCode = generateDocCode(companyPrefix);
+            const rowId = `row-${Date.now()}-${Math.floor(Math.random() * 1000)}`; 
+
+            const row = document.createElement('div');
+            row.className = 'document-row collapsed'; // Start collapsed
+            row.id = rowId;
+            
+            // Using the new styled row structure
+            row.innerHTML = `
+                <button type="button" class="delete-row-btn" aria-label="Remove document row">
+                    <i class="fas fa-times"></i>
+                </button>
+
+                <div class="document-row-header" data-toggle-id="${rowId}-content">
+                    <div class="row-title">
+                        <span class="row-number"></span>
+                        <span class="row-preview" id="${rowId}-preview">NEW DOCUMENT</span>
+                    </div>
+                    <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+                </div>
+
+                <div class="document-row-content" id="${rowId}-content">
+                
+                    <div class="doc-field">
+                        <label class="form-label">
+                            <i class="fas fa-barcode"></i>
+                            Document Code
+                        </label>
+                        <input type="text" name="docCode" value="${docCode}" readonly>
+                    </div>
+                    
+                    <div class="doc-field">
+                        <label class="form-label" for="${rowId}-name">
+                            <i class="fas fa-file-alt"></i>
+                            Document Name
+                        </label>
+                        <input type="text" name="docName" id="${rowId}-name" required placeholder="Enter document name">
+                    </div>
+
+                    <div class="doc-field">
+                        <label class="form-label" for="${rowId}-date">
+                            <i class="fas fa-calendar"></i>
+                            Document Date (Optional)
+                        </label>
+                        <input type="date" name="docDate" id="${rowId}-date">
+                    </div>
+
+                    <div class="doc-field">
+                        <label class="form-label" for="${rowId}-expiry">
+                            <i class="fas fa-clock"></i>
+                            Expiry Date (Optional)
+                        </label>
+                        <input type="date" name="docExpiry" id="${rowId}-expiry">
+                    </div>
+                    
+                    <div class="doc-field">
+                        <label class="form-label" for="${rowId}-remarks">
+                            <i class="fas fa-sticky-note"></i>
+                            Remarks
+                        </label>
+                        <textarea name="docRemarks" id="${rowId}-remarks" placeholder="Add any additional notes..."></textarea>
+                    </div>
+
+                    <div class="doc-field file-upload-wrapper">
+                        <label class="form-label" for="${rowId}-file">
+                            <i class="fas fa-paperclip"></i>
+                            Document File (Required)
+                        </label>
+                        <input type="file" name="docFile" class="file-input" id="${rowId}-file" required>
+                        
+                        <div class="file-control-container">
+                            <span class="file-name-display" id="${rowId}-file-name">No file selected</span>
+                            <label for="${rowId}-file" class="custom-file-upload">
+                                <i class="fas fa-folder-open"></i>
+                                BROWSE FILES
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Get references
+            const fileInput = row.querySelector('.file-input');
+            const fileNameDisplay = row.querySelector('.file-name-display');
+            const deleteButton = row.querySelector('.delete-row-btn');
+            const header = row.querySelector('.document-row-header');
+            const nameInput = row.querySelector('[name="docName"]');
+            const namePreview = row.querySelector('.row-preview');
+
+            // 1. File Input Listener
+            fileInput.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    const fileName = this.files[0].name;
+                    // Display shortened file name for UI
+                    fileNameDisplay.textContent = fileName.length > 25 ? '...' + fileName.slice(-22) : fileName;
+                } else {
+                    fileNameDisplay.textContent = 'No file selected';
+                }
+            });
+
+            // 2. Delete Button Listener
+            deleteButton.addEventListener('click', () => {
+                row.remove();
+                updateRowNumbers();
+            });
+            
+            // 3. Header Collapse/Expand Listener
+            header.addEventListener('click', () => {
+                row.classList.toggle('collapsed');
+            });
+            
+            // 4. Name Input Listener (Update header preview)
+            nameInput.addEventListener('input', (e) => {
+                const previewText = e.target.value.trim().toUpperCase() || 'NEW DOCUMENT';
+                namePreview.textContent = previewText;
+            });
+            
+            return row;
+        }
+
+        /**
+         * Handles the password check and redirection for the "View Documents" button.
+         */
+        function handleViewDocs() {
+            const password = prompt("Enter the password to view documents:");
+            const requiredPassword = "pearl#doc"; // The required password
+
+            if (password === requiredPassword) {
+                // Correct password, redirect
+                window.location.href = 'report.html';
+            } else if (password !== null) {
+                // Incorrect password (not null/cancelled)
+                alert("Incorrect password. Access denied.");
+            }
+            // If password is null (user cancelled), do nothing
+        }
+
+        /**
+         * Initializes the page: sets up event listeners.
+         */
+        function initializeUploader() {
+            
+            addRowBtn.addEventListener('click', () => {
+                if (companySelect.value) {
+                    const newRow = createDocumentRow();
+                    documentRowsContainer.appendChild(newRow);
+                    updateRowNumbers(); 
+                    // Automatically expand the newly added row
+                    newRow.classList.remove('collapsed');
+                } else {
+                    alert('Please select a Company Name first to add a document.');
+                }
+            });
+
+            companySelect.addEventListener('change', () => {
+                // If company is selected and no rows exist, add the first one
+                if (companySelect.value && documentRowsContainer.children.length === 0) {
+                    const newRow = createDocumentRow();
+                    documentRowsContainer.appendChild(newRow);
+                    updateRowNumbers();
+                    newRow.classList.remove('collapsed');
+                }
+            });
+            
+            // NEW EVENT LISTENER for View Documents button
+            viewDocsBtn.addEventListener('click', handleViewDocs);
+
+            // --- MAIN SUBMISSION LOGIC (From original docx file) ---
+            form.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                
+                // === GOOGLE APPS SCRIPT URL (Use the one from the original docx file for full functionality) ===
+                const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwKxwSBGUHWGIKJ9MnNZp5lpYN5iiNJWXaZJBXxadWsyxzGghgwumYklUcCDcYbUvr_/exec'; 
+                // ==============================
+
+                // Reset status message
+                statusMessage.className = 'status-message';
+                progressBar.style.width = '0%'; 
+                
+                // --- Initial Check and Loading State ---
+                if (!companySelect.value || documentRowsContainer.children.length === 0) {
+                    alert('Please select a Company Name and add at least one document.');
+                    return;
+                }
+
+                // Show 'Processing' state with loading animation (Using new styles)
+                statusMessage.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i> Uploading the documents securely...';
+                statusMessage.classList.add('show', 'loading');
+                
+                // --- DATA GATHERING AND CONVERSION ---
+                const documents = [];
+                let hasError = false;
+                const totalRows = documentRowsContainer.querySelectorAll('.document-row').length;
+                let processedRows = 0;
+                
+                // Function to update progress bar (simulated)
+                function updateProgress() {
+                    // Use 50% for client-side processing
+                    let calculatedProgress = Math.floor((processedRows / totalRows) * 50); 
+                    progressBar.style.width = Math.min(calculatedProgress, 50) + '%';
+                }
+
+                const filePromises = Array.from(documentRowsContainer.querySelectorAll('.document-row')).map(row => {
+                    const docFile = row.querySelector('[name="docFile"]').files[0];
+
+                    if (!docFile) {
+                        hasError = true;
+                        return Promise.resolve(null);
+                    }
+                    
+                    return new Promise((resolve) => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                            const base64Data = reader.result.split(',')[1]; 
+                            
+                            const docNameValue = row.querySelector('[name="docName"]').value;
+                            const docRemarksValue = row.querySelector('[name="docRemarks"]').value;
+                            
+                            // Get date values in YYYY-MM-DD format from the input
+                            const rawDocDate = row.querySelector('[name="docDate"]').value;
+                            const rawDocExpiry = row.querySelector('[name="docExpiry"]').value;
+                            
+                            const data = {
+                                company: companySelect.value.toUpperCase(),
+                                docName: docNameValue.toUpperCase(),
+                                docCode: row.querySelector('[name="docCode"]').value,
+                                docDate: formatDate(rawDocDate), 
+                                docExpiry: formatDate(rawDocExpiry),
+                                docRemarks: docRemarksValue.toUpperCase(),
+                                fileName: docFile.name,
+                                mimeType: docFile.type,
+                                fileBase64: base64Data
+                            };
+                            processedRows++;
+                            updateProgress();
+                            resolve(data);
+                        };
+                        reader.readAsDataURL(docFile);
+                    });
+                });
+                
+                const finalDocuments = (await Promise.all(filePromises)).filter(doc => doc !== null);
+                
+                progressBar.style.width = '50%';
+
+
+                if (hasError || finalDocuments.length === 0) {
+                    alert('Please ensure all required fields are filled and files are selected for every document row.');
+                    statusMessage.classList.remove('show', 'loading');
+                    return;
+                }
+
+                // --- API CALL TO GOOGLE APPS SCRIPT ---
+                try {
+                    // Start animation/timer for the 50%-100% upload phase
+                    const uploadSimInterval = setInterval(() => {
+                        let currentWidth = parseFloat(progressBar.style.width);
+                        if (currentWidth < 90) {
+                            progressBar.style.width = (currentWidth + 1) + '%';
+                        } else if (currentWidth < 98) {
+                             progressBar.style.width = (currentWidth + 0.1) + '%';
+                        }
+                    }, 50);
+                    
+                    const response = await fetch(APPS_SCRIPT_URL, {
+                        method: 'POST',
+                        body: JSON.stringify(finalDocuments), 
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8' 
+                        }
+                    });
+                    
+                    clearInterval(uploadSimInterval);
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        // Success state
+                        progressBar.style.width = '100%'; 
+                        statusMessage.classList.remove('loading'); 
+                        statusMessage.classList.add('success');
+                        statusMessage.innerHTML = `<i class="fas fa-check-circle"></i> Document Uploaded Successfully! ${result.message}`;
+
+                        // Clear the form and rows on success
+                        form.reset();
+                        documentRowsContainer.innerHTML = '';
+                        updateRowNumbers(); // Should result in no numbers
+                    } else {
+                        throw new Error(result.message);
+                    }
+
+                } catch (error) {
+                    clearInterval(uploadSimInterval);
+                    console.error('Submission Error:', error);
+                    // Error state
+                    statusMessage.classList.remove('loading'); 
+                    statusMessage.classList.add('error');
+                    statusMessage.innerHTML = `<i class="fas fa-times-circle"></i> **Error:** Could not upload files. ${error.message}`;
+                }
+            });
+            
+            if (documentRowsContainer.children.length > 0) {
+                 updateRowNumbers();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initializeUploader);
+    </script>
+
+</body>
+</html>
