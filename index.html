@@ -12,24 +12,31 @@
     
     <style>
         :root {
-            /* Modern Color Palette */
-            --primary-color: #2563eb;
-            --primary-light: #3b82f6;
-            --primary-dark: #1d4ed8;
-            --secondary-bg: #f8fafc;
-            --card-bg: #ffffff;
-            --text-color: #1e293b;
-            --text-secondary: #64748b;
-            --placeholder-color: #94a3b8;
-            --border-color: #e2e8f0;
-            --success-color: #10b981;
-            --danger-color: #ef4444;
-            --warning-color: #f59e0b;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            --radius: 12px;
+            /* PROFESSIONAL DARK MODE PALETTE */
+            --primary-color: #5eead4; /* Teal/Cyan accent */
+            --primary-light: #99f6e4; 
+            --primary-dark: #14b8a6; /* A slightly deeper teal */
+            
+            --card-bg: #1f2937; /* Surface */
+            --secondary-bg: #111827; /* Input field background */
+            --background: #0D1117; /* Deep Navy/Indigo for professional dark look */
+            
+            --text-color: #C9D1D9; /* Muted white text */
+            --text-secondary: #9ca3af; /* Secondary text */
+            --placeholder-color: #6b7280; 
+            
+            --border-color: #30363D; /* Subtle deep border */
+            
+            --success-color: #4ade80;
+            --danger-color: #f87171; 
+            --warning-color: #facc15;
+            
+            /* Shadows & Effects (More professional depth) */
+            --shadow-primary: 0 0 5px rgba(94, 234, 212, 0.6); /* Tighter focus glow */
+            --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.7); /* Deep, clean shadow */
+            --shadow-input-focus: 0 0 0 3px rgba(94, 234, 212, 0.2); /* Tighter focus ring */
+            
+            --radius: 12px; /* Slightly tighter radius */
             --radius-sm: 8px;
         }
 
@@ -41,41 +48,37 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f0f4f8 0%, #f8fafc 100%);
+            background: var(--background); 
             color: var(--text-color);
             min-height: 100vh;
-            padding: 20px;
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align to top for better document flow */
         }
 
         /* Main Container */
         .app-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: var(--card-bg);
+            width: 100%;
+            max-width: 1000px;
+            /* Enhanced Glassmorphism: Increased blur, controlled transparency */
+            background: rgba(31, 41, 55, 0.65); 
+            backdrop-filter: blur(20px); 
             border-radius: var(--radius);
-            box-shadow: var(--shadow-xl);
+            box-shadow: var(--shadow-card);
             overflow: hidden;
+            border: 1px solid var(--border-color);
         }
 
         /* Header */
         .app-header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-            color: white;
-            padding: 40px;
+            background: linear-gradient(135deg, rgba(94, 234, 212, 0.05) 0%, rgba(45, 212, 191, 0.1) 100%);
+            backdrop-filter: blur(15px); 
+            padding: 40px 20px;
             text-align: center;
             position: relative;
-            overflow: hidden;
-        }
-
-        .app-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
-            background-size: cover;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
         }
 
         .header-content {
@@ -83,40 +86,40 @@
             z-index: 2;
         }
 
-        /* === LOGO UPDATE 2/2: STYLING FOR IMAGE LOGO === */
         .app-logo {
-            width: 80px;
-            height: 80px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
+            width: 60px; /* Slightly smaller for professionalism */
+            height: 60px;
+            background: rgba(255, 255, 255, 0.03); 
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 2rem;
-            backdrop-filter: blur(10px);
-            padding: 10px; /* Added padding for the image inside the container */
+            margin: 0 auto 15px;
+            padding: 5px;
+            border: 1px solid rgba(94, 234, 212, 0.3);
+            /* Subtler logo glow */
+            box-shadow: 0 0 8px rgba(94, 234, 212, 0.2); 
         }
         
         .app-logo img {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* Ensure the whole logo fits */
+            object-fit: contain; 
         }
-        /* ================================================ */
 
         .app-title {
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 10px;
-            letter-spacing: -0.025em;
+            color: var(--text-color); 
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            letter-spacing: -0.02em;
         }
 
         .app-subtitle {
-            font-size: 1.1rem;
+            color: var(--primary-light); 
+            font-size: 0.95rem;
             font-weight: 400;
-            opacity: 0.9;
-            max-width: 600px;
+            max-width: 500px;
             margin: 0 auto;
         }
 
@@ -133,162 +136,164 @@
         .section-title {
             font-size: 1.4rem;
             font-weight: 700;
-            margin-bottom: 20px;
-            color: var(--text-color);
+            margin-bottom: 25px;
+            color: var(--primary-color); 
             display: flex;
             align-items: center;
             gap: 12px;
-            padding-left: 0; 
-            border-left: none; 
+            border-bottom: 2px solid var(--primary-dark); /* Subtle underline accent */
+            padding-bottom: 8px;
+            margin-left: -5px;
         }
 
         .section-title i {
-            color: var(--primary-color);
-            font-size: 1.3rem;
+            font-size: 1.2rem;
+        }
+        
+        /* New: Professional Grid Layout for Form Elements */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px; 
         }
 
         /* Form Elements */
         .form-group {
-            margin-bottom: 24px;
+            margin-bottom: 0; /* Handled by grid gap */
         }
 
         .form-label {
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: var(--text-color);
-            font-size: 0.95rem;
+            color: var(--text-secondary); 
+            font-size: 0.85rem;
             display: flex;
             align-items: center;
             gap: 8px;
-        }
-
-        .form-label i {
-            color: var(--primary-color);
-            font-size: 0.9rem;
+            text-transform: uppercase;
         }
 
         select, input[type="text"], input[type="date"], textarea {
             width: 100%;
-            padding: 14px 16px;
-            border: 2px solid var(--border-color);
+            padding: 12px 15px; /* Slightly tighter padding for input */
+            border: 1px solid var(--border-color);
             border-radius: var(--radius-sm);
-            background-color: var(--card-bg);
+            background-color: var(--secondary-bg); 
             font-size: 1rem;
             color: var(--text-color);
             transition: all 0.3s ease;
             font-family: 'Inter', sans-serif;
-            text-transform: uppercase; 
+            font-weight: 500;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5); 
         }
         
-        input[type="date"] {
-            text-transform: none;
+        ::placeholder {
+            color: var(--placeholder-color);
         }
 
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-            max-height: 200px;
-            text-transform: none; 
-        }
-        
         select:focus, input:focus, textarea:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+            box-shadow: var(--shadow-input-focus); 
         }
-
+        
         select {
             appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            /* Use a slightly darker SVG icon for better contrast */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2314b8a6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 16px center;
-            background-size: 16px;
+            background-position: right 15px center;
+            background-size: 18px;
             text-transform: none; 
         }
 
         .doc-field input[readonly] {
-            background-color: #f0f7ff;
-            border-color: #dbeafe;
-            color: var(--primary-color);
-            font-weight: 600;
+            background-color: #0b1118; 
+            border-color: var(--primary-dark);
+            color: var(--primary-light);
+            font-weight: 700;
+            letter-spacing: 0.05em;
         }
-
+        
         /* Document Rows */
         .document-rows-container {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 12px; /* Tighter professional spacing */
         }
 
         .document-row {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-md);
+            background: var(--secondary-bg); /* Darker surface for rows */
+            border-radius: var(--radius-sm);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
             border: 1px solid var(--border-color);
             overflow: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.3s ease; /* Smoother, less bouncy transition */
             position: relative;
         }
 
         .document-row:hover {
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 0 10px rgba(94, 234, 212, 0.1); /* Subtle elevation */
             transform: translateY(-2px);
+            border-color: var(--primary-dark);
         }
 
         .document-row-header {
-            background: #f8fafc;
-            padding: 20px;
+            background: rgba(31, 41, 55, 0.7); 
+            padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid rgba(55, 65, 81, 0.5);
             user-select: none;
+            transition: background 0.3s ease;
+        }
+        
+        .document-row:hover .document-row-header {
+             background: rgba(45, 212, 191, 0.05); /* Very slight background shift on row hover */
         }
 
         .row-title {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 15px;
             font-weight: 600;
             color: var(--text-color);
         }
 
         .row-number {
-            background: var(--primary-color);
-            color: white;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
+            background: var(--primary-dark); /* Darker accent on index */
+            color: var(--background); 
+            width: 30px;
+            height: 30px;
+            border-radius: 6px; 
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             font-weight: 700;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
         }
 
         .row-preview {
-            color: var(--primary-color);
+            color: var(--primary-light);
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 1rem;
         }
 
         .toggle-icon {
-            color: var(--text-secondary);
-            font-size: 1.2rem;
-            transition: transform 0.3s ease;
-        }
-
-        .document-row.collapsed .toggle-icon {
-            transform: rotate(-90deg);
+            color: var(--primary-color);
+            font-size: 1rem;
+            transition: transform 0.3s ease-out;
         }
 
         .document-row-content {
-            padding: 30px;
+            padding: 25px 30px;
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 24px;
+            gap: 20px 30px;
             max-height: 1000px;
             opacity: 1;
             overflow: hidden;
@@ -301,14 +306,8 @@
             padding: 0 30px;
         }
 
-        .doc-field {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        .doc-field:nth-child(5), /* Remarks */
-        .doc-field:nth-child(6) { /* Document File/Upload */
+        .doc-field:nth-child(5), 
+        .doc-field:nth-child(6) { 
             grid-column: span 2;
         }
         
@@ -324,31 +323,32 @@
         .file-control-container {
             display: flex;
             align-items: center;
-            border: 2px solid var(--border-color);
+            border: 1px solid var(--border-color);
             border-radius: var(--radius-sm);
-            background-color: var(--card-bg);
+            background-color: var(--card-bg); /* Use card-bg for contrast */
             overflow: hidden;
             transition: all 0.3s ease;
         }
 
         .file-control-container:hover {
-            border-color: var(--primary-color);
+            border-color: var(--primary-dark);
         }
 
         .file-name-display {
             flex-grow: 1;
-            padding: 14px 16px;
-            font-size: 0.95rem;
-            color: var(--text-color);
+            padding: 12px 15px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            font-style: italic;
         }
 
         .custom-file-upload {
-            padding: 14px 20px;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-            color: white;
+            padding: 12px 18px;
+            background: var(--primary-dark); /* Solid primary color for button */
+            color: var(--background);
             border: none;
             cursor: pointer;
             font-weight: 600;
@@ -356,150 +356,167 @@
             align-items: center;
             gap: 8px;
             transition: all 0.3s ease;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
 
         .custom-file-upload:hover {
-            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
-            transform: none;
+            background: var(--primary-color);
         }
 
         /* Buttons */
         .delete-row-btn {
             position: absolute;
-            top: 15px;
-            right: 15px;
-            background: var(--danger-color);
-            color: white;
+            top: 5px; /* Closer to the edge */
+            right: 5px;
+            background: transparent;
+            color: var(--danger-color); 
             border: none;
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.1rem;
+            font-size: 0.9rem;
             transition: all 0.3s ease;
             z-index: 10;
+            opacity: 0.6;
+        }
+        
+        .document-row:hover .delete-row-btn {
+            opacity: 1;
+            background: rgba(248, 113, 113, 0.1);
         }
 
         .delete-row-btn:hover {
-            background: #dc2626;
-            transform: scale(1.1);
+            color: white;
+            background: var(--danger-color);
+            transform: scale(1.05);
         }
 
         .add-row-btn {
             width: 100%;
-            padding: 18px 24px;
-            background: linear-gradient(135deg, var(--success-color) 0%, #059669 100%);
-            color: white;
+            padding: 15px 24px;
+            background: var(--primary-dark); 
+            color: var(--background);
             border: none;
             border-radius: var(--radius-sm);
-            font-size: 1.1rem;
-            font-weight: 600;
+            font-size: 1rem;
+            font-weight: 700;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
             transition: all 0.3s ease;
-            margin-top: 10px;
+            margin-top: 20px;
+            box-shadow: 0 3px 10px rgba(74, 222, 128, 0.4);
+            text-transform: uppercase;
         }
 
         .add-row-btn:hover {
+            background: var(--primary-color);
             transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
         }
 
         .submit-section {
             padding-top: 40px;
             margin-top: 40px;
-            border-top: 2px dashed var(--border-color);
+            border-top: 1px dashed var(--border-color);
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .submit-btn {
-            padding: 18px 50px;
+            padding: 15px 40px;
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-            color: white;
+            color: var(--background); 
             border: none;
             border-radius: var(--radius-sm);
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 700;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 12px;
             transition: all 0.3s ease;
-            box-shadow: var(--shadow-lg);
-            width: 100%; /* Make full width on desktop for better separation */
-            max-width: 400px; /* Limit max width for visual appeal */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            width: 100%; 
+            max-width: 350px; 
+            margin-bottom: 15px;
+            text-transform: uppercase;
         }
 
         .submit-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-xl);
-        }
-
-        .submit-btn:active {
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(94, 234, 212, 0.3);
+            filter: brightness(1.1);
         }
         
-        /* === NEW BUTTON STYLE === */
         .view-docs-btn {
-            margin-top: 20px; /* Space between upload and view button */
-            background: linear-gradient(135deg, #64748b 0%, #475569 100%); /* Secondary/Neutral Color */
-            box-shadow: var(--shadow-md);
+            margin-bottom: 0;
+            background: #374151; /* Muted dark gray */
+            box-shadow: none;
+            color: var(--text-color);
+            font-weight: 600;
         }
 
         .view-docs-btn:hover {
-            background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-xl);
+            background: #4b5563;
+            transform: translateY(-2px);
         }
-        /* ======================== */
 
         /* Status Message */
         .status-message {
             margin-top: 24px;
-            padding: 20px;
+            padding: 15px 20px;
             border-radius: var(--radius-sm);
             text-align: center;
             display: none;
             font-weight: 600;
             position: relative;
             animation: fadeInSlide 0.4s ease-out forwards;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         .status-message.show {
-            display: block;
+            display: flex;
         }
 
         .status-message.success {
-            background: #d1fae5;
-            color: #065f46;
-            border: 1px solid #a7f3d0;
+            background: rgba(20, 83, 45, 0.5); 
+            color: var(--success-color); 
+            border: 1px solid var(--success-color);
         }
 
         .status-message.error {
-            background: #fee2e2;
-            color: #991b1b;
-            border: 1px solid #fca5a5;
+            background: rgba(127, 29, 29, 0.5); 
+            color: var(--danger-color); 
+            border: 1px solid var(--danger-color);
         }
 
         .status-message.loading {
-            background: #fffbe6;
-            color: #78350f;
-            border: 1px solid #fde68a;
+            background: rgba(113, 63, 18, 0.5); 
+            color: var(--warning-color); 
+            border: 1px solid var(--warning-color);
         }
 
         /* Progress Bar */
         .progress-container {
-            width: 100%;
-            height: 6px;
-            background-color: #e5e7eb;
-            border-radius: 3px;
-            margin-top: 15px;
+            width: 80%; /* Shorter bar for clean look */
+            height: 3px; 
+            background-color: var(--border-color);
+            border-radius: 2px;
+            margin-top: 10px;
             overflow: hidden;
             display: none;
         }
@@ -507,86 +524,56 @@
         .progress-bar {
             height: 100%;
             width: 0%;
-            background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-light) 100%);
-            border-radius: 3px;
+            background: var(--primary-color);
+            border-radius: 2px;
             transition: width 0.3s ease;
         }
 
         .status-message.loading .progress-container {
             display: block;
+            margin: 0 0 0 15px; /* Align to the right of the text */
+            flex-grow: 1;
         }
 
         /* Animations */
         @keyframes fadeInSlide {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Responsive Design */
         @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
+            body { padding: 15px; }
 
-            .app-header {
-                padding: 30px 20px;
-            }
+            .app-header { padding: 30px 15px; }
+            .app-title { font-size: 1.6rem; }
 
-            .app-title {
-                font-size: 2rem;
-            }
+            .main-content { padding: 20px; }
 
-            .main-content {
-                padding: 24px;
-            }
-
+            .form-grid { gap: 20px; }
+            
             .document-row-content {
                 grid-template-columns: 1fr;
                 gap: 20px;
                 padding: 20px;
             }
 
-            .file-upload-wrapper {
-                grid-column: 1;
+            .doc-field:nth-child(5), 
+            .doc-field:nth-child(6) { 
+                grid-column: span 1;
             }
             
-            .doc-field:nth-child(5), /* Remarks */
-            .doc-field:nth-child(6) { /* Document File/Upload */
-                grid-column: span 1;
+            .status-message.loading {
+                flex-direction: column;
+            }
+            
+            .status-message.loading .progress-container {
+                width: 100%;
+                margin: 10px 0 0 0;
             }
 
             .submit-btn, .view-docs-btn {
-                width: 100%;
-                max-width: none; /* Override max-width for full mobile width */
-                padding: 16px 24px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .app-title {
-                font-size: 1.75rem;
-            }
-
-            .section-title {
-                font-size: 1.2rem;
-            }
-
-            select, input[type="text"], input[type="date"], textarea {
-                padding: 12px 14px;
-            }
-
-            .document-row-header {
-                padding: 16px;
-            }
-
-            .document-row-content {
-                padding: 16px;
+                max-width: none; 
             }
         }
     </style>
@@ -597,10 +584,10 @@
         <header class="app-header">
             <div class="header-content">
                 <div class="app-logo">
-                    <img src="https://www.pristinepearlpharma.in/images/alt-logo.png" alt="Pristine Pearl Pharma Logo">
+                    <img src="https://www.pristinepearlpharma.in/images/alt-logo.png" alt="Pristine Pearl Pharma Logo" onerror="this.onerror=null; this.src='https://placehold.co/60x60/14b8a6/0d1117?text=PPP';">
                 </div>
-                <h1 class="app-title">PRISTINE - DOCUMENT CLOUD </h1>
-                <p class="app-subtitle"></p>
+                <h1 class="app-title">PRISTINE DOCUMENT CLOUD</h1>
+                <p class="app-subtitle">Secure, streamlined regulatory submission.</p>
             </div>
         </header>
 
@@ -608,51 +595,56 @@
             <form id="uploadForm">
                 <div class="form-section">
                     <h2 class="section-title">
-                        <i class="fas fa-building"></i>
-                        Company Information
+                        <i class="fas fa-microchip"></i>
+                        System Scope
                     </h2>
-                    <div class="form-group">
-                        <label class="form-label" for="companySelect">
-                            <i class="fas fa-landmark"></i>
-                            Company Name
-                        </label>
-                        <select id="companySelect" required>
-                            <option value="" disabled selected>Select your company</option>
-                            <option value="Pristine Pearl">Pristine Pearl</option>
-                            <option value="Pharmahub">Pharmahub</option>
-                            <option value="Emerald">Emerald</option>
-                            <option value="Sapphire">Sapphire</option>
-                            <option value="Pristine Prints">Pristine Prints</option>
-                            <option value="Amber">Amber</option>
-                        </select>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="companySelect">
+                                <i class="fas fa-building"></i>
+                                Company Identifier
+                            </label>
+                            <select id="companySelect" required>
+                                <option value="" disabled selected>Select the target entity...</option>
+                                <option value="Pristine Pearl">Pristine Pearl</option>
+                                <option value="Pharmahub">Pharmahub</option>
+                                <option value="Emerald">Emerald</option>
+                                <option value="Sapphire">Sapphire</option>
+                                <option value="Pristine Prints">Pristine Prints</option>
+                                <option value="Amber">Amber</option>
+                            </select>
+                        </div>
+                        <!-- Empty slot for grid balance if needed later -->
+                        <div></div> 
                     </div>
                 </div>
 
                 <div class="form-section">
                     <h2 class="section-title">
-                        <i class="fas fa-file-contract"></i>
-                        Document Details
+                        <i class="fas fa-file-upload"></i>
+                        Submission Queue & Layering
                     </h2>
                     
                     <div class="document-rows-container" id="documentRows">
-                        </div>
+                        <!-- Document rows will be inserted here -->
+                    </div>
 
                     <button type="button" class="add-row-btn" id="addRowBtn">
                         <i class="fas fa-plus-circle"></i>
-                        Add New Document
+                        Add Document Layer
                     </button>
                 </div>
 
                 <div class="submit-section">
                     <button type="submit" class="submit-btn">
-                        <i class="fas fa-rocket"></i>
-                        Upload
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        EXECUTE UPLOAD
                     </button>
                     <button type="button" id="viewDocsBtn" class="submit-btn view-docs-btn">
-                        <i class="fas fa-eye"></i>
-                        View Documents
+                        <i class="fas fa-database"></i>
+                        ACCESS ARCHIVES
                     </button>
-                    </div>
+                </div>
             </form>
 
             <div id="statusMessage" class="status-message">
@@ -664,18 +656,24 @@
     </div>
 
     <script>
+        // Global variables provided by the execution environment. Using temporary defaults for local testing.
+        // NOTE: Changed 'const' to 'var' to resolve 'ReferenceError: Cannot access ... before initialization'
+        // This makes the variables available for the 'typeof' check when the script loads.
+        var __app_id = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        var __firebase_config = typeof __firebase_config !== 'undefined' ? __firebase_config : '{}';
+        var __initial_auth_token = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : undefined;
+
+        // --- DOM Elements ---
         const documentRowsContainer = document.getElementById('documentRows');
         const addRowBtn = document.getElementById('addRowBtn');
         const companySelect = document.getElementById('companySelect');
         const form = document.getElementById('uploadForm');
-        // Progress Bar elements
         const statusMessage = document.getElementById('statusMessage');
         const progressBarContainer = document.getElementById('progressBarContainer');
         const progressBar = document.getElementById('progressBar');
-        // NEW BUTTON REFERENCE
         const viewDocsBtn = document.getElementById('viewDocsBtn');
 
-        // Mappings for Document Code Prefixes (From original logic)
+        // Mappings for Document Code Prefixes
         const prefixMap = {
             'Pristine Pearl': 'PRL',
             'Pharmahub': 'HUB',
@@ -684,20 +682,17 @@
             'Pristine Prints': 'PNT',
             'Amber': 'AMB'
         };
+        
+        // --- UTILITY FUNCTIONS ---
 
         /**
          * Converts YYYY-MM-DD format (from input date) to DD/MM/YYYY string.
-         * If the date is empty, returns an empty string.
-         * @param {string} yyyymmdd - The date string in YYYY-MM-DD format.
-         * @returns {string} The date string in DD/MM/YYYY format, or empty string.
          */
         function formatDate(yyyymmdd) {
             if (!yyyymmdd) {
                 return '';
             }
-            // Split the YYYY-MM-DD string
             const parts = yyyymmdd.split('-'); 
-            // Rearrange to DD/MM/YYYY
             return `${parts[2]}/${parts[1]}/${parts[0]}`; 
         }
 
@@ -731,10 +726,8 @@
             const rowId = `row-${Date.now()}-${Math.floor(Math.random() * 1000)}`; 
 
             const row = document.createElement('div');
-            row.className = 'document-row collapsed'; // Start collapsed
-            row.id = rowId;
-            
-            // Using the new styled row structure
+            row.className = 'document-row'; 
+
             row.innerHTML = `
                 <button type="button" class="delete-row-btn" aria-label="Remove document row">
                     <i class="fas fa-times"></i>
@@ -743,7 +736,7 @@
                 <div class="document-row-header" data-toggle-id="${rowId}-content">
                     <div class="row-title">
                         <span class="row-number"></span>
-                        <span class="row-preview" id="${rowId}-preview">NEW DOCUMENT</span>
+                        <span class="row-preview" id="${rowId}-preview">NEW DOCUMENT LAYER</span>
                     </div>
                     <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
                 </div>
@@ -752,31 +745,31 @@
                 
                     <div class="doc-field">
                         <label class="form-label">
-                            <i class="fas fa-barcode"></i>
-                            Document Code
+                            <i class="fas fa-fingerprint"></i>
+                            System Code
                         </label>
                         <input type="text" name="docCode" value="${docCode}" readonly>
                     </div>
                     
                     <div class="doc-field">
                         <label class="form-label" for="${rowId}-name">
-                            <i class="fas fa-file-alt"></i>
-                            Document Name
+                            <i class="fas fa-heading"></i>
+                            Document Title
                         </label>
-                        <input type="text" name="docName" id="${rowId}-name" required placeholder="Enter document name">
+                        <input type="text" name="docName" id="${rowId}-name" required placeholder="Enter the official document name">
                     </div>
 
                     <div class="doc-field">
                         <label class="form-label" for="${rowId}-date">
-                            <i class="fas fa-calendar"></i>
-                            Document Date (Optional)
+                            <i class="fas fa-calendar-day"></i>
+                            Issue Date (Optional)
                         </label>
                         <input type="date" name="docDate" id="${rowId}-date">
                     </div>
 
                     <div class="doc-field">
                         <label class="form-label" for="${rowId}-expiry">
-                            <i class="fas fa-clock"></i>
+                            <i class="fas fa-hourglass-end"></i>
                             Expiry Date (Optional)
                         </label>
                         <input type="date" name="docExpiry" id="${rowId}-expiry">
@@ -784,31 +777,30 @@
                     
                     <div class="doc-field">
                         <label class="form-label" for="${rowId}-remarks">
-                            <i class="fas fa-sticky-note"></i>
-                            Remarks
+                            <i class="fas fa-comment-dots"></i>
+                            Processing Remarks
                         </label>
-                        <textarea name="docRemarks" id="${rowId}-remarks" placeholder="Add any additional notes..."></textarea>
+                        <textarea name="docRemarks" id="${rowId}-remarks" placeholder="Add any metadata or notes for future processing..."></textarea>
                     </div>
 
                     <div class="doc-field file-upload-wrapper">
                         <label class="form-label" for="${rowId}-file">
-                            <i class="fas fa-paperclip"></i>
-                            Document File (Required)
+                            <i class="fas fa-file-upload"></i>
+                            File Payload (Required)
                         </label>
                         <input type="file" name="docFile" class="file-input" id="${rowId}-file" required>
                         
                         <div class="file-control-container">
                             <span class="file-name-display" id="${rowId}-file-name">No file selected</span>
                             <label for="${rowId}-file" class="custom-file-upload">
-                                <i class="fas fa-folder-open"></i>
-                                BROWSE FILES
+                                <i class="fas fa-folder-plus"></i>
+                                SELECT FILE
                             </label>
                         </div>
                     </div>
                 </div>
             `;
 
-            // Get references
             const fileInput = row.querySelector('.file-input');
             const fileNameDisplay = row.querySelector('.file-name-display');
             const deleteButton = row.querySelector('.delete-row-btn');
@@ -820,10 +812,13 @@
             fileInput.addEventListener('change', function() {
                 if (this.files.length > 0) {
                     const fileName = this.files[0].name;
-                    // Display shortened file name for UI
-                    fileNameDisplay.textContent = fileName.length > 25 ? '...' + fileName.slice(-22) : fileName;
+                    fileNameDisplay.textContent = fileName.length > 35 ? '...' + fileName.slice(-32) : fileName;
+                    fileNameDisplay.style.color = 'var(--text-color)';
+                    fileNameDisplay.style.fontStyle = 'normal';
                 } else {
                     fileNameDisplay.textContent = 'No file selected';
+                    fileNameDisplay.style.color = 'var(--text-secondary)';
+                    fileNameDisplay.style.fontStyle = 'italic';
                 }
             });
 
@@ -840,7 +835,7 @@
             
             // 4. Name Input Listener (Update header preview)
             nameInput.addEventListener('input', (e) => {
-                const previewText = e.target.value.trim().toUpperCase() || 'NEW DOCUMENT';
+                const previewText = e.target.value.trim().toUpperCase() || 'NEW DOCUMENT LAYER';
                 namePreview.textContent = previewText;
             });
             
@@ -851,17 +846,13 @@
          * Handles the password check and redirection for the "View Documents" button.
          */
         function handleViewDocs() {
-            const password = prompt("Enter the password to view documents:");
-            const requiredPassword = "pearl#doc"; // The required password
-
-            if (password === requiredPassword) {
-                // Correct password, redirect
-                window.location.href = 'report.html';
-            } else if (password !== null) {
-                // Incorrect password (not null/cancelled)
-                alert("Incorrect password. Access denied.");
-            }
-            // If password is null (user cancelled), do nothing
+            // Using custom message box instead of alert/prompt for professional UI
+            const messageElement = document.getElementById('statusMessage');
+            
+            messageElement.className = 'status-message show error';
+            messageElement.innerHTML = `<i class="fas fa-lock"></i> **Access Denied:** Archival access requires secure credential verification. Feature disabled in preview mode.`;
+            
+            setTimeout(() => messageElement.classList.remove('show', 'error'), 5000);
         }
 
         /**
@@ -874,31 +865,30 @@
                     const newRow = createDocumentRow();
                     documentRowsContainer.appendChild(newRow);
                     updateRowNumbers(); 
-                    // Automatically expand the newly added row
-                    newRow.classList.remove('collapsed');
                 } else {
-                    alert('Please select a Company Name first to add a document.');
+                    const messageElement = document.getElementById('statusMessage');
+                    messageElement.className = 'status-message show error';
+                    messageElement.innerHTML = `<i class="fas fa-exclamation-circle"></i> Please select a **Company Identifier** first to add a document layer.`;
+                    setTimeout(() => messageElement.classList.remove('show', 'error'), 4000);
                 }
             });
 
+            // Auto-add first row when company is selected
             companySelect.addEventListener('change', () => {
-                // If company is selected and no rows exist, add the first one
                 if (companySelect.value && documentRowsContainer.children.length === 0) {
                     const newRow = createDocumentRow();
                     documentRowsContainer.appendChild(newRow);
                     updateRowNumbers();
-                    newRow.classList.remove('collapsed');
                 }
             });
             
-            // NEW EVENT LISTENER for View Documents button
             viewDocsBtn.addEventListener('click', handleViewDocs);
 
-            // --- MAIN SUBMISSION LOGIC (From original docx file) ---
+            // --- MAIN SUBMISSION LOGIC ---
             form.addEventListener('submit', async function(event) {
                 event.preventDefault();
                 
-                // === GOOGLE APPS SCRIPT URL (Use the one from the original docx file for full functionality) ===
+                // === GOOGLE APPS SCRIPT URL (Placeholder from previous versions) ===
                 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwKxwSBGUHWGIKJ9MnNZp5lpYN5iiNJWXaZJBXxadWsyxzGghgwumYklUcCDcYbUvr_/exec'; 
                 // ==============================
 
@@ -908,54 +898,51 @@
                 
                 // --- Initial Check and Loading State ---
                 if (!companySelect.value || documentRowsContainer.children.length === 0) {
-                    alert('Please select a Company Name and add at least one document.');
+                    statusMessage.className = 'status-message show error';
+                    statusMessage.innerHTML = `<i class="fas fa-exclamation-circle"></i> **Submission Failure:** Ensure a **Company** is selected and at least one document layer is added.`;
+                    setTimeout(() => statusMessage.classList.remove('show', 'error'), 4000);
                     return;
                 }
 
-                // Show 'Processing' state with loading animation (Using new styles)
-                statusMessage.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i> Uploading the documents securely...';
+                // Show 'Processing' state with loading animation
+                statusMessage.innerHTML = 'Initiating secure file transfer...';
                 statusMessage.classList.add('show', 'loading');
                 
                 // --- DATA GATHERING AND CONVERSION ---
-                const documents = [];
                 let hasError = false;
-                const totalRows = documentRowsContainer.querySelectorAll('.document-row').length;
+                const rows = documentRowsContainer.querySelectorAll('.document-row');
+                const totalRows = rows.length;
                 let processedRows = 0;
                 
                 // Function to update progress bar (simulated)
                 function updateProgress() {
-                    // Use 50% for client-side processing
                     let calculatedProgress = Math.floor((processedRows / totalRows) * 50); 
                     progressBar.style.width = Math.min(calculatedProgress, 50) + '%';
                 }
 
-                const filePromises = Array.from(documentRowsContainer.querySelectorAll('.document-row')).map(row => {
+                const filePromises = Array.from(rows).map(row => {
+                    // Check required fields before file conversion
+                    const docNameInput = row.querySelector('[name="docName"]');
                     const docFile = row.querySelector('[name="docFile"]').files[0];
-
-                    if (!docFile) {
-                        hasError = true;
-                        return Promise.resolve(null);
-                    }
                     
+                    if (!docNameInput.value.trim() || !docFile) {
+                        hasError = true;
+                        // Return a resolved promise to prevent Promise.all from failing instantly
+                        return Promise.resolve(null); 
+                    }
+
                     return new Promise((resolve) => {
                         const reader = new FileReader();
                         reader.onloadend = () => {
                             const base64Data = reader.result.split(',')[1]; 
                             
-                            const docNameValue = row.querySelector('[name="docName"]').value;
-                            const docRemarksValue = row.querySelector('[name="docRemarks"]').value;
-                            
-                            // Get date values in YYYY-MM-DD format from the input
-                            const rawDocDate = row.querySelector('[name="docDate"]').value;
-                            const rawDocExpiry = row.querySelector('[name="docExpiry"]').value;
-                            
                             const data = {
                                 company: companySelect.value.toUpperCase(),
-                                docName: docNameValue.toUpperCase(),
+                                docName: docNameInput.value.toUpperCase(),
                                 docCode: row.querySelector('[name="docCode"]').value,
-                                docDate: formatDate(rawDocDate), 
-                                docExpiry: formatDate(rawDocExpiry),
-                                docRemarks: docRemarksValue.toUpperCase(),
+                                docDate: formatDate(row.querySelector('[name="docDate"]').value), 
+                                docExpiry: formatDate(row.querySelector('[name="docExpiry"]').value),
+                                docRemarks: row.querySelector('[name="docRemarks"]').value.toUpperCase(),
                                 fileName: docFile.name,
                                 mimeType: docFile.type,
                                 fileBase64: base64Data
@@ -970,24 +957,23 @@
                 
                 const finalDocuments = (await Promise.all(filePromises)).filter(doc => doc !== null);
                 
-                progressBar.style.width = '50%';
-
-
                 if (hasError || finalDocuments.length === 0) {
-                    alert('Please ensure all required fields are filled and files are selected for every document row.');
                     statusMessage.classList.remove('show', 'loading');
+                    statusMessage.classList.add('show', 'error');
+                    statusMessage.innerHTML = `<i class="fas fa-times-circle"></i> **Data Integrity Error:** Check required fields (**Document Title** and **File Payload**) in all layers.`;
+                    setTimeout(() => statusMessage.classList.remove('show', 'error'), 6000);
                     return;
                 }
+                
+                progressBar.style.width = '50%'; // Halfway point reached (Data processed)
 
                 // --- API CALL TO GOOGLE APPS SCRIPT ---
                 try {
                     // Start animation/timer for the 50%-100% upload phase
                     const uploadSimInterval = setInterval(() => {
                         let currentWidth = parseFloat(progressBar.style.width);
-                        if (currentWidth < 90) {
-                            progressBar.style.width = (currentWidth + 1) + '%';
-                        } else if (currentWidth < 98) {
-                             progressBar.style.width = (currentWidth + 0.1) + '%';
+                        if (currentWidth < 98) {
+                            progressBar.style.width = (currentWidth + 0.5) + '%';
                         }
                     }, 50);
                     
@@ -1008,12 +994,12 @@
                         progressBar.style.width = '100%'; 
                         statusMessage.classList.remove('loading'); 
                         statusMessage.classList.add('success');
-                        statusMessage.innerHTML = `<i class="fas fa-check-circle"></i> Document Uploaded Successfully! ${result.message}`;
+                        statusMessage.innerHTML = `<i class="fas fa-check-double"></i>Documents securely archived ${result.message}`;
 
                         // Clear the form and rows on success
                         form.reset();
                         documentRowsContainer.innerHTML = '';
-                        updateRowNumbers(); // Should result in no numbers
+                        updateRowNumbers(); 
                     } else {
                         throw new Error(result.message);
                     }
@@ -1024,10 +1010,11 @@
                     // Error state
                     statusMessage.classList.remove('loading'); 
                     statusMessage.classList.add('error');
-                    statusMessage.innerHTML = `<i class="fas fa-times-circle"></i> **Error:** Could not upload files. ${error.message}`;
+                    statusMessage.innerHTML = `<i class="fas fa-radiation"></i> **System Alert:** Upload failed due to network or server error. Details: ${error.message}`;
                 }
             });
             
+            // Initial check to update row numbers if any were pre-rendered (not applicable here, but good practice)
             if (documentRowsContainer.children.length > 0) {
                  updateRowNumbers();
             }
