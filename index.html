@@ -50,7 +50,7 @@
             font-family: 'Inter', sans-serif;
             background: var(--background); 
             color: var(--text-color);
-            min-height: 100vh;
+            min-height: 10vh;
             padding: 30px;
             display: flex;
             justify-content: center;
@@ -468,6 +468,7 @@
 
         .view-docs-btn:hover {
             background: #4b5563;
+            box-shadow: 0 6px 20px rgba(75, 85, 99, 0.3);
             transform: translateY(-2px);
         }
 
@@ -587,7 +588,7 @@
                     <img src="https://www.pristinepearlpharma.in/images/alt-logo.png" alt="Pristine Pearl Pharma Logo" onerror="this.onerror=null; this.src='https://placehold.co/60x60/14b8a6/0d1117?text=PPP';">
                 </div>
                 <h1 class="app-title">PRISTINE DOCUMENT CLOUD</h1>
-                <p class="app-subtitle">Secure, streamlined regulatory submission.</p>
+                <p class="app-subtitle">Secure, streamlined regulatory submission and digital archiving platform.</p>
             </div>
         </header>
 
@@ -843,16 +844,12 @@
         }
 
         /**
-         * Handles the password check and redirection for the "View Documents" button.
+         * Handles the navigation for the "View Documents" button.
+         * NOW REDIRECTS TO report.html
          */
         function handleViewDocs() {
-            // Using custom message box instead of alert/prompt for professional UI
-            const messageElement = document.getElementById('statusMessage');
-            
-            messageElement.className = 'status-message show error';
-            messageElement.innerHTML = `<i class="fas fa-lock"></i> **Access Denied:** Archival access requires secure credential verification. Feature disabled in preview mode.`;
-            
-            setTimeout(() => messageElement.classList.remove('show', 'error'), 5000);
+            // FIX: Using './report.html' to ensure the environment recognizes it as a valid relative file path.
+            window.location.href = './report.html';
         }
 
         /**
@@ -994,7 +991,7 @@
                         progressBar.style.width = '100%'; 
                         statusMessage.classList.remove('loading'); 
                         statusMessage.classList.add('success');
-                        statusMessage.innerHTML = `<i class="fas fa-check-double"></i>Documents securely archived ${result.message}`;
+                        statusMessage.innerHTML = `<i class="fas fa-check-double"></i> **Transfer Complete:** Documents securely archived. ${result.message}`;
 
                         // Clear the form and rows on success
                         form.reset();
