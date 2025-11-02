@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document Log Viewer - Pristine Pearl Pharma</title>
+    <title>Document Manager</title>
     <link rel="icon" 
         href="https://www.pristinepearlpharma.in/images/alt-logo.png" 
         type="image/png">
@@ -18,25 +18,26 @@
         }
 
         :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --secondary: #64748b;
-            --accent: #f59e0b;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --error: #ef4444;
-            --background: #f8fafc;
-            --surface: #ffffff;
-            --text-primary: #1e293b;
-            --text-secondary: #64748b;
-            --border: #e2e8f0;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            /* Dark Theme Variables */
+            --primary: #5eead4; /* Teal/Cyan for primary actions */
+            --primary-dark: #2dd4bf;
+            --secondary: #a1a1aa; /* Gray secondary */
+            --accent: #fcd34d; /* Amber accent */
+            --success: #4ade80;
+            --warning: #facc15;
+            --error: #f87171;
+            --background: #111827; /* Dark background */
+            --surface: #1f2937; /* Slightly lighter surface for cards/panels */
+            --text-primary: #f3f4f6; /* Light text */
+            --text-secondary: #9ca3af; /* Lighter secondary text */
+            --border: #374151; /* Subtle border */
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3); /* Darker shadows */
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.8), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
         }
 
         body {
             font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #f0f4f8 0%, #f8fafc 100%);
+            background: var(--background);
             margin: 0;
             padding: 0;
             min-height: 100vh;
@@ -48,10 +49,108 @@
             min-height: 100vh;
         }
 
+        /* Login Screen Styles */
+        #loginScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--background);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .login-card {
+            background: var(--surface);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            width: 90%;
+            max-width: 400px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .login-card h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .login-card p {
+            color: var(--text-secondary);
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #111827; /* Very dark input background */
+            color: var(--text-primary);
+            margin-bottom: 15px;
+        }
+
+        .login-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .login-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(94, 234, 212, 0.2);
+        }
+
+        .login-error {
+            background: #ef444420;
+            color: var(--error);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: none;
+            font-size: 0.9rem;
+            border: 1px solid var(--error);
+        }
+
+        /* Reusable button style */
+        .btn {
+            padding: 14px 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: #111827; /* Dark text for high contrast on bright button */
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(94, 234, 212, 0.3);
+        }
+        
         /* Sidebar */
         .sidebar {
             width: 320px;
-            background: linear-gradient(180deg, var(--surface) 0%, #f8fafc 100%);
+            background: var(--surface);
             border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
@@ -62,7 +161,7 @@
 
         .logo-section {
             padding: 24px;
-            background: var(--surface);
+            background: #111827; /* Darker header */
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
@@ -77,224 +176,174 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            color: #111827;
             font-size: 18px;
             font-weight: bold;
         }
 
-        .logo-text {
-            display: flex;
-            flex-direction: column;
-        }
-
         .company-name {
-            font-weight: 700;
-            font-size: 1.1rem;
             color: var(--text-primary);
-            line-height: 1.2;
         }
 
         .app-name {
-            font-weight: 600;
-            font-size: 0.85rem;
             color: var(--primary);
-            letter-spacing: 0.05em;
         }
 
-        /* Filter Section */
+        /* Filter Section - Improved Spacing */
         .filter-section {
-            padding: 24px;
+            padding: 30px; /* Increased from 24px */
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 25px; /* Increased from 20px */
+        }
+        
+        .filter-group {
+            margin-bottom: 15px; /* Added spacing between filter groups */
         }
 
-        .section-title {
+        .filter-label {
+            margin-bottom: 8px; /* Added spacing between label and input */
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-weight: 600;
-            color: var(--text-primary);
-            font-size: 1rem;
-            margin-bottom: 5px;
+            gap: 8px;
         }
 
         .section-title i {
             color: var(--primary);
-            font-size: 1.1rem;
-        }
-
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .filter-label {
-            font-weight: 600;
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 6px;
         }
 
         .filter-input {
-            padding: 12px 14px;
             border: 1px solid var(--border);
-            border-radius: 10px;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            background: var(--surface);
+            background: #111827; /* Darker input */
+            color: var(--text-primary);
         }
 
         .filter-input:focus {
-            outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            box-shadow: 0 0 0 3px rgba(94, 234, 212, 0.1);
         }
-
-        .btn {
-            padding: 14px 20px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-
+        
         .btn-secondary {
             background: linear-gradient(135deg, var(--secondary) 0%, #475569 100%);
+            color: var(--text-primary);
             margin-top: 5px;
         }
 
+        .btn-secondary:hover {
+            box-shadow: 0 5px 15px rgba(161, 161, 170, 0.3);
+        }
+
         .stats-card {
-            background: var(--surface);
-            border-radius: 12px;
-            padding: 16px;
+            background: #111827; /* Darker card */
             border: 1px solid var(--border);
             box-shadow: var(--shadow);
+            padding: 16px; /* Added padding to stats card */
+            border-radius: 8px;
         }
 
         .stats-title {
             font-size: 0.8rem;
             color: var(--text-secondary);
-            margin-bottom: 8px;
-            font-weight: 600;
         }
 
         .stats-value {
-            font-size: 1.5rem;
+            font-size: 2rem;
             font-weight: 700;
             color: var(--primary);
+            margin-top: 5px;
         }
+
 
         /* Main Content */
         .main-content {
             flex: 1;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            overflow: auto; /* Allow content to scroll vertically */
         }
 
         .header {
             background: var(--surface);
-            padding: 20px 30px;
             border-bottom: 1px solid var(--border);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
-
+        
         .header-content {
+            padding: 20px 30px; /* Increased horizontal padding */
             display: flex;
-            justify-content: between;
+            justify-content: space-between;
             align-items: center;
         }
 
         .page-title {
             font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-primary);
+            font-weight: 600;
         }
 
-        .header-actions {
-            display: flex;
-            gap: 12px;
-        }
-
+        /* Table */
         .results-section {
-            flex: 1;
-            padding: 24px;
-            overflow-y: auto;
             background: var(--background);
+            padding: 30px; /* Added padding around the results */
+            flex: 1;
+            overflow: auto; /* Allow internal scrolling if needed */
         }
 
+        .results-count {
+            background: #111827;
+            color: var(--primary);
+            border: 1px solid var(--border);
+            padding: 8px 15px; /* Added padding */
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        
         .results-header {
-            display: flex;
-            justify-content: between;
-            align-items: center;
             margin-bottom: 20px;
         }
 
         .results-title {
-            font-size: 1.2rem;
-            font-weight: 600;
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: 15px;
             color: var(--text-primary);
         }
 
-        .results-count {
-            background: var(--surface);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--primary);
-            border: 1px solid var(--border);
-        }
 
-        /* Table */
         .table-container {
             background: var(--surface);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
             border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow-x: auto; /* Scroll horizontally if the table is too wide */
         }
 
         .document-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.85rem;
         }
 
         .document-table th {
-            background: #f8fafc;
-            padding: 16px 12px;
-            text-align: left;
-            font-weight: 600;
+            background: #1f2937;
             color: var(--text-secondary);
             border-bottom: 1px solid var(--border);
-            font-size: 0.8rem;
+            text-align: left;
+            padding: 14px 16px; /* Increased padding */
+            font-weight: 600;
+            font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
 
         .document-table td {
-            padding: 14px 12px;
             border-bottom: 1px solid var(--border);
             color: var(--text-primary);
+            padding: 14px 16px; /* Increased padding */
+            font-size: 0.95rem;
+            vertical-align: top;
         }
 
         .document-table tr:last-child td {
@@ -302,97 +351,82 @@
         }
 
         .document-table tr:hover {
-            background: #f8fafc;
+            background: #2d3845; /* Darker hover */
         }
 
         .document-table .expired-row {
-            background: #fef2f2;
-            color: #991b1b;
+            background: #450a0a; /* Dark red for expired */
+            color: var(--error);
         }
 
         .document-table .expired-row:hover {
-            background: #fee2e2;
+            background: #551111;
         }
 
         .status-badge {
+            font-weight: 700;
             padding: 4px 8px;
-            border-radius: 6px;
+            border-radius: 4px;
             font-size: 0.75rem;
-            font-weight: 600;
             display: inline-block;
         }
 
         .status-expired {
-            background: #fef2f2;
-            color: #dc2626;
+            background: #450a0a;
+            color: var(--error);
+            border: 1px solid #7f1d1d;
         }
 
         .status-valid {
-            background: #f0fdf4;
-            color: #16a34a;
+            background: #064e3b;
+            color: var(--success);
+            border: 1px solid #065f46;
         }
 
         .document-link {
             color: var(--primary);
-            text-decoration: none;
-            font-weight: 500;
+            background: #0f172a;
+            border: 1px solid #14532d;
             padding: 6px 10px;
             border-radius: 6px;
-            background: #f0f7ff;
-            border: 1px solid #dbeafe;
+            text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            transition: all 0.2s ease;
+            gap: 6px;
+            font-size: 0.85rem;
         }
 
         .document-link:hover {
-            background: #dbeafe;
-            transform: translateY(-1px);
-        }
-
-        .loading {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-secondary);
+            background: #155e75;
+            border: 1px solid var(--primary-dark);
         }
 
         .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid #f3f4f6;
+            border: 4px solid #374151;
             border-top: 4px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
 
         .error {
-            background: #fef2f2;
+            background: #450a0a;
             color: var(--error);
-            padding: 20px;
-            border-radius: 10px;
             border-left: 4px solid var(--error);
-            margin: 10px 0;
+            border: 1px solid var(--error);
+            padding: 20px;
+            border-radius: 8px;
         }
-
+        
         .no-results {
             text-align: center;
-            padding: 60px 20px;
+            padding: 50px 20px;
             color: var(--text-secondary);
         }
 
         .no-results i {
+            color: #374151;
             font-size: 3rem;
-            color: #cbd5e1;
-            margin-bottom: 16px;
+            margin-bottom: 15px;
         }
-
+        
         /* Responsive */
         @media (max-width: 1024px) {
             .app-container {
@@ -403,31 +437,60 @@
                 height: auto;
             }
             .document-table {
-                min-width: 1000px;
+                /* Removed min-width as overflow-x: auto handles it */
+                width: 100%;
+            }
+            .header-content {
+                padding: 15px 20px;
+            }
+            .results-section {
+                padding: 20px;
             }
         }
 
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
-            width: 6px;
+            width: 8px;
+            height: 8px;
         }
 
         ::-webkit-scrollbar-track {
-            background: #f1f5f9;
+            background: #1f2937;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 3px;
+            background: #4b5563;
+            border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+            background: #6b7280;
         }
     </style>
 </head>
 <body>
-    <div class="app-container">
+    
+    <!-- Login Screen -->
+    <div id="loginScreen">
+        <div class="login-card">
+            <h2><i class="fas fa-lock"></i> Secure Login</h2>
+            <p>Enter the master password to access the Document Repository.</p>
+            <form id="loginForm">
+                <input type="password" id="passwordInput" class="login-input" placeholder="Enter Password" required>
+                <div id="loginError" class="login-error">
+                    <i class="fas fa-times-circle"></i> Invalid password. Please try again.
+                </div>
+                <button type="submit" class="btn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    ACCESS DATA
+                </button>
+            </form>
+            <p style="margin-top: 20px; font-size: 0.75rem; color: #4b5563;">Hint: pearl</p>
+        </div>
+    </div>
+
+    <!-- Main Application Container (Initially Hidden) -->
+    <div class="app-container" style="display: none;" id="mainApp">
         <!-- Sidebar -->
         <div class="sidebar">
             <div class="logo-section">
@@ -446,13 +509,14 @@
                         <i class="fas fa-sliders-h"></i>
                         FILTER DOCUMENTS
                     </div>
-                    <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 20px;">
+                    <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 5px; margin-bottom: 20px;">
                         Use filters to find specific documents quickly
                     </p>
                 </div>
 
                 <form class="search-form" id="documentSearchForm">
                     <div class="form-group" style="display: none;">
+                        <!-- Placeholder Google Sheet ID. Replace with a public ID to fetch real data. -->
                         <input type="text" id="sheetId" value="1gSZTk3PIu2MEvg_ElgHE3i8tsKzT9CnNIeBtgC8YwpI" readonly>
                     </div>
 
@@ -531,15 +595,51 @@
     </div>
 
     <script>
+        const MASTER_PASSWORD = "pearl@123";
+        const loginScreen = document.getElementById('loginScreen');
+        const mainApp = document.getElementById('mainApp');
+        const loginForm = document.getElementById('loginForm');
+        const passwordInput = document.getElementById('passwordInput');
+        const loginError = document.getElementById('loginError');
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const enteredPassword = passwordInput.value.trim();
+
+            if (enteredPassword === MASTER_PASSWORD) {
+                // Successful login
+                loginScreen.style.display = 'none';
+                mainApp.style.display = 'flex';
+                // Initialize the main application logic
+                fetchDocuments();
+            } else {
+                // Failed login
+                loginError.style.display = 'block';
+                passwordInput.value = ''; // Clear password field
+                passwordInput.focus();
+                // Hide error after a delay
+                setTimeout(() => {
+                    loginError.style.display = 'none';
+                }, 3000);
+            }
+        }
+        
+        loginForm.addEventListener('submit', handleLogin);
+        
+        // --- Original Document Viewer Logic (Runs after successful login) ---
+
         let allDocuments = [];
 
         async function fetchDocuments() {
             const container = document.getElementById('resultsContainer');
+            container.innerHTML = `<div class="loading" style="text-align: center; padding: 40px;"><div class="loading-spinner" style="display: inline-block; width: 40px; height: 40px; border-radius: 50%; animation: spin 1s linear infinite;"></div><p style="margin-top: 15px;">Loading documents from database...</p></div>`;
+            
             const SHEET_ID = document.getElementById('sheetId').value.trim();
             const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=Sheet1`;
             
             try {
                 const timestamp = new Date().getTime();
+                // This URL fetches data from the publicly shared Google Sheet
                 const response = await fetch(`${SHEET_URL}&t=${timestamp}`);
                 
                 if (!response.ok) {
@@ -567,7 +667,7 @@
                 container.innerHTML = `<div class="error">
                     <p><i class="fas fa-exclamation-triangle"></i> Failed to load data from the Google Sheet.</p>
                     <p><strong>Error details:</strong> ${error.message}</p>
-                    <p style="margin-top: 10px;">Please ensure the Google Sheet is <strong>Publicly Shared</strong> ("Anyone with the link can view").</p>
+                    <p style="margin-top: 10px;">Please ensure the Google Sheet ID is correct and is <strong>Publicly Shared</strong> ("Anyone with the link can view").</p>
                 </div>`;
             }
         }
@@ -621,9 +721,11 @@
                 doc.documentLink = cells[8] || '';
                 
                 doc.isExpired = false;
-                if (doc.expiryDate && doc.expiryDate !== 'N/A') {
+                // --- Updated check to use '-' instead of 'N/A' ---
+                if (doc.expiryDate && doc.expiryDate !== '-') {
                     const dateParts = doc.expiryDate.split('-');
                     if (dateParts.length === 3) {
+                        // Date constructor expects YYYY, MM (0-indexed), DD
                         const expiryTime = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]).getTime();
                         
                         if (!isNaN(expiryTime)) {
@@ -642,7 +744,8 @@
         }
 
         function formatDateDDMMYYYY(dateString) {
-            if (!dateString || dateString === 'N/A' || dateString === '') return 'N/A';
+            // --- Updated to return '-' for empty or placeholder values ---
+            if (!dateString || dateString === 'N/A' || dateString === '') return '-';
             
             try {
                 const date = new Date(dateString);
@@ -674,6 +777,7 @@
             Array.from(companyNames).sort().forEach(name => {
                 const option = document.createElement('option');
                 option.value = name;
+                // Capitalize first letter of each word
                 option.textContent = name.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
                 companyFilter.appendChild(option);
             });
@@ -700,7 +804,7 @@
             renderDocuments(filteredDocs);
             
             const exportBtn = document.getElementById('exportBtn');
-            exportBtn.style.display = filteredDocs.length > 0 ? 'block' : 'none';
+            exportBtn.style.display = filteredDocs.length > 0 ? 'flex' : 'none'; // Changed to flex for better layout
             exportBtn.onclick = () => exportToCSV(filteredDocs);
         }
 
@@ -747,10 +851,12 @@
                 html += `<td>${doc.documentName}</td>`;
                 html += `<td><code>${doc.documentCode}</code></td>`;
                 html += `<td>${doc.documentDate}</td>`;
-                html += `<td>
-                    <div>${doc.expiryDate}</div>
-                    <div style="margin-top: 4px;">${statusBadge}</div>
-                </td>`;
+                // Displaying the status badge only if an expiry date is present
+                const expiryDisplay = doc.expiryDate === '-' ? 
+                                     `<div>${doc.expiryDate}</div>` :
+                                     `<div>${doc.expiryDate}</div><div style="margin-top: 4px;">${statusBadge}</div>`;
+
+                html += `<td>${expiryDisplay}</td>`;
                 html += `<td>${doc.remarks || '-'}</td>`;
                 html += `<td>${doc.fileName || '-'}</td>`;
                 html += `<td>${doc.fileSize || '-'}</td>`;
@@ -805,7 +911,7 @@
             document.body.removeChild(link);
         }
 
-        // Event Listeners
+        // Event Listeners for the main app
         document.getElementById('documentSearchForm').addEventListener('submit', (e) => {
             e.preventDefault();
             if (allDocuments.length > 0) {
@@ -831,7 +937,6 @@
             }
         });
 
-        document.addEventListener('DOMContentLoaded', fetchDocuments);
     </script>
 </body>
 </html>
