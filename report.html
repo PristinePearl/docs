@@ -1,548 +1,130 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document Manager</title>
-    <link rel="icon" 
-        href="https://www.pristinepearlpharma.in/images/alt-logo.png" 
-        type="image/png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Document Manager — Report</title>
+
+    <link rel="icon" href="https://www.pristinepearlpharma.in/images/alt-logo.png" type="image/png" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* ---------- Theme (kept similar to your previous) ---------- */
+        :root{
+            --primary:#5eead4;
+            --primary-dark:#2dd4bf;
+            --bg:#111827;
+            --surface:#1f2937;
+            --border:#374151;
+            --text:#f3f4f6;
+            --muted:#9ca3af;
+            --success:#4ade80;
+            --error:#f87171;
+            --card-shadow: 0 8px 30px rgba(0,0,0,0.6);
         }
-
-        :root {
-            /* Dark Theme Variables */
-            --primary: #5eead4; /* Teal/Cyan for primary actions */
-            --primary-dark: #2dd4bf;
-            --secondary: #a1a1aa; /* Gray secondary */
-            --accent: #fcd34d; /* Amber accent */
-            --success: #4ade80;
-            --warning: #facc15;
-            --error: #f87171;
-            --background: #111827; /* Dark background */
-            --surface: #1f2937; /* Slightly lighter surface for cards/panels */
-            --text-primary: #f3f4f6; /* Light text */
-            --text-secondary: #9ca3af; /* Lighter secondary text */
-            --border: #374151; /* Subtle border */
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3); /* Darker shadows */
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.8), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
-        }
-
-        body {
-            font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--background);
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            color: var(--text-primary);
-        }
-
-        .app-container {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* Login Screen Styles */
-        #loginScreen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--background);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-        }
-
-        .login-card {
-            background: var(--surface);
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: var(--shadow-lg);
-            width: 90%;
-            max-width: 400px;
-            border: 1px solid var(--border);
-            text-align: center;
-        }
-
-        .login-card h2 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        
-        .login-card p {
-            color: var(--text-secondary);
-            margin-bottom: 25px;
-            font-size: 0.95rem;
-        }
-
-        .login-input {
-            width: 100%;
-            padding: 14px 16px;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background: #111827; /* Very dark input background */
-            color: var(--text-primary);
-            margin-bottom: 15px;
-        }
-
-        .login-input::placeholder {
-            color: var(--text-secondary);
-        }
-
-        .login-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(94, 234, 212, 0.2);
-        }
-
-        .login-error {
-            background: #ef444420;
-            color: var(--error);
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            display: none;
-            font-size: 0.9rem;
-            border: 1px solid var(--error);
-        }
-
-        /* Reusable button style */
-        .btn {
-            padding: 14px 20px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: #111827; /* Dark text for high contrast on bright button */
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 0.95rem;
-            font-weight: 700;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(94, 234, 212, 0.3);
-        }
-        
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:Inter,system-ui,Segoe UI,Arial;background:var(--bg);color:var(--text);min-height:100vh}
+        .app-container{display:flex;min-height:100vh}
         /* Sidebar */
-        .sidebar {
-            width: 320px;
-            background: var(--surface);
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            box-shadow: var(--shadow);
-            position: relative;
-            z-index: 10;
-        }
-
-        .logo-section {
-            padding: 24px;
-            background: #111827; /* Darker header */
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .logo {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #111827;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .company-name {
-            color: var(--text-primary);
-        }
-
-        .app-name {
-            color: var(--primary);
-        }
-
-        /* Filter Section - Improved Spacing */
-        .filter-section {
-            padding: 30px; /* Increased from 24px */
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 25px; /* Increased from 20px */
-        }
-        
-        .filter-group {
-            margin-bottom: 15px; /* Added spacing between filter groups */
-        }
-
-        .filter-label {
-            margin-bottom: 8px; /* Added spacing between label and input */
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .section-title i {
-            color: var(--primary);
-        }
-
-        .filter-input {
-            border: 1px solid var(--border);
-            background: #111827; /* Darker input */
-            color: var(--text-primary);
-        }
-
-        .filter-input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(94, 234, 212, 0.1);
-        }
-        
-        .btn-secondary {
-            background: linear-gradient(135deg, var(--secondary) 0%, #475569 100%);
-            color: var(--text-primary);
-            margin-top: 5px;
-        }
-
-        .btn-secondary:hover {
-            box-shadow: 0 5px 15px rgba(161, 161, 170, 0.3);
-        }
-
-        .stats-card {
-            background: #111827; /* Darker card */
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow);
-            padding: 16px; /* Added padding to stats card */
-            border-radius: 8px;
-        }
-
-        .stats-title {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-
-        .stats-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-top: 5px;
-        }
-
-
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: auto; /* Allow content to scroll vertically */
-        }
-
-        .header {
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        
-        .header-content {
-            padding: 20px 30px; /* Increased horizontal padding */
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .page-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-
-        /* Table */
-        .results-section {
-            background: var(--background);
-            padding: 30px; /* Added padding around the results */
-            flex: 1;
-            overflow: auto; /* Allow internal scrolling if needed */
-        }
-
-        .results-count {
-            background: #111827;
-            color: var(--primary);
-            border: 1px solid var(--border);
-            padding: 8px 15px; /* Added padding */
-            border-radius: 6px;
-            font-size: 0.9rem;
-        }
-        
-        .results-header {
-            margin-bottom: 20px;
-        }
-
-        .results-title {
-            font-size: 1.25rem;
-            font-weight: 500;
-            margin-bottom: 15px;
-            color: var(--text-primary);
-        }
-
-
-        .table-container {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            overflow-x: auto; /* Scroll horizontally if the table is too wide */
-        }
-
-        .document-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .document-table th {
-            background: #1f2937;
-            color: var(--text-secondary);
-            border-bottom: 1px solid var(--border);
-            text-align: left;
-            padding: 14px 16px; /* Increased padding */
-            font-weight: 600;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .document-table td {
-            border-bottom: 1px solid var(--border);
-            color: var(--text-primary);
-            padding: 14px 16px; /* Increased padding */
-            font-size: 0.95rem;
-            vertical-align: top;
-        }
-
-        .document-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .document-table tr:hover {
-            background: #2d3845; /* Darker hover */
-        }
-
-        .document-table .expired-row {
-            background: #450a0a; /* Dark red for expired */
-            color: var(--error);
-        }
-
-        .document-table .expired-row:hover {
-            background: #551111;
-        }
-
-        .status-badge {
-            font-weight: 700;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            display: inline-block;
-        }
-
-        .status-expired {
-            background: #450a0a;
-            color: var(--error);
-            border: 1px solid #7f1d1d;
-        }
-
-        .status-valid {
-            background: #064e3b;
-            color: var(--success);
-            border: 1px solid #065f46;
-        }
-
-        .document-link {
-            color: var(--primary);
-            background: #0f172a;
-            border: 1px solid #14532d;
-            padding: 6px 10px;
-            border-radius: 6px;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.85rem;
-        }
-
-        .document-link:hover {
-            background: #155e75;
-            border: 1px solid var(--primary-dark);
-        }
-
-        .loading-spinner {
-            border: 4px solid #374151;
-            border-top: 4px solid var(--primary);
-        }
-
-        .error {
-            background: #450a0a;
-            color: var(--error);
-            border-left: 4px solid var(--error);
-            border: 1px solid var(--error);
-            padding: 20px;
-            border-radius: 8px;
-        }
-        
-        .no-results {
-            text-align: center;
-            padding: 50px 20px;
-            color: var(--text-secondary);
-        }
-
-        .no-results i {
-            color: #374151;
-            font-size: 3rem;
-            margin-bottom: 15px;
-        }
-        
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .app-container {
-                flex-direction: column;
-            }
-            .sidebar {
-                width: 100%;
-                height: auto;
-            }
-            .document-table {
-                /* Removed min-width as overflow-x: auto handles it */
-                width: 100%;
-            }
-            .header-content {
-                padding: 15px 20px;
-            }
-            .results-section {
-                padding: 20px;
-            }
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #1f2937;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #4b5563;
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #6b7280;
-        }
+        .sidebar{width:320px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column}
+        .logo-section{padding:20px;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:center}
+        .logo{width:48px;height:48px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));display:flex;align-items:center;justify-content:center;border-radius:10px;color:#111827;font-weight:700}
+        .filter-section{padding:22px;flex:1;display:flex;flex-direction:column;gap:18px}
+        .section-title{display:flex;gap:10px;align-items:center;color:var(--primary)}
+        .filter-label{font-size:0.85rem;color:var(--muted);display:flex;gap:8px;align-items:center;margin-bottom:6px}
+        .filter-input{width:100%;padding:10px 12px;border-radius:8px;background:#0f1724;border:1px solid var(--border);color:var(--text)}
+        .btn{padding:12px 14px;border-radius:10px;border:none;cursor:pointer;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#111827;font-weight:700}
+        .btn-secondary{background:linear-gradient(135deg,var(--muted),#475569);color:var(--text);margin-top:6px}
+        .stats-card{background:#0f1724;border:1px solid var(--border);padding:12px;border-radius:8px}
+        .stats-title{color:var(--muted);font-size:0.8rem}
+        .stats-value{color:var(--primary);font-size:1.6rem;font-weight:700}
+        /* main */
+        .main-content{flex:1;display:flex;flex-direction:column;overflow:auto}
+        .header{background:var(--surface);border-bottom:1px solid var(--border)}
+        .header-content{padding:18px 28px;display:flex;justify-content:space-between;align-items:center}
+        .page-title{font-size:1.25rem;font-weight:600}
+        .results-section{padding:22px;background:var(--bg);flex:1;overflow:auto}
+        .table-container{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:auto}
+        table{width:100%;border-collapse:collapse}
+        th{background:#141922;color:var(--muted);padding:12px 14px;text-align:left;font-size:0.85rem;font-weight:700;text-transform:uppercase;border-bottom:1px solid var(--border)}
+        td{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:top;font-size:0.95rem}
+        tr:hover td{background:#222b35}
+        .status-badge{padding:4px 8px;border-radius:6px;font-weight:700;font-size:0.75rem;display:inline-block}
+        .status-expired{background:#3a0d0d;color:var(--error);border:1px solid #7f1d1d}
+        .status-valid{background:#08352a;color:var(--success);border:1px solid #065f46}
+        .document-link{display:inline-flex;gap:8px;align-items:center;padding:6px 8px;border-radius:6px;text-decoration:none;background:#0f1724;border:1px solid #0b5b49;color:var(--primary)}
+        .no-results{text-align:center;padding:40px;color:var(--muted)}
+        .loading{padding:40px;text-align:center;color:var(--muted)}
+        .login-card{background:var(--surface);padding:34px;border-radius:12px;box-shadow:var(--card-shadow);border:1px solid var(--border);text-align:center;width:92%;max-width:420px}
+        .login-input{width:100%;padding:12px;border-radius:10px;border:1px solid var(--border);background:#0f1724;color:var(--text);margin-bottom:12px}
+        .login-error{display:none;background:#2b0b0b;padding:10px;border-radius:8px;color:var(--error);margin-bottom:12px}
+        @media (max-width:1000px){.app-container{flex-direction:column}.sidebar{width:100%}}
     </style>
 </head>
 <body>
-    
-    <!-- Login Screen -->
-    <div id="loginScreen">
+    <!-- Simple password gate -->
+    <div id="loginScreen" style="position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:50">
         <div class="login-card">
-            <h2><i class="fas fa-lock"></i> Secure Login</h2>
-            <p>Enter the master password to access the Document Repository.</p>
-            <form id="loginForm">
-                <input type="password" id="passwordInput" class="login-input" placeholder="Enter Password" required>
-                <div id="loginError" class="login-error">
-                    <i class="fas fa-times-circle"></i> Invalid password. Please try again.
-                </div>
-                <button type="submit" class="btn">
-                    <i class="fas fa-sign-in-alt"></i>
-                    ACCESS DATA
-                </button>
+            <h2 style="display:flex;align-items:center;gap:10px;justify-content:center;color:var(--primary)"><i class="fas fa-lock"></i> Secure Login</h2>
+            <p style="color:var(--muted);margin-top:6px;margin-bottom:16px">Enter the master password to access the Document Repository</p>
+            <form id="loginForm" onsubmit="return false;">
+                <input id="passwordInput" class="login-input" type="password" placeholder="Enter password" required />
+                <div id="loginError" class="login-error"><i class="fas fa-times-circle"></i> Invalid password</div>
+                <button id="loginBtn" class="btn" style="width:100%;"><i class="fas fa-sign-in-alt"></i> ACCESS DATA</button>
             </form>
-            <p style="margin-top: 20px; font-size: 0.75rem; color: #4b5563;">Hint: pearl</p>
+            <p style="font-size:0.8rem;color:#4b5563;margin-top:12px">Hint: pearl</p>
         </div>
     </div>
 
-    <!-- Main Application Container (Initially Hidden) -->
-    <div class="app-container" style="display: none;" id="mainApp">
+    <div class="app-container" id="mainApp" style="display:none">
         <!-- Sidebar -->
         <div class="sidebar">
             <div class="logo-section">
-                <div class="logo">
-                    <i class="fas fa-file-contract"></i>
-                </div>
-                <div class="logo-text">
-                    <div class="company-name">PRISTINE PEARL</div>
-                    <div class="app-name">DOCUMENT MANAGER</div>
+                <div class="logo">PP</div>
+                <div>
+                    <div style="font-weight:700">PRISTINE PEARL</div>
+                    <div style="color:var(--primary);font-weight:700">DOCUMENT MANAGER</div>
                 </div>
             </div>
 
             <div class="filter-section">
                 <div>
-                    <div class="section-title">
-                        <i class="fas fa-sliders-h"></i>
-                        FILTER DOCUMENTS
-                    </div>
-                    <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 5px; margin-bottom: 20px;">
-                        Use filters to find specific documents quickly
-                    </p>
+                    <div class="section-title"><i class="fas fa-sliders-h"></i> FILTER DOCUMENTS</div>
+                    <p style="color:var(--muted);margin-top:6px;font-size:0.9rem">Use filters to find specific documents quickly</p>
                 </div>
 
-                <form class="search-form" id="documentSearchForm">
-                    <div class="form-group" style="display: none;">
-                        <!-- Placeholder Google Sheet ID. Replace with a public ID to fetch real data. -->
-                        <input type="text" id="sheetId" value="1gSZTk3PIu2MEvg_ElgHE3i8tsKzT9CnNIeBtgC8YwpI" readonly>
+                <form id="documentSearchForm" style="display:flex;flex-direction:column;gap:12px">
+                    <!-- Hidden placeholder sheet ID - editable if needed -->
+                    <input type="text" id="sheetId" value="1gSZTk3PIu2MEvg_ElgHE3i8tsKzT9CnNIeBtgC8YwpI" style="display:none" />
+
+                    <div>
+                        <label class="filter-label"><i class="fas fa-search"></i> Search</label>
+                        <input id="searchTerm" class="filter-input" placeholder="Search name, code, remarks, file..." />
                     </div>
 
-                    <div class="filter-group">
-                        <label class="filter-label">
-                            <i class="fas fa-search"></i>
-                            Search Documents
-                        </label>
-                        <input type="text" id="searchTerm" class="filter-input" placeholder="Search by name, code, remarks...">
+                    <div>
+                        <label class="filter-label"><i class="fas fa-building"></i> Company</label>
+                        <select id="companyFilter" class="filter-input"><option value="">All Companies</option></select>
                     </div>
 
-                    <div class="filter-group">
-                        <label class="filter-label">
-                            <i class="fas fa-building"></i>
-                            Company
-                        </label>
-                        <select id="companyFilter" class="filter-input">
-                            <option value="">All Companies</option>
-                        </select>
+                    <div>
+                        <label class="filter-label"><i class="fas fa-sitemap"></i> Department</label>
+                        <select id="deptFilter" class="filter-input"><option value="">All Departments</option></select>
                     </div>
 
-                    <div class="filter-group">
-                        <label class="filter-label">
-                            <i class="fas fa-calendar-check"></i>
-                            Expiry Status
-                        </label>
+                    <div>
+                        <label class="filter-label"><i class="fas fa-file"></i> Document Type</label>
+                        <select id="docTypeFilter" class="filter-input"><option value="">All Types</option></select>
+                    </div>
+
+                    <div>
+                        <label class="filter-label"><i class="fas fa-hashtag"></i> Document Number</label>
+                        <input id="docNumFilter" class="filter-input" placeholder="Exact or partial document number" />
+                    </div>
+
+                    <div>
+                        <label class="filter-label"><i class="fas fa-calendar-check"></i> Expiry Status</label>
                         <select id="expiryFilter" class="filter-input">
                             <option value="">All Documents</option>
                             <option value="Valid">Valid (Not Expired)</option>
@@ -550,392 +132,459 @@
                         </select>
                     </div>
 
-                    <button type="submit" class="btn">
-                        <i class="fas fa-filter"></i>
-                        APPLY FILTERS
-                    </button>
+                    <button id="applyBtn" class="btn" type="button" style="width:100%"><i class="fas fa-filter"></i> APPLY FILTERS</button>
                 </form>
 
-                <div class="stats-card">
+                <div class="stats-card" style="margin-top:6px">
                     <div class="stats-title">TOTAL DOCUMENTS</div>
                     <div class="stats-value" id="totalDocuments">0</div>
                 </div>
 
-                <button type="button" class="btn btn-secondary" id="exportBtn" style="display: none;">
-                    <i class="fas fa-download"></i>
-                    EXPORT REPORT
-                </button>
+                <button id="exportBtn" class="btn btn-secondary" style="display:none"><i class="fas fa-download"></i> EXPORT CSV</button>
             </div>
         </div>
 
-        <!-- Main Content -->
+        <!-- Main -->
         <div class="main-content">
             <div class="header">
                 <div class="header-content">
                     <div class="page-title">Document Repository</div>
-                    <div class="header-actions">
-                        <div class="results-count" id="resultsCount">0 documents</div>
+                    <div style="display:flex;align-items:center;gap:12px">
+                        <div id="resultsCount" style="background:#0f1724;padding:8px 12px;border-radius:8px;border:1px solid var(--border);color:var(--primary)">0 documents</div>
                     </div>
                 </div>
             </div>
 
             <div class="results-section">
-                <div class="results-header">
-                    <div class="results-title">Document Search Results</div>
-                </div>
-
-                <div id="resultsContainer">
-                    <div class="loading">
-                        <div class="loading-spinner"></div>
-                        <p>Loading documents from database...</p>
-                    </div>
+                <div id="resultsContainer" class="results-container">
+                    <div class="loading"><div style="display:inline-block;width:36px;height:36px;border:4px solid #374151;border-top:4px solid var(--primary);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:10px"></div><div>Loading documents from database...</div></div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        const MASTER_PASSWORD = "pearl@123";
+        /* ---------- Config ---------- */
+        const MASTER_PASSWORD = "pearl@123"; // same as before
         const loginScreen = document.getElementById('loginScreen');
         const mainApp = document.getElementById('mainApp');
         const loginForm = document.getElementById('loginForm');
         const passwordInput = document.getElementById('passwordInput');
+        const loginBtn = document.getElementById('loginBtn');
         const loginError = document.getElementById('loginError');
 
-        function handleLogin(e) {
-            e.preventDefault();
-            const enteredPassword = passwordInput.value.trim();
-
-            if (enteredPassword === MASTER_PASSWORD) {
-                // Successful login
+        loginBtn.addEventListener('click', () => {
+            const entered = passwordInput.value.trim();
+            if (entered === MASTER_PASSWORD) {
                 loginScreen.style.display = 'none';
                 mainApp.style.display = 'flex';
-                // Initialize the main application logic
                 fetchDocuments();
             } else {
-                // Failed login
                 loginError.style.display = 'block';
-                passwordInput.value = ''; // Clear password field
-                passwordInput.focus();
-                // Hide error after a delay
-                setTimeout(() => {
-                    loginError.style.display = 'none';
-                }, 3000);
+                passwordInput.value = '';
+                setTimeout(()=> loginError.style.display='none', 3000);
             }
-        }
-        
-        loginForm.addEventListener('submit', handleLogin);
-        
-        // --- Original Document Viewer Logic (Runs after successful login) ---
+        });
 
+        // convenience keypress: Enter on password
+        passwordInput.addEventListener('keydown', (ev) => {
+            if (ev.key === 'Enter') loginBtn.click();
+        });
+
+        /* ---------- Data handling ---------- */
         let allDocuments = [];
 
         async function fetchDocuments() {
             const container = document.getElementById('resultsContainer');
-            container.innerHTML = `<div class="loading" style="text-align: center; padding: 40px;"><div class="loading-spinner" style="display: inline-block; width: 40px; height: 40px; border-radius: 50%; animation: spin 1s linear infinite;"></div><p style="margin-top: 15px;">Loading documents from database...</p></div>`;
-            
+            container.innerHTML = `<div class="loading"><div style="display:inline-block;width:36px;height:36px;border:4px solid #374151;border-top:4px solid var(--primary);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:10px"></div><div>Loading documents from database...</div></div>`;
+
             const SHEET_ID = document.getElementById('sheetId').value.trim();
             const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=Sheet1`;
-            
             try {
-                const timestamp = new Date().getTime();
-                // This URL fetches data from the publicly shared Google Sheet
-                const response = await fetch(`${SHEET_URL}&t=${timestamp}`);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}. Please check Sheet sharing permissions.`);
+                const resp = await fetch(`${SHEET_URL}&t=${Date.now()}`);
+                if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                const text = await resp.text();
+
+                if (text.includes('Google Docs') || text.includes('Requesting permission')) {
+                    throw new Error('Google Sheet is not publicly accessible. Set "Anyone with the link can view".');
                 }
-                
-                const csvText = await response.text();
-                
-                if (csvText.includes('Google Sheets - Requesting permission')) {
-                    throw new Error("Sheet is not publicly accessible. Please set sharing to 'Anyone with the link can view'.");
+
+                allDocuments = parseSheetData(text);
+                if (!allDocuments || allDocuments.length === 0) {
+                    document.getElementById('resultsContainer').innerHTML = `<div class="no-results"><i class="fas fa-file-search" style="font-size:38px;color:var(--border)"></i><h3>No documents found</h3><p style="color:var(--muted)">Ensure sheet contains rows and correct headers</p></div>`;
+                    updateStats(0);
+                    return;
                 }
-                
-                allDocuments = parseSheetData(csvText);
-                
-                if (allDocuments.length === 0) {
-                    throw new Error("Data was fetched, but no rows were parsed. Check sheet content/header format.");
-                }
-                
+
                 updateStats(allDocuments.length);
                 populateFilters(allDocuments);
-                filterAndRender(allDocuments); 
-
-            } catch (error) {
-                console.error("Error fetching documents:", error);
-                container.innerHTML = `<div class="error">
-                    <p><i class="fas fa-exclamation-triangle"></i> Failed to load data from the Google Sheet.</p>
-                    <p><strong>Error details:</strong> ${error.message}</p>
-                    <p style="margin-top: 10px;">Please ensure the Google Sheet ID is correct and is <strong>Publicly Shared</strong> ("Anyone with the link can view").</p>
-                </div>`;
+                filterAndRender(allDocuments);
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = `<div class="error" style="padding:18px;border-radius:8px"><p><strong>Failed to load data:</strong> ${err.message}</p><p style="margin-top:8px;color:var(--muted)">Check sheet ID and "Anyone with the link can view" sharing.</p></div>`;
+                updateStats(0);
             }
         }
 
-        function updateStats(totalCount) {
-            document.getElementById('totalDocuments').textContent = totalCount;
+        function updateStats(n) {
+            document.getElementById('totalDocuments').textContent = n;
         }
 
-        function parseSheetData(csvText) {
-            const rows = csvText.split('\n').filter(row => row.trim() !== '');
-            if (rows.length < 2) return []; 
-            
-            const documents = [];
-            
-            for (let i = 1; i < rows.length; i++) {
-                const row = rows[i].trim();
-                if (!row) continue;
-                
-                const cells = [];
-                let currentCell = '';
-                let inQuotes = false;
-                
-                for (let j = 0; j < row.length; j++) {
-                    const char = row[j];
-                    
-                    if (char === '"') {
-                        inQuotes = !inQuotes;
-                    } else if (char === ',' && !inQuotes) {
-                        cells.push(currentCell.trim());
-                        currentCell = '';
+        /* Robust CSV row parser that handles quoted commas */
+        function splitCsvRow(row) {
+            const cells = [];
+            let inQuotes = false;
+            let cur = '';
+            for (let i=0;i<row.length;i++){
+                const ch = row[i];
+                if (ch === '"' ) {
+                    // handle double quotes inside quoted string
+                    if (inQuotes && row[i+1] === '"') {
+                        cur += '"';
+                        i++;
                     } else {
-                        currentCell += char;
+                        inQuotes = !inQuotes;
                     }
+                } else if (ch === ',' && !inQuotes) {
+                    cells.push(cur);
+                    cur = '';
+                } else {
+                    cur += ch;
                 }
-                cells.push(currentCell.trim());
-                
-                if (cells.length < 9) {
-                    console.warn('Skipping row with insufficient cells:', cells);
-                    continue;
-                }
+            }
+            cells.push(cur);
+            return cells.map(c => c.trim().replace(/^"|"$/g,''));
+        }
 
-                const doc = {};
-                doc.company = cells[0] || '';
-                doc.documentName = cells[1] || '';
-                doc.documentCode = cells[2] || '';
-                doc.documentDate = formatDateDDMMYYYY(cells[3] || '');
-                doc.expiryDate = formatDateDDMMYYYY(cells[4] || '');
-                doc.remarks = cells[5] || '';
-                doc.fileName = cells[6] || '';
-                doc.fileSize = cells[7] || '';
-                doc.documentLink = cells[8] || '';
-                
-                doc.isExpired = false;
-                // --- Updated check to use '-' instead of 'N/A' ---
-                if (doc.expiryDate && doc.expiryDate !== '-') {
-                    const dateParts = doc.expiryDate.split('-');
-                    if (dateParts.length === 3) {
-                        // Date constructor expects YYYY, MM (0-indexed), DD
-                        const expiryTime = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]).getTime();
-                        
+        /* The sheet column order is confirmed:
+            A Timestamp
+            B Company
+            C Department
+            D Document Type
+            E Document Number
+            F Document Name
+            G Document Code
+            H Doc Date
+            I Expiry Date
+            J Remarks
+            K File Name
+            L File Size (MB)
+            M URL
+        */
+        function parseSheetData(csvText) {
+            const lines = csvText.split(/\r\n|\n/).filter(l=>l.trim()!=='');
+            if (lines.length < 2) return [];
+
+            const header = splitCsvRow(lines[0]);
+            const docs = [];
+
+            for (let r=1;r<lines.length;r++){
+                const row = lines[r];
+                if (!row.trim()) continue;
+                const cells = splitCsvRow(row);
+
+                // If row length is less than 13, pad to avoid index errors
+                while (cells.length < 13) cells.push('');
+
+                // Map according to confirmed order
+                const timestamp = cells[0] || '';
+                const company = (cells[1] || '').trim();
+                const department = (cells[2] || '').trim();
+                const documentType = (cells[3] || '').trim();
+                const documentNumber = (cells[4] || '').trim();
+                const documentName = (cells[5] || '').trim();
+                const documentCode = (cells[6] || '').trim();
+                const docDateRaw = (cells[7] || '').trim();
+                const expiryRaw = (cells[8] || '').trim();
+                const remarks = (cells[9] || '').trim();
+                const fileName = (cells[10] || '').trim();
+                const fileSize = (cells[11] || '').trim();
+                const url = (cells[12] || '').trim();
+
+                // Standardize dates to dd-mm-yyyy (if parseable) — fallback to raw
+                const docDate = parseToDisplayDate(docDateRaw);
+                const expiryDate = parseToDisplayDate(expiryRaw);
+
+                // Determine expiry boolean (treat '-' or empty as no expiry)
+                let isExpired = false;
+                if (expiryDate && expiryDate !== '-') {
+                    const parts = expiryDate.split('-'); // dd-mm-yyyy
+                    if (parts.length === 3) {
+                        const d = parseInt(parts[0],10), m = parseInt(parts[1],10)-1, y = parseInt(parts[2],10);
+                        const expiryTime = new Date(y,m,d).setHours(0,0,0,0);
                         if (!isNaN(expiryTime)) {
-                            const today = new Date();
-                            today.setHours(0, 0, 0, 0);
-                            const todayTime = today.getTime();
-                            doc.isExpired = expiryTime < todayTime;
+                            const today = new Date(); today.setHours(0,0,0,0);
+                            isExpired = expiryTime < today.getTime();
                         }
                     }
                 }
 
-                documents.push(doc);
+                docs.push({
+                    timestamp,
+                    company,
+                    department,
+                    documentType,
+                    documentNumber,
+                    documentName,
+                    documentCode,
+                    docDate,
+                    expiryDate,
+                    remarks,
+                    fileName,
+                    fileSize,
+                    url,
+                    isExpired
+                });
             }
 
-            return documents;
+            return docs;
         }
 
-        function formatDateDDMMYYYY(dateString) {
-            // --- Updated to return '-' for empty or placeholder values ---
-            if (!dateString || dateString === 'N/A' || dateString === '') return '-';
-            
-            try {
-                const date = new Date(dateString);
-                if (isNaN(date.getTime())) {
-                    return dateString;
-                }
-                
-                const day = String(date.getDate()).padStart(2, '0');
-                const month = String(date.getMonth() + 1).padStart(2, '0');
-                const year = date.getFullYear();
-                
-                return `${day}-${month}-${year}`;
-            } catch (e) {
-                return dateString;
+        // Try to parse various date formats into dd-mm-yyyy (if possible)
+        function parseToDisplayDate(value) {
+            if (!value || value === 'N/A' || value === '-') return '-';
+            // If already dd-mm-yyyy or dd/mm/yyyy, normalize
+            let v = value.trim();
+            // Replace slashes with dashes
+            v = v.replace(/\//g,'-');
+
+            // If value looks like yyyy-mm-dd
+            const isoMatch = v.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+            if (isoMatch) {
+                const y=isoMatch[1], m=isoMatch[2], d=isoMatch[3];
+                return `${String(d).padStart(2,'0')}-${String(m).padStart(2,'0')}-${y}`;
             }
+
+            // If value looks like dd-mm-yyyy or d-m-yyyy
+            const dmyMatch = v.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+            if (dmyMatch) {
+                const d=dmyMatch[1], m=dmyMatch[2], y=dmyMatch[3];
+                return `${String(d).padStart(2,'0')}-${String(m).padStart(2,'0')}-${y}`;
+            }
+
+            // Try Date parse fallback
+            const tryDate = new Date(v);
+            if (!isNaN(tryDate.getTime())) {
+                const d = String(tryDate.getDate()).padStart(2,'0');
+                const m = String(tryDate.getMonth()+1).padStart(2,'0');
+                const y = tryDate.getFullYear();
+                return `${d}-${m}-${y}`;
+            }
+
+            // otherwise return original raw value
+            return value;
         }
 
+        /* Populate company/department/type filters */
         function populateFilters(documents) {
-            const companyFilter = document.getElementById('companyFilter');
-            companyFilter.innerHTML = '<option value="">All Companies</option>';
-            
-            const companyNames = new Set();
-            documents.forEach(doc => {
-                if (doc.company) {
-                    companyNames.add(doc.company.toUpperCase());
-                }
+            const companySelect = document.getElementById('companyFilter');
+            const deptSelect = document.getElementById('deptFilter');
+            const typeSelect = document.getElementById('docTypeFilter');
+
+            companySelect.innerHTML = '<option value="">All Companies</option>';
+            deptSelect.innerHTML = '<option value="">All Departments</option>';
+            typeSelect.innerHTML = '<option value="">All Types</option>';
+
+            const companies = new Set();
+            const depts = new Set();
+            const types = new Set();
+
+            documents.forEach(d => {
+                if (d.company) companies.add(d.company);
+                if (d.department) depts.add(d.department);
+                if (d.documentType) types.add(d.documentType);
             });
 
-            Array.from(companyNames).sort().forEach(name => {
-                const option = document.createElement('option');
-                option.value = name;
-                // Capitalize first letter of each word
-                option.textContent = name.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
-                companyFilter.appendChild(option);
+            Array.from(companies).sort().forEach(c => {
+                const opt = document.createElement('option'); opt.value = c; opt.textContent = c; companySelect.appendChild(opt);
+            });
+            Array.from(depts).sort().forEach(c => {
+                const opt = document.createElement('option'); opt.value = c; opt.textContent = c; deptSelect.appendChild(opt);
+            });
+            Array.from(types).sort().forEach(c => {
+                const opt = document.createElement('option'); opt.value = c; opt.textContent = c; typeSelect.appendChild(opt);
             });
         }
 
         function filterAndRender(documents) {
-            const searchTerm = document.getElementById('searchTerm').value.trim().toLowerCase();
-            const company = document.getElementById('companyFilter').value.trim().toUpperCase();
-            const expiryStatus = document.getElementById('expiryFilter').value;
+            const search = (document.getElementById('searchTerm').value || '').trim().toLowerCase();
+            const company = (document.getElementById('companyFilter').value || '').trim();
+            const dept = (document.getElementById('deptFilter').value || '').trim();
+            const docType = (document.getElementById('docTypeFilter').value || '').trim();
+            const docNum = (document.getElementById('docNumFilter').value || '').trim().toUpperCase();
+            const expiryStatus = (document.getElementById('expiryFilter').value || '').trim();
 
-            let filteredDocs = documents.filter(doc => {
-                if (company && doc.company.toUpperCase() !== company) return false;
-                if (expiryStatus === 'Expired' && !doc.isExpired) return false;
-                if (expiryStatus === 'Valid' && doc.isExpired) return false;
-
-                if (searchTerm) {
-                    const docText = `${doc.documentName} ${doc.documentCode} ${doc.remarks} ${doc.fileName}`.toLowerCase();
-                    if (!docText.includes(searchTerm)) return false;
+            let filtered = documents.filter(d => {
+                if (company && d.company !== company) return false;
+                if (dept && d.department !== dept) return false;
+                if (docType && d.documentType !== docType) return false;
+                if (docNum && (!d.documentNumber || !d.documentNumber.toUpperCase().includes(docNum))) return false;
+                if (expiryStatus === 'Expired' && !d.isExpired) return false;
+                if (expiryStatus === 'Valid' && d.isExpired) return false;
+                if (search) {
+                    const hay = `${d.company} ${d.department} ${d.documentType} ${d.documentNumber} ${d.documentName} ${d.documentCode} ${d.remarks} ${d.fileName}`.toLowerCase();
+                    if (!hay.includes(search)) return false;
                 }
-                
                 return true;
             });
 
-            renderDocuments(filteredDocs);
-            
+            renderDocuments(filtered);
             const exportBtn = document.getElementById('exportBtn');
-            exportBtn.style.display = filteredDocs.length > 0 ? 'flex' : 'none'; // Changed to flex for better layout
-            exportBtn.onclick = () => exportToCSV(filteredDocs);
+            exportBtn.style.display = filtered.length ? 'block' : 'none';
+            exportBtn.onclick = () => exportToCSV(filtered);
         }
 
+        /* Render table with EXACT columns you requested (without TIMESTAMP) */
         function renderDocuments(documents) {
             const container = document.getElementById('resultsContainer');
             const resultsCount = document.getElementById('resultsCount');
-            
             resultsCount.textContent = `${documents.length} document${documents.length !== 1 ? 's' : ''}`;
-            
-            if (documents.length === 0) {
-                container.innerHTML = `<div class="no-results">
-                    <i class="fas fa-file-search"></i>
-                    <h3>No documents found</h3>
-                    <p>Try adjusting your search criteria or filters</p>
-                </div>`;
+            if (!documents.length) {
+                container.innerHTML = `<div class="no-results"><i class="fas fa-file-search" style="font-size:40px;color:var(--border)"></i><h3>No documents found</h3><p style="color:var(--muted)">Try changing filters</p></div>`;
                 return;
             }
 
-            let html = `<div class="table-container">
-                <table class="document-table">
-                    <thead>
-                        <tr>
-                            <th>Company</th>
-                            <th>Document Name</th>
-                            <th>Code</th>
-                            <th>Doc. Date</th>
-                            <th>Expiry Date</th>
-                            <th>Remarks</th>
-                            <th>File Name</th>
-                            <th>Size (MB)</th>
-                            <th>Document Link</th>
-                        </tr>
-                    </thead>
-                    <tbody>`;
+            let html = `<div class="table-container"><table class="document-table">
+                <thead>
+                  <tr>
+                    <th>Company</th>
+                    <th>Department</th>
+                    <th>Document Type</th>
+                    <th>Document Number</th>
 
-            documents.forEach(doc => {
-                const expiredClass = doc.isExpired ? 'expired-row' : '';
-                const statusBadge = doc.isExpired ? 
-                    '<span class="status-badge status-expired">EXPIRED</span>' : 
-                    '<span class="status-badge status-valid">VALID</span>';
-                
+                    <th>Document Name</th>
+                    <th>Document Code</th>
+                    <th>Doc Date</th>
+                    <th>Expiry Date</th>
+
+                    <th>Remarks</th>
+                    <th>File Name</th>
+                    <th>File Size (MB)</th>
+                    <th>URL</th>
+                  </tr>
+                </thead>
+                <tbody>`;
+
+            documents.forEach(d => {
+                const expiredClass = d.isExpired ? 'expired-row' : '';
+                const badge = d.isExpired ? `<span class="status-badge status-expired">EXPIRED</span>` : `<span class="status-badge status-valid">VALID</span>`;
                 html += `<tr class="${expiredClass}">`;
-                html += `<td><strong>${doc.company}</strong></td>`;
-                html += `<td>${doc.documentName}</td>`;
-                html += `<td><code>${doc.documentCode}</code></td>`;
-                html += `<td>${doc.documentDate}</td>`;
-                // Displaying the status badge only if an expiry date is present
-                const expiryDisplay = doc.expiryDate === '-' ? 
-                                     `<div>${doc.expiryDate}</div>` :
-                                     `<div>${doc.expiryDate}</div><div style="margin-top: 4px;">${statusBadge}</div>`;
+                html += `<td><strong>${escapeHtml(d.company)}</strong></td>`;
+                html += `<td>${escapeHtml(d.department) || '-'}</td>`;
+                html += `<td>${escapeHtml(d.documentType) || '-'}</td>`;
+                html += `<td>${escapeHtml(d.documentNumber) || '-'}</td>`;
 
-                html += `<td>${expiryDisplay}</td>`;
-                html += `<td>${doc.remarks || '-'}</td>`;
-                html += `<td>${doc.fileName || '-'}</td>`;
-                html += `<td>${doc.fileSize || '-'}</td>`;
+                html += `<td>${escapeHtml(d.documentName) || '-'}</td>`;
+                html += `<td><code>${escapeHtml(d.documentCode) || '-'}</code></td>`;
+                html += `<td>${escapeHtml(d.docDate) || '-'}</td>`;
+                html += `<td>${escapeHtml(d.expiryDate) === '-' ? '-' : escapeHtml(d.expiryDate) + '<div style="margin-top:6px">' + badge + '</div>'}</td>`;
+
+                html += `<td>${escapeHtml(d.remarks) || '-'}</td>`;
+                html += `<td>${escapeHtml(d.fileName) || '-'}</td>`;
+                html += `<td>${escapeHtml(d.fileSize) || '-'}</td>`;
+
                 html += `<td>`;
-                if (doc.documentLink && (doc.documentLink.startsWith('http') || doc.documentLink.startsWith('https'))) {
-                    html += `<a href="${doc.documentLink}" target="_blank" class="document-link">
-                        <i class="fas fa-external-link-alt"></i>
-                        View
-                    </a>`;
-                } else if (doc.documentLink) {
-                    html += `${doc.documentLink}`;
+                if (d.url && (d.url.startsWith('http') || d.url.startsWith('https'))) {
+                    html += `<a class="document-link" href="${escapeAttr(d.url)}" target="_blank"><i class="fas fa-external-link-alt"></i> View</a>`;
+                } else if (d.url) {
+                    html += escapeHtml(d.url);
                 } else {
                     html += `-`;
                 }
                 html += `</td>`;
+
                 html += `</tr>`;
             });
 
-            html += '</tbody></table></div>';
+            html += `</tbody></table></div>`;
             container.innerHTML = html;
         }
 
+        // CSV export — columns exactly as requested (no timestamp)
         function exportToCSV(documents) {
-            const headers = ["Company", "Document Name", "Document Code", "Document Date", "Expiry Date", "Remarks", "File Name", "File Size (MB)", "Document Link", "Expiry Status"];
-            
+            const headers = [
+                "COMPANY",
+                "DEPARTMENT",
+                "DOCUMENT TYPE",
+                "DOCUMENT NUMBER",
+                "DOCUMENT NAME",
+                "DOCUMENT CODE",
+                "DOC DATE",
+                "EXPIRY DATE",
+                "REMARKS",
+                "FILE NAME",
+                "FILE SIZE (MB)",
+                "URL"
+            ];
             let csv = headers.join(',') + '\n';
-            
-            documents.forEach(doc => {
-                const values = [
-                    `"${doc.company}"`,
-                    `"${doc.documentName}"`,
-                    `"${doc.documentCode}"`,
-                    `"${doc.documentDate}"`,
-                    `"${doc.expiryDate}"`,
-                    `"${doc.remarks}"`,
-                    `"${doc.fileName}"`,
-                    doc.fileSize,
-                    `"${doc.documentLink}"`,
-                    doc.isExpired ? 'EXPIRED' : 'VALID'
+            documents.forEach(d => {
+                const row = [
+                    csvEscape(d.company),
+                    csvEscape(d.department),
+                    csvEscape(d.documentType),
+                    csvEscape(d.documentNumber),
+                    csvEscape(d.documentName),
+                    csvEscape(d.documentCode),
+                    csvEscape(d.docDate),
+                    csvEscape(d.expiryDate),
+                    csvEscape(d.remarks),
+                    csvEscape(d.fileName),
+                    csvEscape(d.fileSize),
+                    csvEscape(d.url)
                 ];
-                csv += values.join(',') + '\n';
+                csv += row.join(',') + '\n';
             });
 
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement("a");
+            const link = document.createElement('a');
             const url = URL.createObjectURL(blob);
-            link.setAttribute("href", url);
-            link.setAttribute("download", `document_report_${new Date().toISOString().split('T')[0]}.csv`);
+            link.setAttribute('href', url);
+            const fn = `document_report_${new Date().toISOString().split('T')[0]}.csv`;
+            link.setAttribute('download', fn);
             link.style.visibility = 'hidden';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+            URL.revokeObjectURL(url);
         }
 
-        // Event Listeners for the main app
-        document.getElementById('documentSearchForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            if (allDocuments.length > 0) {
-                filterAndRender(allDocuments);
+        /* Utilities */
+        function escapeHtml(str) {
+            if (!str && str !== 0) return '';
+            return String(str)
+                .replace(/&/g,'&amp;')
+                .replace(/</g,'&lt;')
+                .replace(/>/g,'&gt;')
+                .replace(/"/g,'&quot;')
+                .replace(/'/g,'&#39;');
+        }
+        function escapeAttr(s){ return escapeHtml(s).replace(/"/g,'&quot;'); }
+        function csvEscape(v) {
+            if (v === null || v === undefined) return '""';
+            const s = String(v);
+            if (s.includes(',') || s.includes('"') || s.includes('\n')) {
+                return `"${s.replace(/"/g,'""')}"`;
             }
-        });
-        
-        document.getElementById('searchTerm').addEventListener('input', () => {
-            if (allDocuments.length > 0) {
-                filterAndRender(allDocuments);
-            }
-        });
+            return `"${s}"`;
+        }
 
-        document.getElementById('companyFilter').addEventListener('change', () => {
-            if (allDocuments.length > 0) {
-                filterAndRender(allDocuments);
-            }
+        /* Hook up UI events */
+        document.getElementById('applyBtn').addEventListener('click', () => {
+            if (allDocuments.length) filterAndRender(allDocuments);
         });
-        
-        document.getElementById('expiryFilter').addEventListener('change', () => {
-            if (allDocuments.length > 0) {
-                filterAndRender(allDocuments);
-            }
-        });
+        document.getElementById('searchTerm').addEventListener('input', ()=>{ if (allDocuments.length) filterAndRender(allDocuments); });
+        document.getElementById('companyFilter').addEventListener('change', ()=>{ if (allDocuments.length) filterAndRender(allDocuments); });
+        document.getElementById('deptFilter').addEventListener('change', ()=>{ if (allDocuments.length) filterAndRender(allDocuments); });
+        document.getElementById('docTypeFilter').addEventListener('change', ()=>{ if (allDocuments.length) filterAndRender(allDocuments); });
+        document.getElementById('docNumFilter').addEventListener('input', ()=>{ if (allDocuments.length) filterAndRender(allDocuments); });
+        document.getElementById('expiryFilter').addEventListener('change', ()=>{ if (allDocuments.length) filterAndRender(allDocuments); });
+
+        // small animation keyframes (injected)
+        (function injectKeyframes(){
+            const el = document.createElement('style');
+            el.innerHTML = '@keyframes spin{to{transform:rotate(360deg)}}';
+            document.head.appendChild(el);
+        })();
 
     </script>
 </body>
