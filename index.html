@@ -743,6 +743,106 @@
                 </div>
 
                 <div class="document-row-content" id="${rowId}-content">
+<div class="doc-field">
+    <label class="form-label">
+        <i class="fas fa-sitemap"></i>
+        Department
+    </label>
+    <select name="docDept" required>
+        <option value="" disabled selected>Select Department</option>
+        <option>ACCOUNTS</option>
+        <option>FINANCE</option>
+        <option>COMMERCIAL</option>
+        <option>HR</option>
+        <option>SAMPLE</option>
+        <option>DEPOT</option>
+        <option>MARKETING</option>
+        <option>PMT</option>
+        <option>HEADS</option>
+<option>DESIGNING</option>
+    </select>
+</div>
+
+<div class="doc-field">
+    <label class="form-label">
+        <i class="fas fa-file-contract"></i>
+        Document Type
+    </label>
+    <select name="docType" required>
+        <option value="" disabled selected>Select Document Type</option>
+        <option>AADHAAR</option>
+<option>AGREEMENT / CONTRACT</option>
+<option>AMC DOCUMENT</option>
+<option>APPOINTMENT LETTER</option>
+<option>ARTICLES OF ASSOCIATION (AOA)</option>
+<option>ARTWORK APPROVAL</option>
+<option>AUDITOR APPOINTMENT LETTER</option>
+<option>BANK ACCOUNT PROOF</option>
+<option>CANCELLED CHEQUE</option>
+<option>CERTIFICATE OF INCORPORATION</option>
+<option>DELIVERY CHALLAN</option>
+<option>DRIVING LICENSE</option>
+<option>DRUG LICENSE</option>
+<option>ESI REGISTRATION CERTIFICATE</option>
+<option>EXPERIENCE CERTIFICATE</option>
+<option>FACTORY LICENSE</option>
+<option>FIRE SAFETY CERTIFICATE</option>
+<option>FOOD LICENSE (FSSAI)</option>
+<option>GMP CERTIFICATE</option>
+<option>GST CERTIFICATE</option>
+<option>ID CARD</option>
+<option>IMPORT EXPORT CODE (IEC)</option>
+<option>INCOME TAX ASSESSMENT ORDER</option>
+<option>INSURANCE / ESI CARD</option>
+<option>INVOICE</option>
+<option>ISO CERTIFICATES</option>
+<option>LEGAL ENTITY IDENTIFIER (LEI)</option>
+<option>LLP AGREEMENT</option>
+<option>MEDICAL FITNESS CERTIFICATE</option>
+<option>MEMORANDUM OF ASSOCIATION (MOA)</option>
+<option>MSME CERTIFICATE</option>
+<option>OFFER LETTER</option>
+<option>PACKAGING MATERIAL APPROVAL</option>
+<option>PAN CARD</option>
+<option>PARTNERSHIP DEED</option>
+<option>PASSPORT</option>
+<option>PATENT DOCUMENTS</option>
+<option>PF REGISTRATION CERTIFICATE</option>
+<option>POLLUTION CONTROL CERTIFICATE</option>
+<option>PRODUCT LIST</option>
+<option>PROFESSIONAL TAX CERTIFICATE</option>
+<option>PURCHASE ORDER</option>
+<option>QA/QC REPORTS</option>
+<option>QUOTATION / PROPOSAL</option>
+<option>RELIEVING LETTER</option>
+<option>SALARY SLIPS</option>
+<option>SHOPS & ESTABLISHMENT LICENSE</option>
+<option>SOP (STANDARD OPERATING PROCEDURE)</option>
+<option>TAN CERTIFICATE</option>
+<option>TDS REGISTRATION</option>
+<option>TEST REPORTS (COA)</option>
+<option>TELEPHONE</option>
+<option>TRADE LICENSE</option>
+<option>TRADE MARK REGISTRATION</option>
+<option>UDYAM REGISTRATION</option>
+<option>VENDOR REGISTRATION FORM</option>
+<option>VOTER ID</option>
+<option>WHO-GMP CERTIFICATE</option>
+<option>WORK ORDER</option>
+    </select>
+</div>
+
+<div class="doc-field">
+    <label class="form-label">
+        <i class="fas fa-hashtag"></i>
+        Document Number
+    </label>
+    <input type="text" name="docNumber" required 
+           placeholder="Enter Document Number"
+           pattern="[A-Z0-9!@#$%^&*()_+=\\-{}\\[\\]:;,.?/]*"
+           oninput="this.value = this.value.toUpperCase();">
+</input>
+</div>
                 
                     <div class="doc-field">
                         <label class="form-label">
@@ -760,6 +860,15 @@
                         <input type="text" name="docName" id="${rowId}-name" required placeholder="Enter the official document name">
                     </div>
 
+<div class="doc-field">
+                        <label class="form-label" for="${rowId}-remarks">
+                            <i class="fas fa-comment-dots"></i>
+                            Document Remarks
+                        </label>
+                        <textarea name="docRemarks" id="${rowId}-remarks" placeholder="Add any metadata or notes for future processing..."></textarea>
+                    </div>
+
+
                     <div class="doc-field">
                         <label class="form-label" for="${rowId}-date">
                             <i class="fas fa-calendar-day"></i>
@@ -776,14 +885,7 @@
                         <input type="date" name="docExpiry" id="${rowId}-expiry">
                     </div>
                     
-                    <div class="doc-field">
-                        <label class="form-label" for="${rowId}-remarks">
-                            <i class="fas fa-comment-dots"></i>
-                            Processing Remarks
-                        </label>
-                        <textarea name="docRemarks" id="${rowId}-remarks" placeholder="Add any metadata or notes for future processing..."></textarea>
-                    </div>
-
+                  
                     <div class="doc-field file-upload-wrapper">
                         <label class="form-label" for="${rowId}-file">
                             <i class="fas fa-file-upload"></i>
@@ -886,7 +988,7 @@
                 event.preventDefault();
                 
                 // === GOOGLE APPS SCRIPT URL (Placeholder from previous versions) ===
-                const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwKxwSBGUHWGIKJ9MnNZp5lpYN5iiNJWXaZJBXxadWsyxzGghgwumYklUcCDcYbUvr_/exec'; 
+                const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz_9aQ3b76G_2R0SFwjJZ66riMlYdUiNR1URtc6vHmTyIt6siGyMtuqZFX-S6Wowig/exec'; 
                 // ==============================
 
                 // Reset status message
@@ -934,16 +1036,22 @@
                             const base64Data = reader.result.split(',')[1]; 
                             
                             const data = {
-                                company: companySelect.value.toUpperCase(),
-                                docName: docNameInput.value.toUpperCase(),
-                                docCode: row.querySelector('[name="docCode"]').value,
-                                docDate: formatDate(row.querySelector('[name="docDate"]').value), 
-                                docExpiry: formatDate(row.querySelector('[name="docExpiry"]').value),
-                                docRemarks: row.querySelector('[name="docRemarks"]').value.toUpperCase(),
-                                fileName: docFile.name,
-                                mimeType: docFile.type,
-                                fileBase64: base64Data
-                            };
+    company: companySelect.value.toUpperCase(),
+
+    docDept: row.querySelector('[name="docDept"]').value.toUpperCase(),
+    docType: row.querySelector('[name="docType"]').value.toUpperCase(),
+    docNumber: row.querySelector('[name="docNumber"]').value.toUpperCase(),
+
+    docName: docNameInput.value.toUpperCase(),
+    docCode: row.querySelector('[name="docCode"]').value,
+    docDate: row.querySelector('[name="docDate"]').value,
+docExpiry: row.querySelector('[name="docExpiry"]').value,
+    docRemarks: row.querySelector('[name="docRemarks"]').value.toUpperCase(),
+
+    fileName: docFile.name,
+    mimeType: docFile.type,
+    fileBase64: base64Data
+};
                             processedRows++;
                             updateProgress();
                             resolve(data);
