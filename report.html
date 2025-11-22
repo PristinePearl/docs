@@ -411,14 +411,14 @@
             const company = (document.getElementById('companyFilter').value || '').trim();
             const dept = (document.getElementById('deptFilter').value || '').trim();
             const docType = (document.getElementById('docTypeFilter').value || '').trim();
-            const docNum = (document.getElementById('docNumFilter').value || '').trim().toUpperCase();
+            const docNum = (document.getElementById('docNumFilter').value || '').trim();
             const expiryStatus = (document.getElementById('expiryFilter').value || '').trim();
 
             let filtered = documents.filter(d => {
                 if (company && d.company !== company) return false;
                 if (dept && d.department !== dept) return false;
                 if (docType && d.documentType !== docType) return false;
-                if (docNum && (!d.documentNumber || !d.documentNumber.toUpperCase().includes(docNum))) return false;
+                if (docNum && (!d.documentNumber || !d.documentNumber.toLowerCase().includes(docNum.toLowerCase()))) return false;
                 if (expiryStatus === 'Expired' && !d.isExpired) return false;
                 if (expiryStatus === 'Valid' && d.isExpired) return false;
                 if (search) {
