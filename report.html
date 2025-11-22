@@ -3,14 +3,14 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Document Manager — Report</title>
+    <title>Document Manager — Pristine Pearl</title>
 
     <link rel="icon" href="https://www.pristinepearlpharma.in/images/alt-logo.png" type="image/png" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
     <style>
-        /* ---------- Theme (kept similar to your previous) ---------- */
+        /* ---------- Theme ---------- */
         :root{
             --primary:#5eead4;
             --primary-dark:#2dd4bf;
@@ -22,64 +22,182 @@
             --success:#4ade80;
             --error:#f87171;
             --card-shadow: 0 8px 30px rgba(0,0,0,0.6);
+            --modal-bg: rgba(0, 0, 0, 0.92);
         }
         *{box-sizing:border-box;margin:0;padding:0}
-        body{font-family:Inter,system-ui,Segoe UI,Arial;background:var(--bg);color:var(--text);min-height:100vh}
+        
+        /* Security: Prevent text selection on UI elements */
+        body{
+            font-family:Inter,system-ui,Segoe UI,Arial;
+            background:var(--bg); color:var(--text); min-height:100vh;
+            user-select: none; -webkit-user-select: none;
+        }
+        /* Allow selection only on inputs and specific data */
+        input, select, .selectable-text { user-select: text; -webkit-user-select: text; }
+
         .app-container{display:flex;min-height:100vh}
+
         /* Sidebar */
-        .sidebar{width:320px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column}
+        .sidebar{width:320px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;transition: transform 0.3s ease;}
         .logo-section{padding:20px;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:center}
         .logo{width:48px;height:48px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));display:flex;align-items:center;justify-content:center;border-radius:10px;color:#111827;font-weight:700}
         .filter-section{padding:22px;flex:1;display:flex;flex-direction:column;gap:18px}
         .section-title{display:flex;gap:10px;align-items:center;color:var(--primary)}
         .filter-label{font-size:0.85rem;color:var(--muted);display:flex;gap:8px;align-items:center;margin-bottom:6px}
         .filter-input{width:100%;padding:10px 12px;border-radius:8px;background:#0f1724;border:1px solid var(--border);color:var(--text)}
-        .btn{padding:12px 14px;border-radius:10px;border:none;cursor:pointer;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#111827;font-weight:700}
+        
+        .btn{padding:12px 14px;border-radius:10px;border:none;cursor:pointer;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#111827;font-weight:700;transition:transform 0.1s, opacity 0.2s}
+        .btn:active{transform:scale(0.98)}
+        .btn:hover{opacity: 0.9}
+        .btn:disabled{opacity: 0.5; cursor: not-allowed; filter: grayscale(1);}
+        .btn-outline{background:transparent;border:1px solid var(--primary);color:var(--primary)}
         .btn-secondary{background:linear-gradient(135deg,var(--muted),#475569);color:var(--text);margin-top:6px}
+        .btn-danger-outline{background:transparent;border:1px solid var(--error);color:var(--error);padding:8px;}
+
         .stats-card{background:#0f1724;border:1px solid var(--border);padding:12px;border-radius:8px}
         .stats-title{color:var(--muted);font-size:0.8rem}
         .stats-value{color:var(--primary);font-size:1.6rem;font-weight:700}
-        /* main */
-        .main-content{flex:1;display:flex;flex-direction:column;overflow:auto}
-        .header{background:var(--surface);border-bottom:1px solid var(--border)}
+
+        /* Main Content */
+        .main-content{flex:1;display:flex;flex-direction:column;overflow:auto;position:relative;}
+        .header{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;}
         .header-content{padding:18px 28px;display:flex;justify-content:space-between;align-items:center}
         .page-title{font-size:1.25rem;font-weight:600}
         .results-section{padding:22px;background:var(--bg);flex:1;overflow:auto}
-        .table-container{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:auto}
+        
+        /* Table */
+        .table-container{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
         table{width:100%;border-collapse:collapse}
-        th{background:#141922;color:var(--muted);padding:12px 14px;text-align:left;font-size:0.85rem;font-weight:700;text-transform:uppercase;border-bottom:1px solid var(--border)}
-        td{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:top;font-size:0.95rem}
+        th{
+            background:#141922;color:var(--muted);padding:12px 20px;text-align:left;
+            font-size:0.85rem;font-weight:700;text-transform:uppercase;border-bottom:1px solid var(--border);
+            cursor: pointer;
+        }
+        th:hover { color: var(--primary); }
+        td{padding:12px 20px;border-bottom:1px solid var(--border);vertical-align:middle;font-size:0.95rem}
         tr:hover td{background:#222b35}
-        .status-badge{padding:4px 8px;border-radius:6px;font-weight:700;font-size:0.75rem;display:inline-block}
+        
+        /* Sort Icons */
+        .sort-icon { margin-left: 6px; font-size: 0.75em; opacity: 0.5; }
+        .sort-active { opacity: 1; color: var(--primary); }
+
+        .view-btn{
+            padding: 6px 12px; font-size: 0.85rem; background: #0f1724;
+            border: 1px solid var(--primary); color: var(--primary); border-radius: 6px;
+            cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .view-btn:hover{ background: var(--primary); color: #111827; }
+
+        /* Modal Styles */
+        .modal-overlay{
+            position: fixed; inset: 0; background: var(--modal-bg); z-index: 100;
+            display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px);
+        }
+        .modal-content{
+            background: var(--surface); width: 90%; max-width: 700px;
+            border-radius: 12px; border: 1px solid var(--border); box-shadow: var(--card-shadow);
+            display: flex; flex-direction: column; max-height: 90vh; animation: modalFadeIn 0.2s ease-out;
+        }
+        @keyframes modalFadeIn { from{opacity:0;transform:scale(0.95)} to{opacity:1;transform:scale(1)} }
+
+        .modal-header{ padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .modal-title{ font-size: 1.25rem; font-weight: 600; color: var(--primary); }
+        .close-btn{ background: none; border: none; color: var(--muted); font-size: 1.5rem; cursor: pointer; }
+        .close-btn:hover{ color: var(--text); }
+
+        .modal-body{ padding: 20px; overflow-y: auto; }
+        .detail-grid{ display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .detail-item{ display: flex; flex-direction: column; gap: 4px; }
+        .detail-label{ font-size: 0.8rem; color: var(--muted); text-transform: uppercase; font-weight: 700; }
+        .detail-value{ font-size: 1rem; color: var(--text); word-break: break-word; }
+        
+        .status-badge{padding:4px 8px;border-radius:6px;font-weight:700;font-size:0.75rem;display:inline-block;width: fit-content;}
         .status-expired{background:#3a0d0d;color:var(--error);border:1px solid #7f1d1d}
         .status-valid{background:#08352a;color:var(--success);border:1px solid #065f46}
-        .document-link{display:inline-flex;gap:8px;align-items:center;padding:6px 8px;border-radius:6px;text-decoration:none;background:#0f1724;border:1px solid #0b5b49;color:var(--primary)}
+
+        .modal-footer{
+            padding: 20px; border-top: 1px solid var(--border); display: flex; gap: 12px;
+            justify-content: flex-end; background: #151c28; border-radius: 0 0 12px 12px; flex-wrap: wrap;
+            align-items: center;
+        }
+
+        /* CAPTCHA STYLES */
+        .captcha-container {
+            width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 15px;
+            background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; border: 1px solid var(--border);
+        }
+        .captcha-controls { display: flex; gap: 10px; align-items: center; }
+        .captcha-input { 
+            background: var(--bg); border: 1px solid var(--border); color: var(--text); 
+            padding: 10px; border-radius: 6px; width: 120px; text-align: center; 
+            letter-spacing: 3px; font-weight: bold; text-transform: uppercase;
+        }
+
         .no-results{text-align:center;padding:40px;color:var(--muted)}
-        .loading{padding:40px;text-align:center;color:var(--muted)}
+        
+        /* Skeleton Loading */
+        .skeleton-row {
+            height: 60px; background: #1f2937; margin-bottom: 2px;
+            position: relative; overflow: hidden;
+        }
+        .skeleton-row::after {
+            content: ""; position: absolute; inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            transform: translateX(-100%); animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer { 100% { transform: translateX(100%); } }
+
+        /* Login Card */
         .login-card{background:var(--surface);padding:34px;border-radius:12px;box-shadow:var(--card-shadow);border:1px solid var(--border);text-align:center;width:92%;max-width:420px}
         .login-input{width:100%;padding:12px;border-radius:10px;border:1px solid var(--border);background:#0f1724;color:var(--text);margin-bottom:12px}
         .login-error{display:none;background:#2b0b0b;padding:10px;border-radius:8px;color:var(--error);margin-bottom:12px}
-        @media (max-width:1000px){.app-container{flex-direction:column}.sidebar{width:100%}}
+
+        /* Responsive Design */
+        .mobile-menu-btn { display: none; background: none; border: none; color: var(--text); font-size: 1.5rem; cursor: pointer; }
+        
+        @media (max-width:1000px){
+            .app-container{flex-direction:column}
+            .sidebar{width:100%; display: none;}
+            .sidebar.active{display: flex;}
+            .mobile-menu-btn { display: block; }
+            .detail-grid{ grid-template-columns: 1fr; }
+            
+            .captcha-container { flex-direction: column; gap: 12px; }
+            .captcha-controls { width: 100%; justify-content: space-between; }
+            
+            /* Mobile Card Table */
+            thead { display: none; }
+            tr { display: block; background: var(--surface); border: 1px solid var(--border); margin-bottom: 12px; border-radius: 8px; padding: 16px; }
+            td { display: flex; justify-content: space-between; padding: 8px 0; border: none; text-align: right; }
+            td::before { content: attr(data-label); font-weight: 700; color: var(--muted); text-align: left; margin-right: 12px; }
+            td:last-child { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); justify-content: center; }
+            .view-btn { width: 100%; justify-content: center; }
+        }
     </style>
 </head>
-<body>
-    <!-- Simple password gate -->
+<body oncontextmenu="return false;"> <!-- Security: Disable Right Click Context Menu -->
+    
+    <!-- Login Screen -->
     <div id="loginScreen" style="position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:50">
         <div class="login-card">
-            <h2 style="display:flex;align-items:center;gap:10px;justify-content:center;color:var(--primary)"><i class="fas fa-lock"></i> Secure Login</h2>
-            <p style="color:var(--muted);margin-top:6px;margin-bottom:16px">Enter the master password to access the Document Repository</p>
+            <h2 style="display:flex;align-items:center;gap:10px;justify-content:center;color:var(--primary)"><i class="fas fa-shield-alt"></i> Secure Login</h2>
+            <p style="color:var(--muted);margin-top:6px;margin-bottom:16px">Enter the master password to access documents</p>
             <form id="loginForm" onsubmit="return false;">
-                <input id="passwordInput" class="login-input" type="password" placeholder="Enter password" required />
+                <input id="passwordInput" class="login-input" type="password" placeholder="Enter password" required autocomplete="off" />
+                
                 <div id="loginError" class="login-error"><i class="fas fa-times-circle"></i> Invalid password</div>
+                <div id="lockoutMsg" class="login-error" style="background:#3a1d1d;color:#f87171;display:none"><i class="fas fa-lock"></i> Too many attempts. Wait 30s.</div>
+                
                 <button id="loginBtn" class="btn" style="width:100%;"><i class="fas fa-sign-in-alt"></i> ACCESS DATA</button>
             </form>
             <p style="font-size:0.8rem;color:#4b5563;margin-top:12px">Hint: pearl</p>
         </div>
     </div>
 
+    <!-- Main Application -->
     <div class="app-container" id="mainApp" style="display:none">
         <!-- Sidebar -->
-        <div class="sidebar">
+        <div class="sidebar" id="sidebar">
             <div class="logo-section">
                 <div class="logo">PP</div>
                 <div>
@@ -89,18 +207,18 @@
             </div>
 
             <div class="filter-section">
-                <div>
-                    <div class="section-title"><i class="fas fa-sliders-h"></i> FILTER DOCUMENTS</div>
-                    <p style="color:var(--muted);margin-top:6px;font-size:0.9rem">Use filters to find specific documents quickly</p>
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                    <div class="section-title"><i class="fas fa-sliders-h"></i> FILTERS</div>
+                    <button onclick="resetFilters()" class="btn-danger-outline" style="font-size:0.7rem;border-radius:6px">CLEAR ALL</button>
                 </div>
-
+                
                 <form id="documentSearchForm" style="display:flex;flex-direction:column;gap:12px">
-                    <!-- Hidden placeholder sheet ID - editable if needed -->
+                    <!-- ID is now explicitly set to prevent decode errors -->
                     <input type="text" id="sheetId" value="1gSZTk3PIu2MEvg_ElgHE3i8tsKzT9CnNIeBtgC8YwpI" style="display:none" />
 
                     <div>
                         <label class="filter-label"><i class="fas fa-search"></i> Search</label>
-                        <input id="searchTerm" class="filter-input" placeholder="Search name, code, remarks, file..." />
+                        <input id="searchTerm" class="filter-input" placeholder="Search name, code..." />
                     </div>
 
                     <div>
@@ -118,385 +236,354 @@
                         <select id="docTypeFilter" class="filter-input"><option value="">All Types</option></select>
                     </div>
 
-                    <div>
-                        <label class="filter-label"><i class="fas fa-hashtag"></i> Document Number</label>
-                        <input id="docNumFilter" class="filter-input" placeholder="Exact or partial document number" />
-                    </div>
-
-                    <div>
-                        <label class="filter-label"><i class="fas fa-calendar-check"></i> Expiry Status</label>
-                        <select id="expiryFilter" class="filter-input">
-                            <option value="">All Documents</option>
-                            <option value="Valid">Valid (Not Expired)</option>
-                            <option value="Expired">Expired</option>
-                        </select>
-                    </div>
-
                     <button id="applyBtn" class="btn" type="button" style="width:100%"><i class="fas fa-filter"></i> APPLY FILTERS</button>
                 </form>
 
-                <div class="stats-card" style="margin-top:6px">
+                <div class="stats-card" style="margin-top:auto">
                     <div class="stats-title">TOTAL DOCUMENTS</div>
                     <div class="stats-value" id="totalDocuments">0</div>
                 </div>
 
-                <button id="exportBtn" class="btn btn-secondary" style="display:none"><i class="fas fa-download"></i> EXPORT CSV</button>
+                <button id="exportBtn" class="btn btn-secondary" style="display:none;width:100%;margin-top:12px"><i class="fas fa-file-csv"></i> EXPORT TO CSV</button>
+                <button onclick="logout()" class="btn-danger-outline" style="width:100%;margin-top:12px;border:1px solid var(--border);color:var(--muted)"><i class="fas fa-sign-out-alt"></i> LOGOUT</button>
             </div>
         </div>
 
-        <!-- Main -->
+        <!-- Main Content -->
         <div class="main-content">
             <div class="header">
                 <div class="header-content">
-                    <div class="page-title">Document Repository</div>
-                    <div style="display:flex;align-items:center;gap:12px">
-                        <div id="resultsCount" style="background:#0f1724;padding:8px 12px;border-radius:8px;border:1px solid var(--border);color:var(--primary)">0 documents</div>
+                    <div style="display:flex;align-items:center;gap:15px">
+                        <button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+                        <div class="page-title">Document Repository</div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:15px">
+                         <div id="timerDisplay" style="font-size:0.8rem;color:var(--muted);font-variant-numeric:tabular-nums"><i class="fas fa-clock"></i> Auto-lock: 05:00</div>
+                         <div id="resultsCount" style="background:#0f1724;padding:8px 12px;border-radius:8px;border:1px solid var(--border);color:var(--primary);font-size:0.9rem">0 docs</div>
                     </div>
                 </div>
             </div>
 
             <div class="results-section">
                 <div id="resultsContainer" class="results-container">
-                    <div class="loading"><div style="display:inline-block;width:36px;height:36px;border:4px solid #374151;border-top:4px solid var(--primary);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:10px"></div><div>Loading documents from database...</div></div>
+                    <!-- Skeleton Loading Init -->
+                    <div class="skeleton-row" style="border-radius:8px 8px 0 0"></div>
+                    <div class="skeleton-row"></div>
+                    <div class="skeleton-row"></div>
+                    <div class="skeleton-row" style="border-radius:0 0 8px 8px"></div>
+                    <div style="text-align:center;margin-top:20px;color:var(--muted)">Connecting to secure database...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DETAIL MODAL -->
+    <div id="detailModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title"><i class="fas fa-file-alt"></i> Document Details</div>
+                <button class="close-btn" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Content injected via JS -->
+            </div>
+            
+            <div class="modal-footer">
+                <!-- CAPTCHA SECTION -->
+                <div id="captchaContainer" class="captcha-container" style="display:none">
+                    <div style="display:flex;flex-direction:column;gap:5px">
+                        <div style="display:flex;align-items:center;gap:10px">
+                            <canvas id="captchaCanvas" width="120" height="40" style="border-radius:6px;border:1px solid var(--border);cursor:pointer" onclick="drawCaptcha()" title="Click to refresh"></canvas>
+                            <button onclick="drawCaptcha()" class="btn-outline" style="padding:8px;border:none" title="Refresh Code"><i class="fas fa-sync-alt"></i></button>
+                        </div>
+                        <div id="captchaError" style="color:var(--error);font-size:0.75rem;display:none"><i class="fas fa-exclamation-circle"></i> Incorrect code</div>
+                    </div>
+                    <div class="captcha-controls">
+                        <input type="text" id="captchaInput" class="captcha-input" placeholder="CODE" maxlength="5">
+                        <button onclick="verifyCaptcha()" class="btn">VERIFY</button>
+                    </div>
+                </div>
+
+                <!-- ACTION BUTTONS (Hidden by default) -->
+                <div id="actionButtons" style="display:none;gap:12px;flex-wrap:wrap;justify-content:flex-end;width:100%">
+                    <button id="copyLinkBtn" class="btn btn-outline" onclick="copyLink()"><i class="fas fa-link"></i> COPY LINK</button>
+                    <a id="previewBtn" href="#" target="_blank" class="btn btn-outline"><i class="fas fa-eye"></i> PREVIEW</a>
+                    <a id="downloadBtn" href="#" download class="btn"><i class="fas fa-download"></i> DOWNLOAD</a>
+                </div>
+                
+                <!-- No URL Message -->
+                <div id="noUrlMessage" style="display:none;color:var(--muted);width:100%;text-align:center">
+                    <i class="fas fa-ban"></i> No digital file attached to this record.
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        /* ---------- Config ---------- */
-        const MASTER_PASSWORD = "pearl@123"; // same as before
+        /* ---------- SECURITY CONFIGURATION ---------- */
+        // Obfuscated Configuration (Base64 Encoded)
+        // 'cGVhcmxAMTIz' decodes to 'pearl@123'
+        const SECURE_CONFIG = {
+            p_hash: "cGVhcmxAMTIz"
+        };
+
+        let loginAttempts = 0;
+        let isLockedOut = false;
+        const MAX_ATTEMPTS = 3;
+        const LOCKOUT_TIME = 30000; // 30 seconds
+        
+        /* ---------- AUTH & LOGIN LOGIC ---------- */
         const loginScreen = document.getElementById('loginScreen');
         const mainApp = document.getElementById('mainApp');
-        const loginForm = document.getElementById('loginForm');
         const passwordInput = document.getElementById('passwordInput');
         const loginBtn = document.getElementById('loginBtn');
         const loginError = document.getElementById('loginError');
+        const lockoutMsg = document.getElementById('lockoutMsg');
 
-        loginBtn.addEventListener('click', () => {
+        loginBtn.addEventListener('click', performLogin);
+        passwordInput.addEventListener('keydown', (ev) => { if (ev.key === 'Enter') performLogin(); });
+
+        function performLogin() {
+            if (isLockedOut) return;
+
             const entered = passwordInput.value.trim();
-            if (entered === MASTER_PASSWORD) {
+            const correct = atob(SECURE_CONFIG.p_hash); // Decode verify
+
+            if (entered === correct) {
+                // Success
+                loginAttempts = 0;
                 loginScreen.style.display = 'none';
                 mainApp.style.display = 'flex';
+                passwordInput.value = '';
+                startIdleTimer(); // Start auto-lock timer
                 fetchDocuments();
             } else {
-                loginError.style.display = 'block';
+                // Failure
+                loginAttempts++;
                 passwordInput.value = '';
-                setTimeout(()=> loginError.style.display='none', 3000);
+                
+                if (loginAttempts >= MAX_ATTEMPTS) {
+                    initiateLockout();
+                } else {
+                    loginError.innerHTML = `<i class="fas fa-times-circle"></i> Invalid password (${MAX_ATTEMPTS - loginAttempts} attempts remaining)`;
+                    loginError.style.display = 'block';
+                    setTimeout(()=> loginError.style.display='none', 3000);
+                }
             }
-        });
+        }
 
-        // convenience keypress: Enter on password
-        passwordInput.addEventListener('keydown', (ev) => {
-            if (ev.key === 'Enter') loginBtn.click();
-        });
+        function initiateLockout() {
+            isLockedOut = true;
+            loginBtn.disabled = true;
+            loginError.style.display = 'none';
+            lockoutMsg.style.display = 'block';
+            
+            let remaining = LOCKOUT_TIME / 1000;
+            lockoutMsg.innerHTML = `<i class="fas fa-lock"></i> Too many attempts. Wait ${remaining}s.`;
 
-        /* ---------- Data handling ---------- */
+            const interval = setInterval(() => {
+                remaining--;
+                lockoutMsg.innerHTML = `<i class="fas fa-lock"></i> Too many attempts. Wait ${remaining}s.`;
+                if (remaining <= 0) {
+                    clearInterval(interval);
+                    isLockedOut = false;
+                    loginAttempts = 0;
+                    loginBtn.disabled = false;
+                    lockoutMsg.style.display = 'none';
+                }
+            }, 1000);
+        }
+
+        function logout() {
+            stopIdleTimer();
+            mainApp.style.display = 'none';
+            loginScreen.style.display = 'flex';
+            passwordInput.value = '';
+            allDocuments = []; // Clear memory
+        }
+
+        /* ---------- IDLE TIMER (AUTO-LOGOUT) ---------- */
+        let idleTime = 0;
+        let idleInterval;
+        const IDLE_LIMIT = 300; // 5 minutes (300 seconds)
+
+        function startIdleTimer() {
+            stopIdleTimer();
+            idleTime = 0;
+            updateTimerDisplay();
+            idleInterval = setInterval(timerIncrement, 1000);
+            
+            // Reset on activity
+            window.addEventListener('mousemove', resetIdleTime);
+            window.addEventListener('keypress', resetIdleTime);
+            window.addEventListener('click', resetIdleTime);
+            window.addEventListener('scroll', resetIdleTime);
+        }
+
+        function stopIdleTimer() {
+            clearInterval(idleInterval);
+            window.removeEventListener('mousemove', resetIdleTime);
+            window.removeEventListener('keypress', resetIdleTime);
+        }
+
+        function resetIdleTime() {
+            idleTime = 0;
+            updateTimerDisplay();
+        }
+
+        function timerIncrement() {
+            idleTime++;
+            updateTimerDisplay();
+            if (idleTime >= IDLE_LIMIT) {
+                logout();
+                alert("Session expired due to inactivity.");
+            }
+        }
+
+        function updateTimerDisplay() {
+            const remaining = IDLE_LIMIT - idleTime;
+            const m = Math.floor(remaining / 60).toString().padStart(2, '0');
+            const s = (remaining % 60).toString().padStart(2, '0');
+            const display = document.getElementById('timerDisplay');
+            if (display) display.innerHTML = `<i class="fas fa-clock"></i> Auto-lock: ${m}:${s}`;
+        }
+
+        /* ---------- DATA & SORT STATE ---------- */
         let allDocuments = [];
+        let currentSort = { key: 'company', dir: 'asc' };
 
         async function fetchDocuments() {
             const container = document.getElementById('resultsContainer');
-            container.innerHTML = `<div class="loading"><div style="display:inline-block;width:36px;height:36px;border:4px solid #374151;border-top:4px solid var(--primary);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:10px"></div><div>Loading documents from database...</div></div>`;
-
             const SHEET_ID = document.getElementById('sheetId').value.trim();
             const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=Sheet1`;
+            
             try {
                 const resp = await fetch(`${SHEET_URL}&t=${Date.now()}`);
                 if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
                 const text = await resp.text();
-
-                if (text.includes('Google Docs') || text.includes('Requesting permission')) {
-                    throw new Error('Google Sheet is not publicly accessible. Set "Anyone with the link can view".');
-                }
-
+                
                 allDocuments = parseSheetData(text);
                 if (!allDocuments || allDocuments.length === 0) {
-                    document.getElementById('resultsContainer').innerHTML = `<div class="no-results"><i class="fas fa-file-search" style="font-size:38px;color:var(--border)"></i><h3>No documents found</h3><p style="color:var(--muted)">Ensure sheet contains rows and correct headers</p></div>`;
-                    updateStats(0);
+                    container.innerHTML = `<div class="no-results"><h3>No documents found</h3></div>`;
                     return;
                 }
-
+                
                 updateStats(allDocuments.length);
                 populateFilters(allDocuments);
                 filterAndRender(allDocuments);
             } catch (err) {
                 console.error(err);
-                container.innerHTML = `<div class="error" style="padding:18px;border-radius:8px"><p><strong>Failed to load data:</strong> ${err.message}</p><p style="margin-top:8px;color:var(--muted)">Check sheet ID and "Anyone with the link can view" sharing.</p></div>`;
-                updateStats(0);
+                container.innerHTML = `<div class="no-results" style="color:var(--error)">Failed to load data. Check internet connection.</div>`;
             }
         }
 
-        function updateStats(n) {
-            document.getElementById('totalDocuments').textContent = n;
-        }
+        function updateStats(n) { document.getElementById('totalDocuments').textContent = n; }
 
-        /* Robust CSV row parser that handles quoted commas */
-        function splitCsvRow(row) {
-            const cells = [];
-            let inQuotes = false;
-            let cur = '';
-            for (let i=0;i<row.length;i++){
-                const ch = row[i];
-                if (ch === '"' ) {
-                    // handle double quotes inside quoted string
-                    if (inQuotes && row[i+1] === '"') {
-                        cur += '"';
-                        i++;
-                    } else {
-                        inQuotes = !inQuotes;
-                    }
-                } else if (ch === ',' && !inQuotes) {
-                    cells.push(cur);
-                    cur = '';
-                } else {
-                    cur += ch;
-                }
-            }
-            cells.push(cur);
-            return cells.map(c => c.replace(/^"|"$/g,'').trim());
-        }
-
-        /* The sheet column order is confirmed:
-            A Timestamp
-            B Company
-            C Department
-            D Document Type
-            E Document Number
-            F Document Name
-            G Document Code
-            H Doc Date
-            I Expiry Date
-            J Remarks
-            K File Name
-            L File Size (MB)
-            M URL
-        */
         function parseSheetData(csvText) {
             const lines = csvText.split(/\r\n|\n/).filter(l=>l.trim()!=='');
             if (lines.length < 2) return [];
 
-            const header = splitCsvRow(lines[0]);
             const docs = [];
-
             for (let r=1;r<lines.length;r++){
-                const row = lines[r];
-                if (!row.trim()) continue;
-                const cells = splitCsvRow(row);
+                const cells = splitCsvRow(lines[r]);
+                if (cells.length < 13) continue; 
 
-                // If row length is less than 13, pad to avoid index errors
-                while (cells.length < 13) cells.push('');
-
-                // Map according to confirmed order
-                const timestamp = cells[0] || '';
-                const company = (cells[1] || '').trim();
-                const department = (cells[2] || '').trim();
-                const documentType = (cells[3] || '').trim();
-                const documentNumber = (cells[4] || '').trim();
-                const documentName = (cells[5] || '').trim();
-                const documentCode = (cells[6] || '').trim();
-                const docDateRaw = (cells[7] || '').trim();
-                const expiryRaw = (cells[8] || '').trim();
-                const remarks = (cells[9] || '').trim();
-                const fileName = (cells[10] || '').trim();
-                const fileSize = (cells[11] || '').trim();
-                const url = (cells[12] || '').trim();
-
-                // Standardize dates to dd-mm-yyyy (if parseable) — fallback to raw
-                const docDate = parseToDisplayDate(docDateRaw);
-                const expiryDate = parseToDisplayDate(expiryRaw);
-
-                // Determine expiry boolean (treat '-' or empty as no expiry)
+                const docDate = parseToDisplayDate(cells[7]);
+                const expiryDate = parseToDisplayDate(cells[8]);
+                
                 let isExpired = false;
                 if (expiryDate && expiryDate !== '-') {
-                    const parts = expiryDate.split('-'); // dd-mm-yyyy
+                    const parts = expiryDate.split('-'); 
                     if (parts.length === 3) {
-                        const d = parseInt(parts[0],10), m = parseInt(parts[1],10)-1, y = parseInt(parts[2],10);
-                        const expiryTime = new Date(y,m,d).setHours(0,0,0,0);
-                        if (!isNaN(expiryTime)) {
-                            const today = new Date(); today.setHours(0,0,0,0);
-                            isExpired = expiryTime < today.getTime();
-                        }
+                        const d = parseInt(parts[0]), m = parseInt(parts[1])-1, y = parseInt(parts[2]);
+                        const exp = new Date(y,m,d).setHours(0,0,0,0);
+                        if (!isNaN(exp)) isExpired = exp < new Date().setHours(0,0,0,0);
                     }
                 }
 
                 docs.push({
-                    timestamp,
-                    company,
-                    department,
-                    documentType,
-                    documentNumber,
-                    documentName,
-                    documentCode,
-                    docDate,
-                    expiryDate,
-                    remarks,
-                    fileName,
-                    fileSize,
-                    url,
-                    isExpired
+                    company: (cells[1]||'').trim(),
+                    department: (cells[2]||'').trim(),
+                    documentType: (cells[3]||'').trim(),
+                    documentNumber: (cells[4]||'').trim(),
+                    documentName: (cells[5]||'').trim(),
+                    documentCode: (cells[6]||'').trim(),
+                    docDate: docDate,
+                    expiryDate: expiryDate,
+                    remarks: (cells[9]||'').trim(),
+                    fileName: (cells[10]||'').trim(),
+                    fileSize: (cells[11]||'').trim(),
+                    url: (cells[12]||'').trim(),
+                    isExpired: isExpired
                 });
             }
-
             return docs;
         }
 
-        // Try to parse various date formats into dd-mm-yyyy (if possible)
-        function parseToDisplayDate(value) {
-            if (!value || value === 'N/A' || value === '-') return '-';
-            // If already dd-mm-yyyy or dd/mm/yyyy, normalize
-            let v = value.trim();
-            // Replace slashes with dashes
-            v = v.replace(/\//g,'-');
-
-            // If value looks like yyyy-mm-dd
-            const isoMatch = v.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
-            if (isoMatch) {
-                const y=isoMatch[1], m=isoMatch[2], d=isoMatch[3];
-                return `${String(d).padStart(2,'0')}-${String(m).padStart(2,'0')}-${y}`;
+        /* ---------- SORTING LOGIC ---------- */
+        function handleSort(key) {
+            if (currentSort.key === key) {
+                currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort.key = key;
+                currentSort.dir = 'asc';
             }
-
-            // If value looks like dd-mm-yyyy or d-m-yyyy
-            const dmyMatch = v.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
-            if (dmyMatch) {
-                const d=dmyMatch[1], m=dmyMatch[2], y=dmyMatch[3];
-                return `${String(d).padStart(2,'0')}-${String(m).padStart(2,'0')}-${y}`;
-            }
-
-            // Try Date parse fallback
-            const tryDate = new Date(v);
-            if (!isNaN(tryDate.getTime())) {
-                const d = String(tryDate.getDate()).padStart(2,'0');
-                const m = String(tryDate.getMonth()+1).padStart(2,'0');
-                const y = tryDate.getFullYear();
-                return `${d}-${m}-${y}`;
-            }
-
-            // otherwise return original raw value
-            return value;
+            filterAndRender(allDocuments);
         }
 
-        /* Populate company/department/type filters */
-        function populateFilters(documents) {
-            const companySelect = document.getElementById('companyFilter');
-            const deptSelect = document.getElementById('deptFilter');
-            const typeSelect = document.getElementById('docTypeFilter');
-
-            companySelect.innerHTML = '<option value="">All Companies</option>';
-            deptSelect.innerHTML = '<option value="">All Departments</option>';
-            typeSelect.innerHTML = '<option value="">All Types</option>';
-
-            const companies = new Set();
-            const depts = new Set();
-            const types = new Set();
-
-            documents.forEach(d => {
-                if (d.company) companies.add(d.company);
-                if (d.department) depts.add(d.department);
-                if (d.documentType) types.add(d.documentType);
-            });
-
-            Array.from(companies).sort().forEach(c => {
-                const opt = document.createElement('option'); opt.value = c; opt.textContent = c; companySelect.appendChild(opt);
-            });
-            Array.from(depts).sort().forEach(c => {
-                const opt = document.createElement('option'); opt.value = c; opt.textContent = c; deptSelect.appendChild(opt);
-            });
-            Array.from(types).sort().forEach(c => {
-                const opt = document.createElement('option'); opt.value = c; opt.textContent = c; typeSelect.appendChild(opt);
+        function sortDocuments(docs) {
+            const { key, dir } = currentSort;
+            return docs.sort((a, b) => {
+                const valA = (a[key] || '').toLowerCase();
+                const valB = (b[key] || '').toLowerCase();
+                if (valA < valB) return dir === 'asc' ? -1 : 1;
+                if (valA > valB) return dir === 'asc' ? 1 : -1;
+                return 0;
             });
         }
 
-        function filterAndRender(documents) {
-            const search = (document.getElementById('searchTerm').value || '').trim().toLowerCase();
-            const company = (document.getElementById('companyFilter').value || '').trim();
-            const dept = (document.getElementById('deptFilter').value || '').trim();
-            const docType = (document.getElementById('docTypeFilter').value || '').trim();
-            const docNum = (document.getElementById('docNumFilter').value || '').trim();
-            const expiryStatus = (document.getElementById('expiryFilter').value || '').trim();
-
-            let filtered = documents.filter(d => {
-                if (company && d.company !== company) return false;
-                if (dept && d.department !== dept) return false;
-                if (docType && d.documentType !== docType) return false;
-                if (docNum) {
-    const cleanInput = docNum.toLowerCase().replace(/[^a-z0-9]/g, '');
-    const cleanDocNum = (d.documentNumber || '').toLowerCase().replace(/[^a-z0-9]/g, '');
-    if (!cleanDocNum.includes(cleanInput)) return false;
-                    }
-                if (expiryStatus === 'Expired' && !d.isExpired) return false;
-                if (expiryStatus === 'Valid' && d.isExpired) return false;
-                if (search) {
-                    const hay = `${d.company} ${d.department} ${d.documentType} ${d.documentNumber} ${d.documentName} ${d.documentCode} ${d.remarks} ${d.fileName}`.toLowerCase();
-                    if (!hay.includes(search)) return false;
-                }
-                return true;
-            });
-
-            renderDocuments(filtered);
-            const exportBtn = document.getElementById('exportBtn');
-            exportBtn.style.display = filtered.length ? 'block' : 'none';
-            exportBtn.onclick = () => exportToCSV(filtered);
+        function getSortIcon(key) {
+            if (currentSort.key !== key) return `<i class="fas fa-sort sort-icon"></i>`;
+            return currentSort.dir === 'asc' 
+                ? `<i class="fas fa-sort-up sort-icon sort-active"></i>` 
+                : `<i class="fas fa-sort-down sort-icon sort-active"></i>`;
         }
 
-        /* Render table with EXACT columns you requested (without TIMESTAMP) */
+        /* ---------- RENDERING ---------- */
         function renderDocuments(documents) {
             const container = document.getElementById('resultsContainer');
             const resultsCount = document.getElementById('resultsCount');
-            resultsCount.textContent = `${documents.length} document${documents.length !== 1 ? 's' : ''}`;
+            resultsCount.textContent = `${documents.length} doc${documents.length !== 1 ? 's' : ''}`;
+
             if (!documents.length) {
-                container.innerHTML = `<div class="no-results"><i class="fas fa-file-search" style="font-size:40px;color:var(--border)"></i><h3>No documents found</h3><p style="color:var(--muted)">Try changing filters</p></div>`;
+                container.innerHTML = `<div class="no-results"><h3>No documents match filters</h3></div>`;
                 return;
             }
 
             let html = `<div class="table-container"><table class="document-table">
                 <thead>
                   <tr>
-                    <th>Company</th>
-                    <th>Department</th>
-                    <th>Document Type</th>
-                    <th>Document Number</th>
-
-                    <th>Document Name</th>
-                    <th>Document Code</th>
-                    <th>Doc Date</th>
-                    <th>Expiry Date</th>
-
-                    <th>Remarks</th>
-                    <th>File Name</th>
-                    <th>File Size (MB)</th>
-                    <th>URL</th>
+                    <th onclick="handleSort('company')" style="width:25%">Company ${getSortIcon('company')}</th>
+                    <th onclick="handleSort('department')" style="width:25%">Department ${getSortIcon('department')}</th>
+                    <th onclick="handleSort('documentName')" style="width:35%">Document Name ${getSortIcon('documentName')}</th>
+                    <th style="width:15%;text-align:center">Action</th>
                   </tr>
                 </thead>
                 <tbody>`;
 
-            documents.forEach(d => {
-                const expiredClass = d.isExpired ? 'expired-row' : '';
-                const badge = d.isExpired ? `<span class="status-badge status-expired">EXPIRED</span>` : `<span class="status-badge status-valid">VALID</span>`;
-                html += `<tr class="${expiredClass}">`;
-                html += `<td><strong>${escapeHtml(d.company)}</strong></td>`;
-                html += `<td>${escapeHtml(d.department) || '-'}</td>`;
-                html += `<td>${escapeHtml(d.documentType) || '-'}</td>`;
-                html += `<td>${escapeHtml(d.documentNumber) || '-'}</td>`;
+            documents.forEach((d, index) => {
+                const rowId = `doc_${index}_${Math.random().toString(36).substr(2,9)}`;
+                window[rowId] = d;
 
-                html += `<td>${escapeHtml(d.documentName) || '-'}</td>`;
-                html += `<td><code>${escapeHtml(d.documentCode) || '-'}</code></td>`;
-                html += `<td>${escapeHtml(d.docDate) || '-'}</td>`;
-                html += `<td>${escapeHtml(d.expiryDate) === '-' ? '-' : escapeHtml(d.expiryDate) + '<div style="margin-top:6px">' + badge + '</div>'}</td>`;
-
-                html += `<td>${escapeHtml(d.remarks) || '-'}</td>`;
-                html += `<td>${escapeHtml(d.fileName) || '-'}</td>`;
-                html += `<td>${escapeHtml(d.fileSize) || '-'}</td>`;
-
-                html += `<td>`;
-                if (d.url && (d.url.startsWith('http') || d.url.startsWith('https'))) {
-                    html += `<a class="document-link" href="${escapeAttr(d.url)}" target="_blank"><i class="fas fa-external-link-alt"></i> View</a>`;
-                } else if (d.url) {
-                    html += escapeHtml(d.url);
-                } else {
-                    html += `-`;
-                }
-                html += `</td>`;
-
+                html += `<tr>`;
+                html += `<td data-label="Company" class="selectable-text"><strong>${escapeHtml(d.company)}</strong></td>`;
+                html += `<td data-label="Department" class="selectable-text">${escapeHtml(d.department)}</td>`;
+                html += `<td data-label="Document Name" class="selectable-text">${escapeHtml(d.documentName)}</td>`;
+                html += `<td data-label="Action" style="text-align:center">
+                            <button class="view-btn" onclick="openDetailModal('${rowId}')">
+                                <i class="fas fa-info-circle"></i> View Details
+                            </button>
+                         </td>`;
                 html += `</tr>`;
             });
 
@@ -504,37 +591,231 @@
             container.innerHTML = html;
         }
 
-        // CSV export — columns exactly as requested (no timestamp)
+        /* ---------- CAPTCHA LOGIC ---------- */
+        let currentCaptcha = '';
+
+        function generateCaptchaCode() {
+            const chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ'; 
+            let result = '';
+            for (let i = 0; i < 5; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
+        function drawCaptcha() {
+            currentCaptcha = generateCaptchaCode();
+            const canvas = document.getElementById('captchaCanvas');
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+            ctx.fillStyle = '#1f2937';
+            ctx.fillRect(0, 0, w, h);
+
+            for(let i=0; i<40; i++) {
+                ctx.fillStyle = Math.random() > 0.5 ? '#374151' : '#111827';
+                ctx.beginPath();
+                ctx.arc(Math.random()*w, Math.random()*h, 1.5, 0, 2*Math.PI);
+                ctx.fill();
+            }
+
+            ctx.font = 'bold 22px Inter, sans-serif';
+            ctx.fillStyle = '#5eead4';
+            ctx.textBaseline = 'middle';
+            ctx.textAlign = 'center';
+            
+            ctx.save();
+            ctx.translate(w/2, h/2);
+            ctx.rotate((Math.random() - 0.5) * 0.15);
+            ctx.fillText(currentCaptcha, 0, 1);
+            ctx.restore();
+            
+            document.getElementById('captchaInput').value = '';
+            document.getElementById('captchaError').style.display = 'none';
+        }
+
+        function verifyCaptcha() {
+            const input = document.getElementById('captchaInput');
+            const errorMsg = document.getElementById('captchaError');
+            const entered = input.value.toUpperCase().trim();
+
+            if (entered === currentCaptcha) {
+                document.getElementById('captchaContainer').style.display = 'none';
+                document.getElementById('actionButtons').style.display = 'flex';
+            } else {
+                errorMsg.style.display = 'block';
+                drawCaptcha(); 
+            }
+        }
+
+        document.getElementById('captchaInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') verifyCaptcha();
+        });
+
+        /* ---------- MODAL LOGIC ---------- */
+        let currentDetailUrl = ""; 
+
+        function openDetailModal(rowId) {
+            resetIdleTime(); // Interacting resets timer
+            const d = window[rowId];
+            if (!d) return;
+
+            currentDetailUrl = d.url;
+            const modal = document.getElementById('detailModal');
+            const body = document.getElementById('modalBody');
+            const previewBtn = document.getElementById('previewBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            
+            const captchaContainer = document.getElementById('captchaContainer');
+            const actionButtons = document.getElementById('actionButtons');
+            const noUrlMessage = document.getElementById('noUrlMessage');
+
+            actionButtons.style.display = 'none';
+            captchaContainer.style.display = 'none';
+            noUrlMessage.style.display = 'none';
+            
+            const statusBadge = d.isExpired 
+                ? `<span class="status-badge status-expired">EXPIRED</span>` 
+                : `<span class="status-badge status-valid">VALID</span>`;
+            
+            const expiryDisplay = d.expiryDate === '-' ? '-' : `${d.expiryDate} &nbsp; ${statusBadge}`;
+
+            body.innerHTML = `
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Company</div>
+                        <div class="detail-value selectable-text" style="color:var(--primary);font-weight:600">${escapeHtml(d.company)}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Document Name</div>
+                        <div class="detail-value selectable-text" style="font-weight:600">${escapeHtml(d.documentName)}</div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">Department</div>
+                        <div class="detail-value selectable-text">${escapeHtml(d.department)}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Document Type</div>
+                        <div class="detail-value selectable-text">${escapeHtml(d.documentType)}</div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-label">Document Number</div>
+                        <div class="detail-value selectable-text">${escapeHtml(d.documentNumber)}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Document Code</div>
+                        <div class="detail-value selectable-text"><code>${escapeHtml(d.documentCode)}</code></div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-label">Document Date</div>
+                        <div class="detail-value selectable-text">${escapeHtml(d.docDate)}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Expiry Date</div>
+                        <div class="detail-value selectable-text">${expiryDisplay}</div>
+                    </div>
+
+                    <div class="detail-item" style="grid-column: 1 / -1;">
+                        <div class="detail-label">Remarks</div>
+                        <div class="detail-value selectable-text">${escapeHtml(d.remarks) || '-'}</div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-label">File Name</div>
+                        <div class="detail-value selectable-text">${escapeHtml(d.fileName)}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">File Size</div>
+                        <div class="detail-value selectable-text">${escapeHtml(d.fileSize)}</div>
+                    </div>
+                </div>
+            `;
+
+            if (d.url && d.url !== '-') {
+                captchaContainer.style.display = 'flex';
+                drawCaptcha();
+                previewBtn.href = d.url;
+                downloadBtn.href = d.url;
+            } else {
+                noUrlMessage.style.display = 'block';
+            }
+
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('detailModal').style.display = 'none';
+        }
+
+        function copyLink() {
+            if (!currentDetailUrl) return;
+            const textArea = document.createElement("textarea");
+            textArea.value = currentDetailUrl;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                const btn = document.getElementById('copyLinkBtn');
+                const originalHtml = `<i class="fas fa-link"></i> COPY LINK`;
+                btn.innerHTML = `<i class="fas fa-check"></i> COPIED`;
+                setTimeout(() => btn.innerHTML = originalHtml, 2000);
+            } catch (err) {
+                console.error('Fallback: Oops, unable to copy', err);
+            }
+            document.body.removeChild(textArea);
+        }
+
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('detailModal')) closeModal();
+        }
+
+        /* ---------- UTILS & HELPERS ---------- */
+        function filterAndRender(documents) {
+            resetIdleTime(); // filtering counts as activity
+            const search = (document.getElementById('searchTerm').value || '').trim().toLowerCase();
+            const company = (document.getElementById('companyFilter').value || '').trim();
+            const dept = (document.getElementById('deptFilter').value || '').trim();
+            const docType = (document.getElementById('docTypeFilter').value || '').trim();
+
+            let filtered = documents.filter(d => {
+                if (company && d.company !== company) return false;
+                if (dept && d.department !== dept) return false;
+                if (docType && d.documentType !== docType) return false;
+                if (search) {
+                    const hay = `${d.company} ${d.documentName} ${d.documentNumber} ${d.documentCode}`.toLowerCase();
+                    if (!hay.includes(search)) return false;
+                }
+                return true;
+            });
+
+            filtered = sortDocuments(filtered);
+            renderDocuments(filtered);
+            
+            const exportBtn = document.getElementById('exportBtn');
+            exportBtn.style.display = filtered.length ? 'block' : 'none';
+            exportBtn.onclick = () => exportToCSV(filtered);
+        }
+
         function exportToCSV(documents) {
+            resetIdleTime();
             const headers = [
-                "COMPANY",
-                "DEPARTMENT",
-                "DOCUMENT TYPE",
-                "DOCUMENT NUMBER",
-                "DOCUMENT NAME",
-                "DOCUMENT CODE",
-                "DOC DATE",
-                "EXPIRY DATE",
-                "REMARKS",
-                "FILE NAME",
-                "FILE SIZE (MB)",
-                "URL"
+                "COMPANY", "DEPARTMENT", "DOCUMENT TYPE", "DOCUMENT NUMBER",
+                "DOCUMENT NAME", "DOCUMENT CODE", "DOC DATE", "EXPIRY DATE",
+                "REMARKS", "FILE NAME", "FILE SIZE (MB)", "URL"
             ];
+            
             let csv = headers.join(',') + '\n';
             documents.forEach(d => {
                 const row = [
-                    csvEscape(d.company),
-                    csvEscape(d.department),
-                    csvEscape(d.documentType),
-                    csvEscape(d.documentNumber),
-                    csvEscape(d.documentName),
-                    csvEscape(d.documentCode),
-                    csvEscape(d.docDate),
-                    csvEscape(d.expiryDate),
-                    csvEscape(d.remarks),
-                    csvEscape(d.fileName),
-                    csvEscape(d.fileSize),
-                    csvEscape(d.url)
+                    csvEscape(d.company), csvEscape(d.department), csvEscape(d.documentType),
+                    csvEscape(d.documentNumber), csvEscape(d.documentName), csvEscape(d.documentCode),
+                    csvEscape(d.docDate), csvEscape(d.expiryDate), csvEscape(d.remarks),
+                    csvEscape(d.fileName), csvEscape(d.fileSize), csvEscape(d.url)
                 ];
                 csv += row.join(',') + '\n';
             });
@@ -543,53 +824,83 @@
             const link = document.createElement('a');
             const url = URL.createObjectURL(blob);
             link.setAttribute('href', url);
-            const fn = `document_report_${new Date().toISOString().split('T')[0]}.csv`;
-            link.setAttribute('download', fn);
+            link.setAttribute('download', `document_report_${new Date().toISOString().slice(0,10)}.csv`);
             link.style.visibility = 'hidden';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            URL.revokeObjectURL(url);
         }
 
-        /* Utilities */
-        function escapeHtml(str) {
-            if (!str && str !== 0) return '';
-            return String(str)
-                .replace(/&/g,'&amp;')
-                .replace(/</g,'&lt;')
-                .replace(/>/g,'&gt;')
-                .replace(/"/g,'&quot;')
-                .replace(/'/g,'&#39;');
+        function resetFilters() {
+            document.getElementById('searchTerm').value = '';
+            document.getElementById('companyFilter').value = '';
+            document.getElementById('deptFilter').value = '';
+            document.getElementById('docTypeFilter').value = '';
+            filterAndRender(allDocuments);
         }
-        function escapeAttr(s){ return escapeHtml(s).replace(/"/g,'&quot;'); }
+
+        function populateFilters(documents) {
+            const createOpts = (id, key) => {
+                const sel = document.getElementById(id);
+                const current = sel.value;
+                sel.innerHTML = sel.options[0].outerHTML;
+                const unique = [...new Set(documents.map(d => d[key]).filter(Boolean))].sort();
+                unique.forEach(v => {
+                    const opt = document.createElement('option');
+                    opt.value = v; opt.textContent = v;
+                    sel.appendChild(opt);
+                });
+                sel.value = current;
+            };
+            createOpts('companyFilter', 'company');
+            createOpts('deptFilter', 'department');
+            createOpts('docTypeFilter', 'documentType');
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+
+        function splitCsvRow(row) {
+            const cells = [];
+            let inQuotes = false, cur = '';
+            for (let i=0;i<row.length;i++){
+                const ch = row[i];
+                if (ch === '"') {
+                    if (inQuotes && row[i+1] === '"') { cur += '"'; i++; }
+                    else { inQuotes = !inQuotes; }
+                } else if (ch === ',' && !inQuotes) {
+                    cells.push(cur); cur = '';
+                } else { cur += ch; }
+            }
+            cells.push(cur);
+            return cells.map(c => c.replace(/^"|"$/g,'').trim());
+        }
+
+        function parseToDisplayDate(v) {
+            if (!v || v === 'N/A' || v === '-') return '-';
+            v = v.replace(/\//g,'-');
+            if (/^\d{4}-\d{1,2}-\d{1,2}$/.test(v)) {
+                const [y,m,d] = v.split('-'); return `${d.padStart(2,'0')}-${m.padStart(2,'0')}-${y}`;
+            }
+            if (/^\d{1,2}-\d{1,2}-\d{4}$/.test(v)) {
+                const [d,m,y] = v.split('-'); return `${d.padStart(2,'0')}-${m.padStart(2,'0')}-${y}`;
+            }
+            return v;
+        }
+
+        function escapeHtml(str) { return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
         function csvEscape(v) {
             if (v === null || v === undefined) return '""';
             const s = String(v);
-            if (s.includes(',') || s.includes('"') || s.includes('\n')) {
-                return `"${s.replace(/"/g,'""')}"`;
-            }
+            if (s.includes(',') || s.includes('"') || s.includes('\n')) return `"${s.replace(/"/g,'""')}"`;
             return `"${s}"`;
         }
 
-        /* Hook up UI events */
-        document.getElementById('applyBtn').addEventListener('click', () => {
-            if (allDocuments.length) filterAndRender(allDocuments);
+        document.getElementById('applyBtn').addEventListener('click', () => filterAndRender(allDocuments));
+        ['searchTerm', 'companyFilter', 'deptFilter', 'docTypeFilter'].forEach(id => {
+            document.getElementById(id).addEventListener(id === 'searchTerm' ? 'input' : 'change', () => filterAndRender(allDocuments));
         });
-        document.getElementById('searchTerm').addEventListener('input', ()=>{ if (allDocuments.length) filterAndRender(allDocuments); });
-        document.getElementById('companyFilter').addEventListener('change', ()=>{ if (allDocuments.length) filterAndRender(allDocuments); });
-        document.getElementById('deptFilter').addEventListener('change', ()=>{ if (allDocuments.length) filterAndRender(allDocuments); });
-        document.getElementById('docTypeFilter').addEventListener('change', ()=>{ if (allDocuments.length) filterAndRender(allDocuments); });
-        document.getElementById('docNumFilter').addEventListener('input', ()=>{ if (allDocuments.length) filterAndRender(allDocuments); });
-        document.getElementById('expiryFilter').addEventListener('change', ()=>{ if (allDocuments.length) filterAndRender(allDocuments); });
-
-        // small animation keyframes (injected)
-        (function injectKeyframes(){
-            const el = document.createElement('style');
-            el.innerHTML = '@keyframes spin{to{transform:rotate(360deg)}}';
-            document.head.appendChild(el);
-        })();
-
     </script>
 </body>
 </html>
