@@ -22,7 +22,7 @@
             --success:#4ade80;
             --error:#f87171;
             --card-shadow: 0 8px 30px rgba(0,0,0,0.6);
-            --modal-bg: rgba(0, 0, 0, 0.92);
+            --modal-bg: rgba(0, 0, 0, 0.95);
         }
         *{box-sizing:border-box;margin:0;padding:0}
         
@@ -97,7 +97,15 @@
             background: var(--surface); width: 90%; max-width: 700px;
             border-radius: 12px; border: 1px solid var(--border); box-shadow: var(--card-shadow);
             display: flex; flex-direction: column; max-height: 90vh; animation: modalFadeIn 0.2s ease-out;
+            transition: all 0.3s ease;
         }
+        
+        /* Expanded Modal for Preview */
+        .modal-content.expanded {
+            max-width: 95vw;
+            height: 95vh;
+        }
+
         @keyframes modalFadeIn { from{opacity:0;transform:scale(0.95)} to{opacity:1;transform:scale(1)} }
 
         .modal-header{ padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
@@ -105,7 +113,7 @@
         .close-btn{ background: none; border: none; color: var(--muted); font-size: 1.5rem; cursor: pointer; }
         .close-btn:hover{ color: var(--text); }
 
-        .modal-body{ padding: 20px; overflow-y: auto; }
+        .modal-body{ padding: 20px; overflow-y: auto; flex: 1; display: flex; flex-direction: column;}
         .detail-grid{ display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .detail-item{ display: flex; flex-direction: column; gap: 4px; }
         .detail-label{ font-size: 0.8rem; color: var(--muted); text-transform: uppercase; font-weight: 700; }
@@ -120,6 +128,34 @@
             justify-content: flex-end; background: #151c28; border-radius: 0 0 12px 12px; flex-wrap: wrap;
             align-items: center;
         }
+
+        /* Preview Frame */
+        .preview-frame-container {
+            display: none; /* Hidden by default */
+            flex: 1;
+            background: #000;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-top: 20px;
+            position: relative;
+        }
+        .preview-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #fff; /* Documents are usually on white */
+        }
+        .close-preview-btn {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: var(--muted);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .close-preview-btn:hover { color: var(--text); }
 
         /* CAPTCHA STYLES */
         .captcha-container {
@@ -279,13 +315,22 @@
 
     <!-- DETAIL MODAL -->
     <div id="detailModal" class="modal-overlay">
-        <div class="modal-content">
+        <div id="modalContent" class="modal-content">
             <div class="modal-header">
                 <div class="modal-title"><i class="fas fa-file-alt"></i> Document Details</div>
                 <button class="close-btn" onclick="closeModal()"><i class="fas fa-times"></i></button>
             </div>
             <div class="modal-body" id="modalBody">
-                <!-- Content injected via JS -->
+                <!-- Details injected here -->
+                <div id="detailsContent"></div>
+                
+                <!-- PREVIEW CONTAINER (Inside Modal) -->
+                <div id="previewContainer" class="preview-frame-container">
+                    <button class="close-preview-btn" onclick="hidePreview()">
+                        <i class="fas fa-arrow-left"></i> Back to Details
+                    </button>
+                    <iframe id="docFrame" class="preview-iframe" src=""></iframe>
+                </div>
             </div>
             
             <div class="modal-footer">
@@ -307,7 +352,7 @@
                 <!-- ACTION BUTTONS (Hidden by default) -->
                 <div id="actionButtons" style="display:none;gap:12px;flex-wrap:wrap;justify-content:flex-end;width:100%">
                     <button id="copyLinkBtn" class="btn btn-outline" onclick="copyLink()"><i class="fas fa-link"></i> COPY LINK</button>
-                    <a id="previewBtn" href="#" target="_blank" class="btn btn-outline"><i class="fas fa-eye"></i> PREVIEW</a>
+                    <button id="previewBtn" onclick="showPreview()" class="btn btn-outline"><i class="fas fa-eye"></i> PREVIEW</button>
                     <a id="downloadBtn" href="#" download class="btn"><i class="fas fa-download"></i> DOWNLOAD</a>
                 </div>
                 
@@ -654,23 +699,31 @@
             if (e.key === 'Enter') verifyCaptcha();
         });
 
-        /* ---------- MODAL LOGIC ---------- */
+        /* ---------- MODAL LOGIC & PREVIEW ---------- */
         let currentDetailUrl = ""; 
 
         function openDetailModal(rowId) {
-            resetIdleTime(); // Interacting resets timer
+            resetIdleTime(); 
             const d = window[rowId];
             if (!d) return;
 
             currentDetailUrl = d.url;
-            const modal = document.getElementById('detailModal');
-            const body = document.getElementById('modalBody');
-            const previewBtn = document.getElementById('previewBtn');
-            const downloadBtn = document.getElementById('downloadBtn');
             
+            // UI Elements
+            const modal = document.getElementById('detailModal');
+            const modalContent = document.getElementById('modalContent');
+            const detailsContent = document.getElementById('detailsContent');
+            const previewContainer = document.getElementById('previewContainer');
+            const downloadBtn = document.getElementById('downloadBtn');
             const captchaContainer = document.getElementById('captchaContainer');
             const actionButtons = document.getElementById('actionButtons');
             const noUrlMessage = document.getElementById('noUrlMessage');
+
+            // Reset State
+            modalContent.classList.remove('expanded');
+            previewContainer.style.display = 'none';
+            detailsContent.style.display = 'block';
+            document.getElementById('docFrame').src = ""; // clear prev
 
             actionButtons.style.display = 'none';
             captchaContainer.style.display = 'none';
@@ -682,7 +735,8 @@
             
             const expiryDisplay = d.expiryDate === '-' ? '-' : `${d.expiryDate} &nbsp; ${statusBadge}`;
 
-            body.innerHTML = `
+            // Inject Details
+            detailsContent.innerHTML = `
                 <div class="detail-grid">
                     <div class="detail-item">
                         <div class="detail-label">Company</div>
@@ -739,13 +793,47 @@
             if (d.url && d.url !== '-') {
                 captchaContainer.style.display = 'flex';
                 drawCaptcha();
-                previewBtn.href = d.url;
                 downloadBtn.href = d.url;
             } else {
                 noUrlMessage.style.display = 'block';
             }
 
             modal.style.display = 'flex';
+        }
+
+        function showPreview() {
+            if (!currentDetailUrl) return;
+
+            const modalContent = document.getElementById('modalContent');
+            const detailsContent = document.getElementById('detailsContent');
+            const previewContainer = document.getElementById('previewContainer');
+            const frame = document.getElementById('docFrame');
+
+            // Expand Modal
+            modalContent.classList.add('expanded');
+            detailsContent.style.display = 'none'; // hide details to make room
+            previewContainer.style.display = 'block';
+
+            // Smart URL handling for Google Drive
+            let previewUrl = currentDetailUrl;
+            if (previewUrl.includes('drive.google.com') && previewUrl.includes('/view')) {
+                previewUrl = previewUrl.replace('/view', '/preview');
+            }
+
+            frame.src = previewUrl;
+        }
+
+        function hidePreview() {
+            const modalContent = document.getElementById('modalContent');
+            const detailsContent = document.getElementById('detailsContent');
+            const previewContainer = document.getElementById('previewContainer');
+            const frame = document.getElementById('docFrame');
+
+            // Shrink Modal
+            modalContent.classList.remove('expanded');
+            previewContainer.style.display = 'none';
+            detailsContent.style.display = 'block';
+            frame.src = "";
         }
 
         function closeModal() {
