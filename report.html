@@ -610,6 +610,7 @@
                   <tr>
                     <th onclick="handleSort('company')" style="width:25%">Company ${getSortIcon('company')}</th>
                     <th onclick="handleSort('department')" style="width:25%">Department ${getSortIcon('department')}</th>
+                    <th onclick="handleSort('documentType')" style="width:20%">Document Type ${getSortIcon('documentType')}</th> </th>
                     <th onclick="handleSort('documentName')" style="width:35%">Document Name ${getSortIcon('documentName')}</th>
                     <th style="width:15%;text-align:center">Action</th>
                   </tr>
@@ -623,6 +624,7 @@
                 html += `<tr>`;
                 html += `<td data-label="Company" class="selectable-text"><strong>${escapeHtml(d.company)}</strong></td>`;
                 html += `<td data-label="Department" class="selectable-text">${escapeHtml(d.department)}</td>`;
+                html += `<td data-label="Document Type">${escapeHtml(d.documentType)}</td>`;
                 html += `<td data-label="Document Name" class="selectable-text">${escapeHtml(d.documentName)}</td>`;
                 html += `<td data-label="Action" style="text-align:center">
                             <button class="view-btn" onclick="openDetailModal('${rowId}')">
