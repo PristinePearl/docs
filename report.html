@@ -877,9 +877,9 @@
                 if (dept && d.department !== dept) return false;
                 if (docType && d.documentType !== docType) return false;
                 if (search) {
-                    const hay = `${d.company} ${d.documentName} ${d.documentNumber} ${d.documentCode}`.toLowerCase();
-                    if (!hay.includes(search)) return false;
-                }
+    const hay = `${d.company} ${d.department} ${d.documentType} ${d.documentName} ${d.documentNumber} ${d.documentCode}`.toLowerCase();
+    if (!hay.includes(search)) return false;
+}
                 return true;
             });
 
