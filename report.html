@@ -27,18 +27,33 @@
         *{box-sizing:border-box;margin:0;padding:0}
         
         /* Security: Prevent text selection on UI elements */
-        body{
-            font-family:Inter,system-ui,Segoe UI,Arial;
-            background:var(--bg); color:var(--text); min-height:100vh;
-            user-select: none; -webkit-user-select: none;
-        }
+       body{
+    font-family:Inter,system-ui,Segoe UI,Arial;
+    background:var(--bg);
+    color:var(--text);
+    height:100vh;
+    overflow:hidden;   /* 🔥 prevents full page scroll */
+    user-select: none;
+    -webkit-user-select: none;
+}
         /* Allow selection only on inputs and specific data */
         input, select, .selectable-text { user-select: text; -webkit-user-select: text; }
 
-        .app-container{display:flex;min-height:100vh}
+        .app-container{
+    display:flex;
+    height:100vh;   /* full screen fixed */
+}
 
         /* Sidebar */
-        .sidebar{width:320px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;transition: transform 0.3s ease;}
+        .sidebar{
+    width:320px;
+    background:var(--surface);
+    border-right:1px solid var(--border);
+    display:flex;
+    flex-direction:column;
+    height:100vh;      /* fixed height */
+    overflow:hidden;   /* no scroll */
+}
         .logo-section{padding:20px;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:center}
         .logo{width:48px;height:48px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));display:flex;align-items:center;justify-content:center;border-radius:10px;color:#111827;font-weight:700}
         .filter-section{padding:22px;flex:1;display:flex;flex-direction:column;gap:18px}
@@ -59,20 +74,64 @@
         .stats-value{color:var(--primary);font-size:1.6rem;font-weight:700}
 
         /* Main Content */
-        .main-content{flex:1;display:flex;flex-direction:column;overflow:auto;position:relative;}
-        .header{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;}
+        .main-content{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    height:100vh;
+    overflow:hidden;   /* prevent double scroll */
+    position:relative;
+}
+        .header{
+    background:var(--surface);
+    border-bottom:1px solid var(--border);
+    position:relative;   /* 🔥 change this */
+    z-index:500;         /* 🔥 higher than table */
+}
         .header-content{padding:18px 28px;display:flex;justify-content:space-between;align-items:center}
         .page-title{font-size:1.25rem;font-weight:600}
-        .results-section{padding:22px;background:var(--bg);flex:1;overflow:auto}
+.results-section{
+    padding:0 22px 22px 22px;   /* 🔥 remove top padding */
+    background:var(--bg);
+    flex:1;
+    overflow-y:auto;
+}
         
         /* Table */
-        .table-container{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
-        table{width:100%;border-collapse:collapse}
-        th{
-            background:#141922;color:var(--muted);padding:12px 20px;text-align:left;
-            font-size:0.85rem;font-weight:700;text-transform:uppercase;border-bottom:1px solid var(--border);
-            cursor: pointer;
-        }
+       .table-container{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:8px;
+    overflow:visible;   /* 🔥 IMPORTANT */
+}
+table{
+    width:100%;
+    border-collapse:separate;   /* 🔥 IMPORTANT */
+    border-spacing:0;
+}
+thead th{
+    position: sticky;
+    top: 0;
+    z-index: 300;
+
+    background: rgba(20, 25, 34, 0.95);   /* 🔥 solid dark glass */
+    backdrop-filter: blur(6px);           /* 🔥 glass effect */
+    -webkit-backdrop-filter: blur(6px);
+
+    color: var(--muted);
+    padding:20px 20px;
+    text-align:left;
+    font-size:0.85rem;
+    font-weight:700;
+    text-transform:uppercase;
+    border-bottom:1px solid var(--border);
+    cursor:pointer;
+
+    /* 🔥 Strong shadow barrier */
+    box-shadow:
+        0 6px 12px rgba(0,0,0,0.6),
+        0 2px 0 var(--border);
+}
         th:hover { color: var(--primary); }
         td{padding:12px 20px;border-bottom:1px solid var(--border);vertical-align:middle;font-size:0.95rem}
         tr:hover td{background:#222b35}
@@ -271,47 +330,96 @@
                         <label class="filter-label"><i class="fas fa-file"></i> Document Type</label>
                         <select id="docTypeFilter" class="filter-input"><option value="">All Types</option></select>
                     </div>
+<div>
+    <label class="filter-label">
+        <i class="fas fa-hourglass-half"></i> Near Expiry
+    </label>
+    <select id="expiryFilter" class="filter-input">
+        <option value="">All</option>
+        <option value="30">&lt; 30 Days</option>
+        <option value="60">&lt; 60 Days</option>
+        <option value="90">&lt; 90 Days</option>
+        <option value="120">&lt; 120 Days</option>
+        <option value="180">&lt; 180 Days</option>
+        <option value="custom">Custom Days</option>
+    </select>
+</div>
+
+<div id="customDaysWrapper" style="display:none">
+    <input type="number" id="customDaysInput" 
+           class="filter-input selectable-text"
+           placeholder="Enter days"
+           min="1">
+</div>
 
                     <button id="applyBtn" class="btn" type="button" style="width:100%"><i class="fas fa-filter"></i> APPLY FILTERS</button>
                 </form>
 
-                <div class="stats-card" style="margin-top:auto">
-                    <div class="stats-title">TOTAL DOCUMENTS</div>
-                    <div class="stats-value" id="totalDocuments">0</div>
-                </div>
 
                 <button id="exportBtn" class="btn btn-secondary" style="display:none;width:100%;margin-top:12px"><i class="fas fa-file-csv"></i> EXPORT TO CSV</button>
-                <button onclick="logout()" class="btn-danger-outline" style="width:100%;margin-top:12px;border:1px solid var(--border);color:var(--muted)"><i class="fas fa-sign-out-alt"></i> LOGOUT</button>
             </div>
         </div>
 
         <!-- Main Content -->
-        <div class="main-content">
-            <div class="header">
-                <div class="header-content">
-                    <div style="display:flex;align-items:center;gap:15px">
-                        <button class="mobile-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
-                        <div class="page-title">Document Repository</div>
-                    </div>
-                    <div style="display:flex;align-items:center;gap:15px">
-                         <div id="timerDisplay" style="font-size:0.8rem;color:var(--muted);font-variant-numeric:tabular-nums"><i class="fas fa-clock"></i> Auto-lock: 05:00</div>
-                         <div id="resultsCount" style="background:#0f1724;padding:8px 12px;border-radius:8px;border:1px solid var(--border);color:var(--primary);font-size:0.9rem">0 docs</div>
-                    </div>
-                </div>
+        <!-- Main Content -->
+<div class="main-content">
+
+    <div class="header">
+        <div class="header-content">
+
+            <!-- LEFT SIDE -->
+            <div style="display:flex;align-items:center;gap:15px">
+                <button class="mobile-menu-btn" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="page-title">Document Repository</div>
             </div>
 
-            <div class="results-section">
-                <div id="resultsContainer" class="results-container">
-                    <!-- Skeleton Loading Init -->
-                    <div class="skeleton-row" style="border-radius:8px 8px 0 0"></div>
-                    <div class="skeleton-row"></div>
-                    <div class="skeleton-row"></div>
-                    <div class="skeleton-row" style="border-radius:0 0 8px 8px"></div>
-                    <div style="text-align:center;margin-top:20px;color:var(--muted)">Connecting to secure database...</div>
+            <!-- RIGHT SIDE -->
+            <div style="display:flex;align-items:center;gap:15px">
+
+                <div id="timerDisplay"
+                     style="font-size:0.8rem;color:var(--muted);font-variant-numeric:tabular-nums">
+                    <i class="fas fa-clock"></i> Auto-lock: 05:00
                 </div>
+
+                <div id="resultsCount"
+                     style="background:#0f1724;padding:8px 12px;border-radius:8px;
+                            border:1px solid var(--border);color:var(--primary);
+                            font-size:0.9rem">
+                    0 DOCS
+                </div>
+
+                <button onclick="logout()"
+                        style="
+                            background:#b91c1c;
+                            border:1px solid #ef4444;
+                            color:#fff;
+                            padding:8px 14px;
+                            border-radius:8px;
+                            font-weight:600;
+                            cursor:pointer;
+                            display:flex;
+                            align-items:center;
+                            gap:6px;
+                        "
+                        onmouseover="this.style.background='#ef4444'"
+                        onmouseout="this.style.background='#b91c1c'">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+
             </div>
+
         </div>
     </div>
+
+    <div class="results-section">
+        <div id="resultsContainer" class="results-container">
+            <!-- Your table loads here -->
+        </div>
+    </div>
+
+</div>
 
     <!-- DETAIL MODAL -->
     <div id="detailModal" class="modal-overlay">
@@ -522,7 +630,7 @@
             }
         }
 
-        function updateStats(n) { document.getElementById('totalDocuments').textContent = n; }
+        function updateStats(n) { }
 
         function parseSheetData(csvText) {
             const lines = csvText.split(/\r\n|\n/).filter(l=>l.trim()!=='');
@@ -872,16 +980,48 @@
             const dept = (document.getElementById('deptFilter').value || '').trim();
             const docType = (document.getElementById('docTypeFilter').value || '').trim();
 
-            let filtered = documents.filter(d => {
-                if (company && d.company !== company) return false;
-                if (dept && d.department !== dept) return false;
-                if (docType && d.documentType !== docType) return false;
-                if (search) {
-    const hay = `${d.company} ${d.department} ${d.documentType} ${d.documentName} ${d.documentNumber} ${d.documentCode}`.toLowerCase();
-    if (!hay.includes(search)) return false;
-}
-                return true;
-            });
+           let filtered = documents.filter(d => {
+
+    if (company && d.company !== company) return false;
+    if (dept && d.department !== dept) return false;
+    if (docType && d.documentType !== docType) return false;
+
+    if (search) {
+        const hay = `${d.company} ${d.department} ${d.documentType} ${d.documentName} ${d.documentNumber} ${d.documentCode}`.toLowerCase();
+        if (!hay.includes(search)) return false;
+    }
+
+    // 🔥 NEAR EXPIRY FILTER
+    const expiryFilter = document.getElementById('expiryFilter').value;
+    const customDays = parseInt(document.getElementById('customDaysInput').value);
+
+    if (expiryFilter) {
+        if (!d.expiryDate || d.expiryDate === '-') return false;
+
+        const parts = d.expiryDate.split('-');
+        if (parts.length !== 3) return false;
+
+        const expDate = new Date(parts[2], parts[1] - 1, parts[0]);
+        const today = new Date();
+        today.setHours(0,0,0,0);
+
+        const diffTime = expDate - today;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        let limit = 0;
+
+        if (expiryFilter === 'custom') {
+            if (!customDays || customDays <= 0) return false;
+            limit = customDays;
+        } else {
+            limit = parseInt(expiryFilter);
+        }
+
+        if (diffDays < 0 || diffDays > limit) return false;
+    }
+
+    return true;
+});
 
             filtered = sortDocuments(filtered);
             renderDocuments(filtered);
@@ -926,6 +1066,9 @@
             document.getElementById('companyFilter').value = '';
             document.getElementById('deptFilter').value = '';
             document.getElementById('docTypeFilter').value = '';
+document.getElementById('expiryFilter').value = '';
+    document.getElementById('customDaysInput').value = '';
+    document.getElementById('customDaysWrapper').style.display = 'none';
             filterAndRender(allDocuments);
         }
 
@@ -988,9 +1131,20 @@
         }
 
         document.getElementById('applyBtn').addEventListener('click', () => filterAndRender(allDocuments));
-        ['searchTerm', 'companyFilter', 'deptFilter', 'docTypeFilter'].forEach(id => {
+        ['searchTerm', 'companyFilter', 'deptFilter', 'docTypeFilter', 'expiryFilter'].forEach(id => {
             document.getElementById(id).addEventListener(id === 'searchTerm' ? 'input' : 'change', () => filterAndRender(allDocuments));
         });
+
+document.getElementById('expiryFilter').addEventListener('change', function () {
+    const wrapper = document.getElementById('customDaysWrapper');
+    wrapper.style.display = this.value === 'custom' ? 'block' : 'none';
+    filterAndRender(allDocuments);
+});
+
+document.getElementById('customDaysInput').addEventListener('input', function () {
+    filterAndRender(allDocuments);
+});
+
     </script>
 </body>
 </html>
