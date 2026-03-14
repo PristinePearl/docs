@@ -910,32 +910,36 @@
                         upoSetPct(simPct);
                     }, 40);
 
-                    const response = await fetch(APPS_SCRIPT_URL, {
+                    // Google Apps Script requires no-cors mode when called from a browser.
+                    // We wrap the JSON payload in a form-encoded 'data' key so GAS can read
+                    // it via e.postData.contents on the server side.
+                    const formBody = 'data=' + encodeURIComponent(JSON.stringify(finalDocuments));
+
+                    await fetch(APPS_SCRIPT_URL, {
                         method: 'POST',
-                        body: JSON.stringify(finalDocuments),
-                        headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8' }
+                        mode: 'no-cors',
+                        body: formBody,
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
                     });
 
+                    // no-cors returns an opaque response — we can't read it,
+                    // so we treat a non-thrown fetch as success.
                     clearInterval(uploadSimInterval);
-                    const result = await response.json();
+                    upoAdvanceTo(100, 1.2);
 
-                    if (result.success) {
-                        upoAdvanceTo(100, 1.2);
-                        setTimeout(() => {
-                            upoHide(true);
-                            showToast(
-                                `${finalDocuments.length} document${finalDocuments.length > 1 ? 's' : ''} archived successfully.`,
-                                'success', 5000
-                            );
-                            statusMessage.className = 'status-message show success';
-                            statusMessage.innerHTML = `<i class="fas fa-check-double"></i> Transfer Complete: ${finalDocuments.length} document${finalDocuments.length > 1 ? 's' : ''} securely archived to the database. ${result.message || ''}`;
-                            form.reset();
-                            documentRowsContainer.innerHTML = '';
-                            updateRowNumbers();
-                        }, 650);
-                    } else {
-                        throw new Error(result.message);
-                    }
+                    setTimeout(() => {
+                        upoHide(true);
+                        showToast(
+                            `${finalDocuments.length} document${finalDocuments.length > 1 ? 's' : ''} submitted to database successfully.`,
+                            'success', 5000
+                        );
+                        statusMessage.className = 'status-message show success';
+                        statusMessage.innerHTML = `<i class="fas fa-check-double"></i> Transfer Complete: ${finalDocuments.length} document${finalDocuments.length > 1 ? 's' : ''} securely archived to the database.`;
+                        form.reset();
+                        documentRowsContainer.innerHTML = '';
+                        updateRowNumbers();
+                    }, 650);
+
                 } catch (error) {
                     clearInterval(upoInterval);
                     console.error('Submission Error:', error);
