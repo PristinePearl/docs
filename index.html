@@ -3,486 +3,607 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pristine Document Cloud</title>
+    <title>Pristine Document Manager</title>
+    
     <link rel="icon" type="image/png" href="https://www.pristinepearlpharma.in/images/alt-logo.png">
+    
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         :root {
-            --primary-color: #5eead4;
-            --primary-light: #99f6e4;
-            --primary-dark: #14b8a6;
-            --card-bg: #1f2937;
-            --secondary-bg: #111827;
-            --background: #0D1117;
-            --text-color: #C9D1D9;
-            --text-secondary: #9ca3af;
-            --placeholder-color: #6b7280;
-            --border-color: #30363D;
+            /* PROFESSIONAL DARK MODE PALETTE */
+            --primary-color: #5eead4; /* Teal/Cyan accent */
+            --primary-light: #99f6e4; 
+            --primary-dark: #14b8a6; /* A slightly deeper teal */
+            
+            --card-bg: #1f2937; /* Surface */
+            --secondary-bg: #111827; /* Input field background */
+            --background: #0D1117; /* Deep Navy/Indigo for professional dark look */
+            
+            --text-color: #C9D1D9; /* Muted white text */
+            --text-secondary: #9ca3af; /* Secondary text */
+            --placeholder-color: #6b7280; 
+            
+            --border-color: #30363D; /* Subtle deep border */
+            
             --success-color: #4ade80;
-            --danger-color: #f87171;
+            --danger-color: #f87171; 
             --warning-color: #facc15;
-            --shadow-card: 0 8px 30px rgba(0,0,0,0.7);
-            --shadow-input-focus: 0 0 0 3px rgba(94,234,212,0.2);
-            --radius: 12px;
+            
+            /* Shadows & Effects (More professional depth) */
+            --shadow-primary: 0 0 5px rgba(94, 234, 212, 0.6); /* Tighter focus glow */
+            --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.7); /* Deep, clean shadow */
+            --shadow-input-focus: 0 0 0 3px rgba(94, 234, 212, 0.2); /* Tighter focus ring */
+            
+            --radius: 12px; /* Slightly tighter radius */
             --radius-sm: 8px;
         }
-        * { margin:0; padding:0; box-sizing:border-box; }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            background: var(--background);
+            background: var(--background); 
             color: var(--text-color);
-            min-height: 100vh;
+            min-height: 10vh;
             padding: 30px;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
+            align-items: flex-start; /* Align to top for better document flow */
         }
 
-        /* ── APP CONTAINER ── */
+        /* Main Container */
         .app-container {
             width: 100%;
             max-width: 1000px;
-            background: rgba(31,41,55,0.65);
-            backdrop-filter: blur(20px);
+            /* Enhanced Glassmorphism: Increased blur, controlled transparency */
+            background: rgba(31, 41, 55, 0.65); 
+            backdrop-filter: blur(20px); 
             border-radius: var(--radius);
             box-shadow: var(--shadow-card);
             overflow: hidden;
             border: 1px solid var(--border-color);
-            transition: filter 0.3s ease;
         }
 
-        /* ── HEADER ── */
+        /* Header */
         .app-header {
-            background: linear-gradient(135deg, rgba(94,234,212,0.05) 0%, rgba(45,212,191,0.1) 100%);
-            backdrop-filter: blur(15px);
-            padding: 36px 20px 30px;
+            background: linear-gradient(135deg, rgba(94, 234, 212, 0.05) 0%, rgba(45, 212, 191, 0.1) 100%);
+            backdrop-filter: blur(15px); 
+            padding: 40px 20px;
             text-align: center;
+            position: relative;
             border-bottom: 1px solid var(--border-color);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
         }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
         .app-logo {
-            width: 58px; height: 58px;
-            background: rgba(255,255,255,0.03);
+            width: 60px; /* Slightly smaller for professionalism */
+            height: 60px;
+            background: rgba(255, 255, 255, 0.03); 
             border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 14px;
-            padding: 5px;
-            border: 1px solid rgba(94,234,212,0.3);
-            box-shadow: 0 0 10px rgba(94,234,212,0.15);
-        }
-        .app-logo img { width:100%; height:100%; object-fit:contain; }
-        .app-title { color: var(--text-color); font-size: 1.9rem; font-weight: 800; margin-bottom: 5px; letter-spacing: -0.02em; }
-        .app-subtitle { color: var(--primary-light); font-size: 0.9rem; font-weight: 400; max-width: 480px; margin: 0 auto 20px; }
-
-        /* ── STAT PILLS ── */
-        .stats-bar { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
-        .stat-pill {
-            display: flex; align-items: center; gap: 6px;
-            background: rgba(94,234,212,0.06);
-            border: 1px solid rgba(94,234,212,0.15);
-            border-radius: 20px;
-            padding: 4px 12px;
-            font-size: 0.72rem;
-            font-weight: 600;
-            color: var(--primary-light);
-            letter-spacing: 0.02em;
-        }
-        .stat-pill i { font-size: 0.65rem; opacity: 0.75; }
-
-        /* ── MAIN CONTENT ── */
-        .main-content { padding: 36px 40px; }
-        .form-section { margin-bottom: 38px; }
-        .section-title {
-            font-size: 1.05rem;
-            font-weight: 700;
-            margin-bottom: 22px;
-            color: var(--primary-color);
             display: flex;
             align-items: center;
-            gap: 10px;
-            border-bottom: 1px solid rgba(94,234,212,0.15);
-            padding-bottom: 10px;
+            justify-content: center;
+            margin: 0 auto 15px;
+            padding: 5px;
+            border: 1px solid rgba(94, 234, 212, 0.3);
+            /* Subtler logo glow */
+            box-shadow: 0 0 8px rgba(94, 234, 212, 0.2); 
         }
-        .section-title i { font-size: 0.95rem; }
-
-        /* ── DOCUMENT COUNT BADGE ── */
-        .doc-count-badge {
-            display: inline-flex; align-items: center; gap: 5px;
-            background: rgba(94,234,212,0.08);
-            border: 1px solid rgba(94,234,212,0.18);
-            color: var(--primary-light);
-            font-size: 0.7rem; font-weight: 700;
-            padding: 2px 9px; border-radius: 10px;
-            margin-left: 8px;
+        
+        .app-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; 
         }
 
-        /* ── FORM ── */
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
-        .form-group { margin-bottom: 0; }
+        .app-title {
+            color: var(--text-color); 
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            letter-spacing: -0.02em;
+        }
+
+        .app-subtitle {
+            color: var(--primary-light); 
+            font-size: 0.95rem;
+            font-weight: 400;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 40px;
+        }
+
+        /* Form Sections */
+        .form-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: var(--primary-color); 
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 2px solid var(--primary-dark); /* Subtle underline accent */
+            padding-bottom: 8px;
+            margin-left: -5px;
+        }
+
+        .section-title i {
+            font-size: 1.2rem;
+        }
+        
+        /* New: Professional Grid Layout for Form Elements */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px; 
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 0; /* Handled by grid gap */
+        }
+
         .form-label {
-            display: flex; margin-bottom: 7px;
-            font-weight: 600; color: var(--text-secondary);
-            font-size: 0.78rem; align-items: center;
-            gap: 7px; text-transform: uppercase; letter-spacing: 0.045em;
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-secondary); 
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
         }
+
         select, input[type="text"], input[type="date"], textarea {
             width: 100%;
-            padding: 11px 13px;
+            padding: 12px 15px; /* Slightly tighter padding for input */
             border: 1px solid var(--border-color);
             border-radius: var(--radius-sm);
-            background-color: var(--secondary-bg);
-            font-size: 0.93rem;
+            background-color: var(--secondary-bg); 
+            font-size: 1rem;
             color: var(--text-color);
-            transition: border-color 0.2s, box-shadow 0.2s;
+            transition: all 0.3s ease;
             font-family: 'Inter', sans-serif;
             font-weight: 500;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.4);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5); 
         }
-        ::placeholder { color: var(--placeholder-color); }
+        
+        ::placeholder {
+            color: var(--placeholder-color);
+        }
+
         select:focus, input:focus, textarea:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: var(--shadow-input-focus);
+            box-shadow: var(--shadow-input-focus); 
         }
+        
         select {
             appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2314b8a6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+            /* Use a slightly darker SVG icon for better contrast */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2314b8a6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 13px center;
-            background-size: 15px;
+            background-position: right 15px center;
+            background-size: 18px;
+            text-transform: none; 
         }
-        select option { background: #111420; }
+
         .doc-field input[readonly] {
-            background-color: #0a0f17;
+            background-color: #0b1118; 
             border-color: var(--primary-dark);
             color: var(--primary-light);
             font-weight: 700;
-            letter-spacing: 0.06em;
-            cursor: default;
+            letter-spacing: 0.05em;
         }
-        textarea { resize: vertical; min-height: 66px; }
+        
+        /* Document Rows */
+        .document-rows-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px; /* Tighter professional spacing */
+        }
 
-        /* ── DOCUMENT ROWS ── */
-        .document-rows-container { display: flex; flex-direction: column; gap: 10px; }
         .document-row {
-            background: var(--secondary-bg);
+            background: var(--secondary-bg); /* Darker surface for rows */
             border-radius: var(--radius-sm);
-            box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
             border: 1px solid var(--border-color);
             overflow: hidden;
-            transition: box-shadow 0.25s, transform 0.25s, border-color 0.25s, opacity 0.25s;
+            transition: all 0.3s ease; /* Smoother, less bouncy transition */
             position: relative;
         }
+
         .document-row:hover {
-            box-shadow: 0 0 14px rgba(94,234,212,0.09);
-            transform: translateY(-1px);
-            border-color: rgba(20,184,166,0.45);
+            box-shadow: 0 0 10px rgba(94, 234, 212, 0.1); /* Subtle elevation */
+            transform: translateY(-2px);
+            border-color: var(--primary-dark);
         }
+
         .document-row-header {
-            background: rgba(31,41,55,0.75);
-            padding: 13px 18px;
+            background: rgba(31, 41, 55, 0.7); 
+            padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
-            border-bottom: 1px solid rgba(55,65,81,0.5);
+            border-bottom: 1px solid rgba(55, 65, 81, 0.5);
             user-select: none;
-            transition: background 0.2s;
+            transition: background 0.3s ease;
         }
-        .document-row:hover .document-row-header { background: rgba(45,212,191,0.05); }
-        .row-title { display: flex; align-items: center; gap: 11px; font-weight: 600; color: var(--text-color); }
+        
+        .document-row:hover .document-row-header {
+             background: rgba(45, 212, 191, 0.05); /* Very slight background shift on row hover */
+        }
+
+        .row-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
         .row-number {
-            background: var(--primary-dark); color: var(--background);
-            width: 26px; height: 26px; border-radius: 5px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.82rem; font-weight: 800; flex-shrink: 0;
+            background: var(--primary-dark); /* Darker accent on index */
+            color: var(--background); 
+            width: 30px;
+            height: 30px;
+            border-radius: 6px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 700;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
         }
-        .row-preview { color: var(--primary-light); font-weight: 600; font-size: 0.9rem; }
-        .row-type-meta { font-size: 0.7rem; color: var(--text-secondary); margin-left: 3px; font-weight: 400; }
-        .toggle-icon { color: var(--primary-color); font-size: 0.82rem; transition: transform 0.3s ease; flex-shrink: 0; }
-        .document-row.collapsed .toggle-icon { transform: rotate(-90deg); }
+
+        .row-preview {
+            color: var(--primary-light);
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .toggle-icon {
+            color: var(--primary-color);
+            font-size: 1rem;
+            transition: transform 0.3s ease-out;
+        }
+
         .document-row-content {
-            padding: 20px 26px;
+            padding: 25px 30px;
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 16px 24px;
+            gap: 20px 30px;
             max-height: 1000px;
             opacity: 1;
             overflow: hidden;
-            transition: max-height 0.38s ease, opacity 0.28s ease, padding 0.28s ease;
+            transition: all 0.4s ease-in-out;
         }
-        .document-row.collapsed .document-row-content { max-height: 0; opacity: 0; padding: 0 26px; }
-        .doc-field:nth-child(5), .doc-field:nth-child(6) { grid-column: span 2; }
 
-        /* ── FILE UPLOAD ── */
-        .file-upload-wrapper { grid-column: 1 / -1; }
-        .file-input { display: none; }
+        .document-row.collapsed .document-row-content {
+            max-height: 0;
+            opacity: 0;
+            padding: 0 30px;
+        }
+
+        .doc-field:nth-child(5), 
+        .doc-field:nth-child(6) { 
+            grid-column: span 2;
+        }
+        
+        /* File Upload */
+        .file-upload-wrapper {
+            grid-column: 1 / -1;
+        }
+
+        .file-input {
+            display: none;
+        }
+
         .file-control-container {
-            display: flex; align-items: center;
+            display: flex;
+            align-items: center;
             border: 1px solid var(--border-color);
             border-radius: var(--radius-sm);
-            background-color: var(--card-bg);
+            background-color: var(--card-bg); /* Use card-bg for contrast */
             overflow: hidden;
-            transition: border-color 0.2s;
+            transition: all 0.3s ease;
         }
-        .file-control-container:hover { border-color: var(--primary-dark); }
+
+        .file-control-container:hover {
+            border-color: var(--primary-dark);
+        }
+
         .file-name-display {
-            flex-grow: 1; padding: 11px 13px;
-            font-size: 0.85rem; color: var(--text-secondary);
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            flex-grow: 1;
+            padding: 12px 15px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
             font-style: italic;
         }
-        .custom-file-upload {
-            padding: 11px 16px;
-            background: var(--primary-dark); color: var(--background);
-            border: none; cursor: pointer; font-weight: 700; font-size: 0.78rem;
-            display: flex; align-items: center; gap: 7px;
-            transition: background 0.2s;
-            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-            letter-spacing: 0.04em;
-        }
-        .custom-file-upload:hover { background: var(--primary-color); }
 
-        /* ── BUTTONS ── */
-        .delete-row-btn {
-            position: absolute; top: 6px; right: 6px;
-            background: transparent; color: var(--danger-color);
-            border: none; width: 24px; height: 24px; border-radius: 50%;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            font-size: 0.78rem; transition: all 0.2s; z-index: 10; opacity: 0;
+        .custom-file-upload {
+            padding: 12px 18px;
+            background: var(--primary-dark); /* Solid primary color for button */
+            color: var(--background);
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
-        .document-row:hover .delete-row-btn { opacity: 1; background: rgba(248,113,113,0.1); }
-        .delete-row-btn:hover { color: #fff; background: var(--danger-color); transform: scale(1.1); }
+
+        .custom-file-upload:hover {
+            background: var(--primary-color);
+        }
+
+        /* Buttons */
+        .delete-row-btn {
+            position: absolute;
+            top: 5px; /* Closer to the edge */
+            right: 5px;
+            background: transparent;
+            color: var(--danger-color); 
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            z-index: 10;
+            opacity: 0.6;
+        }
+        
+        .document-row:hover .delete-row-btn {
+            opacity: 1;
+            background: rgba(248, 113, 113, 0.1);
+        }
+
+        .delete-row-btn:hover {
+            color: white;
+            background: var(--danger-color);
+            transform: scale(1.05);
+        }
 
         .add-row-btn {
-            width: 100%; padding: 12px 20px;
-            background: transparent; color: var(--primary-color);
-            border: 1px dashed rgba(94,234,212,0.35);
+            width: 100%;
+            padding: 15px 24px;
+            background: var(--primary-dark); 
+            color: var(--background);
+            border: none;
             border-radius: var(--radius-sm);
-            font-size: 0.85rem; font-weight: 700;
+            font-size: 1rem;
+            font-weight: 700;
             cursor: pointer;
-            display: flex; align-items: center; justify-content: center; gap: 9px;
-            transition: background 0.2s, border-color 0.2s;
-            margin-top: 14px;
-            text-transform: uppercase; letter-spacing: 0.06em;
-        }
-        .add-row-btn:hover {
-            background: rgba(94,234,212,0.06);
-            border-color: rgba(94,234,212,0.55);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 0 3px 10px rgba(74, 222, 128, 0.4);
+            text-transform: uppercase;
         }
 
-        /* ── SUBMIT SECTION ── */
+        .add-row-btn:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
         .submit-section {
-            padding-top: 32px; margin-top: 32px;
-            border-top: 1px dashed rgba(48,54,61,0.7);
-            display: flex; flex-direction: column; align-items: center;
+            padding-top: 40px;
+            margin-top: 40px;
+            border-top: 1px dashed var(--border-color);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
+
         .submit-btn {
-            padding: 13px 38px;
+            padding: 15px 40px;
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-            color: var(--background);
-            border: none; border-radius: var(--radius-sm);
-            font-size: 0.95rem; font-weight: 800;
+            color: var(--background); 
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 1.1rem;
+            font-weight: 700;
             cursor: pointer;
-            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-            transition: all 0.22s;
-            box-shadow: 0 4px 20px rgba(94,234,212,0.18);
-            width: 100%; max-width: 340px;
-            margin-bottom: 11px;
-            text-transform: uppercase; letter-spacing: 0.07em;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            width: 100%; 
+            max-width: 350px; 
+            margin-bottom: 15px;
+            text-transform: uppercase;
         }
-        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 26px rgba(94,234,212,0.32); filter: brightness(1.07); }
-        .submit-btn:active { transform: translateY(0); }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(94, 234, 212, 0.3);
+            filter: brightness(1.1);
+        }
+        
         .view-docs-btn {
             margin-bottom: 0;
-            background: rgba(55,65,81,0.55);
+            background: #374151; /* Muted dark gray */
             box-shadow: none;
-            color: var(--text-secondary);
-            border: 1px solid var(--border-color);
-        }
-        .view-docs-btn:hover { background: rgba(75,85,99,0.65); color: var(--text-color); box-shadow: none; filter: none; }
-
-        /* ── EMPTY STATE ── */
-        .empty-state {
-            text-align: center; padding: 32px 20px;
-            color: var(--text-secondary);
-            border: 1px dashed rgba(48,54,61,0.7);
-            border-radius: var(--radius-sm);
-        }
-        .empty-state i { font-size: 1.8rem; opacity: 0.25; margin-bottom: 10px; display: block; }
-        .empty-state p { font-size: 0.84rem; }
-
-        /* ── STATUS MESSAGE ── */
-        .status-message {
-            margin-top: 18px; padding: 13px 16px;
-            border-radius: var(--radius-sm);
-            font-weight: 600; font-size: 0.88rem;
-            animation: fadeInSlide 0.35s ease forwards;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.45);
-            display: none; align-items: center; justify-content: center; gap: 10px;
-        }
-        .status-message.show { display: flex; }
-        .status-message.success { background: rgba(20,83,45,0.5); color: var(--success-color); border: 1px solid rgba(74,222,128,0.35); }
-        .status-message.error   { background: rgba(127,29,29,0.5); color: var(--danger-color);   border: 1px solid rgba(248,113,113,0.35); }
-
-        /* ── UPLOAD PROGRESS OVERLAY ── */
-        #upload-overlay {
-            position: fixed; inset: 0;
-            background: rgba(8,11,18,0.93);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            z-index: 9999;
-            display: flex; align-items: center; justify-content: center;
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.28s ease;
-        }
-        #upload-overlay.active { opacity: 1; pointer-events: all; }
-        .upo-box {
-            display: flex; flex-direction: column;
-            align-items: center; gap: 14px;
-            text-align: center; padding: 10px 30px;
-        }
-        .upo-icon {
-            width: 54px; height: 54px; border-radius: 50%;
-            background: rgba(94,234,212,0.07);
-            border: 1px solid rgba(94,234,212,0.22);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.25rem; color: var(--primary-color);
-            animation: upoPulse 2s ease-in-out infinite;
-        }
-        @keyframes upoPulse {
-            0%,100% { box-shadow: 0 0 0 0 rgba(94,234,212,0.12); }
-            50%      { box-shadow: 0 0 0 10px rgba(94,234,212,0); }
-        }
-        .upo-label {
-            font-size: 0.68rem; letter-spacing: 0.15em;
-            text-transform: uppercase; color: var(--text-secondary); font-weight: 600;
-        }
-        .upo-pct {
-            font-size: 4.6rem; font-weight: 800;
-            color: var(--primary-color); line-height: 1;
-            font-variant-numeric: tabular-nums; letter-spacing: -0.02em;
-        }
-        .upo-stage { font-size: 1rem; font-weight: 600; color: var(--text-color); min-height: 22px; }
-        .upo-track {
-            width: 340px; height: 5px;
-            background: rgba(48,54,61,0.9);
-            border-radius: 3px; overflow: hidden;
-        }
-        .upo-fill {
-            height: 100%; width: 0%;
-            background: linear-gradient(90deg, var(--primary-dark), var(--primary-color), var(--primary-light));
-            background-size: 200% 100%;
-            border-radius: 3px;
-            transition: width 0.18s ease;
-            animation: upoShimmer 2.2s linear infinite;
-        }
-        @keyframes upoShimmer {
-            0%   { background-position: 200% center; }
-            100% { background-position: -200% center; }
-        }
-        .upo-detail {
-            font-size: 0.74rem; color: var(--text-secondary);
-            min-height: 18px; font-family: 'Courier New', monospace;
-            letter-spacing: 0.02em;
-        }
-        .upo-docs-info { font-size: 0.72rem; color: rgba(94,234,212,0.45); margin-top: -4px; }
-
-        /* ── TOAST ── */
-        #toast-container {
-            position: fixed; top: 22px; right: 22px;
-            z-index: 10000;
-            display: flex; flex-direction: column; gap: 8px;
-            pointer-events: none;
-        }
-        .toast {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-sm);
-            padding: 11px 16px;
-            font-size: 0.82rem; font-weight: 600;
             color: var(--text-color);
-            display: flex; align-items: center; gap: 9px;
-            box-shadow: 0 6px 22px rgba(0,0,0,0.55);
-            animation: toastIn 0.28s ease forwards;
-            max-width: 310px;
+            font-weight: 600;
         }
-        .toast.success { border-color: rgba(74,222,128,0.35); color: var(--success-color); }
-        .toast.error   { border-color: rgba(248,113,113,0.35); color: var(--danger-color); }
-        .toast.info    { border-color: rgba(94,234,212,0.25); color: var(--primary-light); }
-        .toast.out     { animation: toastOut 0.28s ease forwards; }
-        @keyframes toastIn  { from { opacity:0; transform:translateX(16px); } to { opacity:1; transform:none; } }
-        @keyframes toastOut { from { opacity:1; transform:none; } to { opacity:0; transform:translateX(16px); } }
 
-        /* ── ANIMATIONS ── */
-        @keyframes fadeInSlide { from { opacity:0; transform:translateY(7px); } to { opacity:1; transform:none; } }
-        @keyframes rowEnter    { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:none; } }
-        .row-enter { animation: rowEnter 0.28s ease forwards; }
+        .view-docs-btn:hover {
+            background: #4b5563;
+            box-shadow: 0 6px 20px rgba(75, 85, 99, 0.3);
+            transform: translateY(-2px);
+        }
 
-        /* ── RESPONSIVE ── */
+        /* Status Message */
+        .status-message {
+            margin-top: 24px;
+            padding: 15px 20px;
+            border-radius: var(--radius-sm);
+            text-align: center;
+            display: none;
+            font-weight: 600;
+            position: relative;
+            animation: fadeInSlide 0.4s ease-out forwards;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .status-message.show {
+            display: flex;
+        }
+
+        .status-message.success {
+            background: rgba(20, 83, 45, 0.5); 
+            color: var(--success-color); 
+            border: 1px solid var(--success-color);
+        }
+
+        .status-message.error {
+            background: rgba(127, 29, 29, 0.5); 
+            color: var(--danger-color); 
+            border: 1px solid var(--danger-color);
+        }
+
+        .status-message.loading {
+            background: rgba(113, 63, 18, 0.5); 
+            color: var(--warning-color); 
+            border: 1px solid var(--warning-color);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 80%; /* Shorter bar for clean look */
+            height: 3px; 
+            background-color: var(--border-color);
+            border-radius: 2px;
+            margin-top: 10px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--primary-color);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .status-message.loading .progress-container {
+            display: block;
+            margin: 0 0 0 15px; /* Align to the right of the text */
+            flex-grow: 1;
+        }
+
+        /* Animations */
+        @keyframes fadeInSlide {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Design */
         @media (max-width: 768px) {
-            body { padding: 10px; }
-            .app-header { padding: 26px 14px 22px; }
-            .app-title { font-size: 1.4rem; }
-            .main-content { padding: 16px 18px; }
-            .form-grid { gap: 14px; }
-            .document-row-content { grid-template-columns: 1fr; gap: 14px; padding: 16px; }
-            .doc-field:nth-child(5), .doc-field:nth-child(6) { grid-column: span 1; }
-            .submit-btn, .view-docs-btn { max-width: none; }
-            .upo-pct { font-size: 3.4rem; }
-            .upo-track { width: 260px; }
-            .stats-bar { gap: 8px; }
-        }
-        @media (max-width: 400px) {
-            .upo-pct { font-size: 2.8rem; }
-            .upo-track { width: 210px; }
+            body { padding: 15px; }
+
+            .app-header { padding: 30px 15px; }
+            .app-title { font-size: 1.6rem; }
+
+            .main-content { padding: 20px; }
+
+            .form-grid { gap: 20px; }
+            
+            .document-row-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 20px;
+            }
+
+            .doc-field:nth-child(5), 
+            .doc-field:nth-child(6) { 
+                grid-column: span 1;
+            }
+            
+            .status-message.loading {
+                flex-direction: column;
+            }
+            
+            .status-message.loading .progress-container {
+                width: 100%;
+                margin: 10px 0 0 0;
+            }
+
+            .submit-btn, .view-docs-btn {
+                max-width: none; 
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- TOAST CONTAINER -->
-    <div id="toast-container"></div>
-
-    <!-- UPLOAD PROGRESS OVERLAY -->
-    <div id="upload-overlay">
-        <div class="upo-box">
-            <div class="upo-icon"><i class="fas fa-shield-alt"></i></div>
-            <div class="upo-label">Secure Transfer in Progress</div>
-            <div class="upo-pct" id="upo-pct">0%</div>
-            <div class="upo-stage" id="upo-stage">Preparing files...</div>
-            <div class="upo-track"><div class="upo-fill" id="upo-fill"></div></div>
-            <div class="upo-detail" id="upo-detail">Reading file data into memory</div>
-            <div class="upo-docs-info" id="upo-docs-info"></div>
-        </div>
-    </div>
-
     <div class="app-container">
         <header class="app-header">
-            <div class="app-logo">
-                <img src="https://www.pristinepearlpharma.in/images/alt-logo.png" alt="Pristine Pearl Pharma Logo"
-                     onerror="this.onerror=null;this.src='https://placehold.co/60x60/14b8a6/0d1117?text=PPP';">
-            </div>
-            <h1 class="app-title">PRISTINE DOCUMENT CLOUD</h1>
-            <p class="app-subtitle">   </p>
-            <div class="stats-bar">
-                <div class="stat-pill"><i class="fas fa-lock"></i> End-to-End Encrypted</div>
-                <div class="stat-pill"><i class="fas fa-database"></i> Live Database Sync</div>
-                <div class="stat-pill"><i class="fas fa-layer-group"></i> Multi-Document Support</div>
+            <div class="header-content">
+                <div class="app-logo">
+                    <img src="https://www.pristinepearlpharma.in/images/alt-logo.png" alt="Pristine Pearl Pharma Logo" onerror="this.onerror=null; this.src='https://placehold.co/60x60/14b8a6/0d1117?text=PPP';">
+                </div>
+                <h1 class="app-title">PRISTINE DOCUMENT CLOUD</h1>
+                <p class="app-subtitle">Secure, streamlined regulatory submission and digital archiving platform.</p>
             </div>
         </header>
 
         <div class="main-content">
             <form id="uploadForm">
-
-                <!-- SYSTEM SCOPE -->
                 <div class="form-section">
-                    <h2 class="section-title"><i class="fas fa-microchip"></i> System Scope</h2>
+                    <h2 class="section-title">
+                        <i class="fas fa-microchip"></i>
+                        System Scope
+                    </h2>
                     <div class="form-grid">
                         <div class="form-group">
                             <label class="form-label" for="companySelect">
-                                <i class="fas fa-building"></i> Company Identifier
+                                <i class="fas fa-building"></i>
+                                Company Identifier
                             </label>
                             <select id="companySelect" required>
                                 <option value="" disabled selected>Select the target entity...</option>
@@ -499,461 +620,550 @@
                                 <option value="Trust Office">Trust Office</option>
                             </select>
                         </div>
-                        <div></div>
+                        <!-- Empty slot for grid balance if needed later -->
+                        <div></div> 
                     </div>
                 </div>
 
-                <!-- SUBMISSION QUEUE -->
                 <div class="form-section">
                     <h2 class="section-title">
-                        <i class="fas fa-file-upload"></i> Submission Queue
-                        <span class="doc-count-badge">
-                            <i class="fas fa-layer-group"></i>
-                            <span id="docCountNum">0</span> layers
-                        </span>
+                        <i class="fas fa-file-upload"></i>
+                        Submission Queue & Layering
                     </h2>
+                    
                     <div class="document-rows-container" id="documentRows">
-                        <div class="empty-state" id="emptyState">
-                            <i class="fas fa-inbox"></i>
-                            <p>Select a company above, then add document layers to begin.</p>
-                        </div>
+                        <!-- Document rows will be inserted here -->
                     </div>
+
                     <button type="button" class="add-row-btn" id="addRowBtn">
-                        <i class="fas fa-plus-circle"></i> Add Document Layer
+                        <i class="fas fa-plus-circle"></i>
+                        Add Document Layer
                     </button>
                 </div>
 
-                <!-- SUBMIT -->
                 <div class="submit-section">
                     <button type="submit" class="submit-btn">
-                        <i class="fas fa-cloud-upload-alt"></i> EXECUTE UPLOAD
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        EXECUTE UPLOAD
                     </button>
                     <button type="button" id="viewDocsBtn" class="submit-btn view-docs-btn">
-                        <i class="fas fa-database"></i> ACCESS DOCUMENTS
+                        <i class="fas fa-database"></i>
+                        ACCESS DOCUMENTS
                     </button>
                 </div>
             </form>
 
-            <div id="statusMessage" class="status-message"></div>
+            <div id="statusMessage" class="status-message">
+                <div id="progressBarContainer" class="progress-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
+        // Global variables provided by the execution environment. Using temporary defaults for local testing.
+        // NOTE: Changed 'const' to 'var' to resolve 'ReferenceError: Cannot access ... before initialization'
+        // This makes the variables available for the 'typeof' check when the script loads.
         var __app_id = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         var __firebase_config = typeof __firebase_config !== 'undefined' ? __firebase_config : '{}';
         var __initial_auth_token = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : undefined;
 
-        // ── DOM REFS ──
+        // --- DOM Elements ---
         const documentRowsContainer = document.getElementById('documentRows');
-        const addRowBtn             = document.getElementById('addRowBtn');
-        const companySelect         = document.getElementById('companySelect');
-        const form                  = document.getElementById('uploadForm');
-        const statusMessage         = document.getElementById('statusMessage');
-        const viewDocsBtn           = document.getElementById('viewDocsBtn');
-        const docCountNum           = document.getElementById('docCountNum');
-        const emptyState            = document.getElementById('emptyState');
+        const addRowBtn = document.getElementById('addRowBtn');
+        const companySelect = document.getElementById('companySelect');
+        const form = document.getElementById('uploadForm');
+        const statusMessage = document.getElementById('statusMessage');
+        const progressBarContainer = document.getElementById('progressBarContainer');
+        const progressBar = document.getElementById('progressBar');
+        const viewDocsBtn = document.getElementById('viewDocsBtn');
 
-        // ── PREFIX MAP ──
+        // Mappings for Document Code Prefixes
         const prefixMap = {
-            'Pristine Pearl Pharma': 'PRL', 'Pharmahub': 'HUB', 'Emerald': 'EMD',
-            'Sapphire': 'SPR', 'Pristine Prints': 'PNT', 'Amber': 'AMB',
-            'New VDL': 'VDL', 'Medinnov': 'MDV', 'Palepu': 'PPD',
-            'Pristine BLR': 'PRL/B', 'Trust Office': 'TRS',
+            'Pristine Pearl Pharma': 'PRL',
+            'Pharmahub': 'HUB',
+            'Emerald': 'EMD',
+            'Sapphire': 'SPR',
+            'Pristine Prints': 'PNT',
+            'Amber': 'AMB',
+            'New VDL': 'VDL',
+            'Medinnov': 'MDV',
+            'Palepu': 'PPD',
+            'Pristine BLR': 'PRL/B',
+            'Trust Office': 'TRS',
         };
+        
+        // --- UTILITY FUNCTIONS ---
 
-        // ── TOAST ──
-        function showToast(msg, type = 'info', duration = 3500) {
-            const c = document.getElementById('toast-container');
-            const icons = { success: 'fa-check-circle', error: 'fa-times-circle', info: 'fa-info-circle' };
-            const t = document.createElement('div');
-            t.className = `toast ${type}`;
-            t.innerHTML = `<i class="fas ${icons[type]}"></i> ${msg}`;
-            c.appendChild(t);
-            setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 300); }, duration);
+        /**
+         * Converts YYYY-MM-DD format (from input date) to DD/MM/YYYY string.
+         */
+        function formatDate(yyyymmdd) {
+            if (!yyyymmdd) {
+                return '';
+            }
+            const parts = yyyymmdd.split('-'); 
+            return `${parts[2]}/${parts[1]}/${parts[0]}`; 
         }
 
-        // ── UTILITIES ──
-        function formatDate(v) {
-            if (!v) return '';
-            const p = v.split('-');
-            return `${p[2]}/${p[1]}/${p[0]}`;
+        /**
+         * Generates a unique 4-digit number and prepends the company code.
+         */
+        function generateDocCode(companyCode) {
+            const uniqueNum = Math.floor(1000 + Math.random() * 9000); 
+            return `${companyCode}-${uniqueNum}`;
         }
-        function generateDocCode(code) {
-            return `${code}-${Math.floor(1000 + Math.random() * 9000)}`;
-        }
+        
+        /**
+         * Updates the sequential number for each document row.
+         */
         function updateRowNumbers() {
-            const rows = documentRowsContainer.querySelectorAll('.document-row');
-            rows.forEach((row, i) => {
-                const n = row.querySelector('.row-number');
-                if (n) n.textContent = i + 1;
+            documentRowsContainer.querySelectorAll('.document-row').forEach((row, index) => {
+                const rowNumber = row.querySelector('.row-number');
+                if (rowNumber) {
+                    rowNumber.textContent = index + 1;
+                }
             });
-            docCountNum.textContent = rows.length;
-            emptyState.style.display = rows.length === 0 ? 'block' : 'none';
         }
 
-        // ── CREATE DOCUMENT ROW ──
+        /**
+         * Creates and returns the HTML for a single document row.
+         */
         function createDocumentRow() {
-            const prefix  = prefixMap[companySelect.value] || '???';
-            const docCode = generateDocCode(prefix);
-            const rowId   = `row-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
-            const row     = document.createElement('div');
-            row.className = 'document-row row-enter';
+            const companyName = companySelect.value;
+            const companyPrefix = prefixMap[companyName] || '???';
+            const docCode = generateDocCode(companyPrefix);
+            const rowId = `row-${Date.now()}-${Math.floor(Math.random() * 1000)}`; 
+
+            const row = document.createElement('div');
+            row.className = 'document-row'; 
 
             row.innerHTML = `
-                <button type="button" class="delete-row-btn" title="Remove layer"><i class="fas fa-times"></i></button>
-                <div class="document-row-header">
+                <button type="button" class="delete-row-btn" aria-label="Remove document row">
+                    <i class="fas fa-times"></i>
+                </button>
+
+                <div class="document-row-header" data-toggle-id="${rowId}-content">
                     <div class="row-title">
                         <span class="row-number"></span>
-                        <span>
-                            <span class="row-preview" id="${rowId}-preview">NEW DOCUMENT LAYER</span>
-                            <span class="row-type-meta" id="${rowId}-tmeta"></span>
-                        </span>
+                        <span class="row-preview" id="${rowId}-preview">NEW DOCUMENT LAYER</span>
                     </div>
                     <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
                 </div>
-                <div class="document-row-content">
+
+                <div class="document-row-content" id="${rowId}-content">
+<div class="doc-field">
+    <label class="form-label">
+        <i class="fas fa-sitemap"></i>
+        Department
+    </label>
+    <select name="docDept" required>
+        <option value="" disabled selected>Select Department</option>
+        <option>HO</option>
+        <option>ACCOUNTS</option>
+        <option>FINANCE</option>
+        <option>GENERAL FINANCE</option>
+        <option>BANKING & GENERAL</option>
+        <option>TRAVEL TEAM</option>
+        <option>COMMERCIAL</option>
+        <option>COMMERCIAL-TN01</option>
+        <option>COMMERCIAL-KL</option>
+        <option>CREDIT TEAM</option>
+        <option>HR</option>
+        <option>SAMPLE</option>
+        <option>DEPOT</option>
+        <option>MARKETING</option>
+        <option>PMT</option>
+        <option>DMF</option>
+        <option>SALES</option>
+        <option>HEADS</option>
+        <option>DIRECTORS</OPTION>
+        <option>DESIGNING</option>
+    </select>
+</div>
+
+<div class="doc-field">
+    <label class="form-label">
+        <i class="fas fa-file-contract"></i>
+        Document Type
+    </label>
+    <select name="docType" required>
+        <option value="" disabled selected>Select Document Type</option>
+        <option>AADHAAR</option>
+<option>AGREEMENT / CONTRACT</option>
+<option>AFFIDAVIT</option>
+<option>AMC DOCUMENT</option>
+<option>ANNUAL TAX STATEMENT</option>
+<option>APPOINTMENT LETTER</option>
+<option>ARTWORK APPROVAL</option>
+<option>AUDITOR APPOINTMENT LETTER</option>
+<option>BANK DOCUMENTS</option>
+<option>BOARD RESOLUTION DOCUMENT</option>
+<option>CANCELLED CHEQUE</option>
+<option>CERTIFICATE OF INCORPORATION</option>
+<option>DELIVERY CHALLAN</option>
+<option>DRIVING LICENSE</option>
+<option>DRUG LICENSE</option>
+<option>EB DOCUMENTS</option>
+<option>ENCUMBRANCE CERTIFICATE (EC)</option>
+<option>ESI REGISTRATION CERTIFICATE</option>
+<option>EXPERIENCE CERTIFICATE</option>
+<option>FACTORY LICENSE</option>
+<option>FIRE SAFETY CERTIFICATE</option>
+<option>FOOD LICENSE (FSSAI)</option>
+<option>FORM DIR-2</option>
+<option>GMP CERTIFICATE</option>
+<option>GST CERTIFICATE</option>
+<option>ID CARD</option>
+<option>IMPORT EXPORT CODE (IEC)</option>
+<option>INCOME TAX DOCUMENTS</option>
+<option>INCOME TAX RETURN (ITR)</option>
+<option>INCOME TAX ASSESSMENT ORDER</option>
+<option>INSURANCE / ESI CARD</option>
+<option>INTERNET</option>
+<option>INVOICE</option>
+<option>ISO CERTIFICATES</option>
+<option>LAND DOCUMENTS</OPTION>
+<option>LEGAL ENTITY IDENTIFIER (LEI)</option>
+<option>LETTER HEAD</OPTION>
+<option>LLP AGREEMENT</option>
+<option>MEDICAL FITNESS CERTIFICATE</option>
+<option>MSME CERTIFICATE</option>
+<option>NETWORTH CERTIFICATE</option>
+<option>OFFER LETTER</option>
+<option>PACKAGING MATERIAL APPROVAL</option>
+<option>PAN CARD</option>
+<option>PARTNERSHIP DEED</option>
+<option>PASSPORT</option>
+<option>PARENT DOCUMENTS</option>
+<option>PATENT DOCUMENTS</option>
+<option>PF REGISTRATION CERTIFICATE</option>
+<option>PHOTO COPY</option>
+<option>POLLUTION CONTROL CERTIFICATE</option>
+<option>PRODUCT LIST</option>
+<option>PROFESSIONAL TAX CERTIFICATE</option>
+<option>PURCHASE ORDER</option>
+<option>QA/QC REPORTS</option>
+<option>QUOTATION / PROPOSAL</option>
+<option>REGISTRAR OF COMPANIES (ROC)</option>
+<option>RELIEVING LETTER</option>
+<option>RENTAL DOCUMENTS</option>
+<option>SALARY SLIPS</option>
+<option>SHARE CERTIFICATE</option>
+<option>SHOPS & ESTABLISHMENT LICENSE</option>
+<option>SOP (STANDARD OPERATING PROCEDURE)</option>
+<option>STATEMENT OF INCOME</option>
+<option>TAN CERTIFICATE</option>
+<option>TDS REGISTRATION</option>
+<option>TAX RECEIPT</option>
+<option>TEST REPORTS (COA)</option>
+<option>TELEPHONE</option>
+<option>TRADE LICENSE</option>
+<option>TRADE MARK REGISTRATION</option>
+<option>UDYAM REGISTRATION</option>
+<option>VENDOR REGISTRATION FORM</option>
+<option>VOTER ID</option>
+<option>WHO-GMP CERTIFICATE</option>
+<option>WORK ORDER</option>
+    </select>
+</div>
+
+<div class="doc-field">
+    <label class="form-label">
+        <i class="fas fa-hashtag"></i>
+        Document Number
+    </label>
+    <input type="text" name="docNumber" required 
+           placeholder="Enter Document Number"
+           pattern="[A-Z0-9!@#$%^&*()_+=\\-{}\\[\\]:;,.?/]*"
+           oninput="this.value = this.value.toUpperCase();">
+</input>
+</div>
+                
                     <div class="doc-field">
-                        <label class="form-label"><i class="fas fa-sitemap"></i> Department</label>
-                        <select name="docDept" required>
-                            <option value="" disabled selected>Select Department</option>
-                            <option>HO</option><option>ACCOUNTS</option><option>FINANCE</option>
-                            <option>GENERAL FINANCE</option><option>BANKING &amp; GENERAL</option>
-                            <option>TRAVEL TEAM</option><option>COMMERCIAL</option>
-                            <option>COMMERCIAL-TN01</option><option>COMMERCIAL-KL</option>
-                            <option>CREDIT TEAM</option><option>HR</option><option>SAMPLE</option>
-                            <option>DEPOT</option><option>MARKETING</option><option>PMT</option>
-                            <option>DMF</option><option>SALES</option><option>HEADS</option>
-                            <option>DIRECTORS</option><option>DESIGNING</option>
-                        </select>
-                    </div>
-                    <div class="doc-field">
-                        <label class="form-label"><i class="fas fa-file-contract"></i> Document Type</label>
-                        <select name="docType" required>
-                            <option value="" disabled selected>Select Document Type</option>
-                            <option>AADHAAR</option><option>AGREEMENT / CONTRACT</option><option>AFFIDAVIT</option>
-                            <option>AMC DOCUMENT</option><option>ANNUAL TAX STATEMENT</option>
-                            <option>APPOINTMENT LETTER</option><option>ARTWORK APPROVAL</option>
-                            <option>AUDITOR APPOINTMENT LETTER</option><option>BANK DOCUMENTS</option>
-                            <option>BOARD RESOLUTION DOCUMENT</option><option>CANCELLED CHEQUE</option>
-                            <option>CERTIFICATE OF INCORPORATION</option><option>DELIVERY CHALLAN</option>
-                            <option>DRIVING LICENSE</option><option>DRUG LICENSE</option>
-                            <option>EB DOCUMENTS</option><option>ENCUMBRANCE CERTIFICATE (EC)</option>
-                            <option>ESI REGISTRATION CERTIFICATE</option><option>EXPERIENCE CERTIFICATE</option>
-                            <option>FACTORY LICENSE</option><option>FIRE SAFETY CERTIFICATE</option>
-                            <option>FOOD LICENSE (FSSAI)</option><option>FORM DIR-2</option>
-                            <option>GMP CERTIFICATE</option><option>GST CERTIFICATE</option>
-                            <option>ID CARD</option><option>IMPORT EXPORT CODE (IEC)</option>
-                            <option>INCOME TAX DOCUMENTS</option><option>INCOME TAX RETURN (ITR)</option>
-                            <option>INCOME TAX ASSESSMENT ORDER</option><option>INSURANCE / ESI CARD</option>
-                            <option>INTERNET</option><option>INVOICE</option><option>ISO CERTIFICATES</option>
-                            <option>LAND DOCUMENTS</option><option>LEGAL ENTITY IDENTIFIER (LEI)</option>
-                            <option>LETTER HEAD</option><option>LLP AGREEMENT</option>
-                            <option>MEDICAL FITNESS CERTIFICATE</option><option>MSME CERTIFICATE</option>
-                            <option>NETWORTH CERTIFICATE</option><option>OFFER LETTER</option>
-                            <option>PACKAGING MATERIAL APPROVAL</option><option>PAN CARD</option>
-                            <option>PARTNERSHIP DEED</option><option>PASSPORT</option>
-                            <option>PARENT DOCUMENTS</option><option>PATENT DOCUMENTS</option>
-                            <option>PF REGISTRATION CERTIFICATE</option><option>PHOTO COPY</option>
-                            <option>POLLUTION CONTROL CERTIFICATE</option><option>PRODUCT LIST</option>
-                            <option>PROFESSIONAL TAX CERTIFICATE</option><option>PURCHASE ORDER</option>
-                            <option>QA/QC REPORTS</option><option>QUOTATION / PROPOSAL</option>
-                            <option>REGISTRAR OF COMPANIES (ROC)</option><option>RELIEVING LETTER</option>
-                            <option>RENTAL DOCUMENTS</option><option>SALARY SLIPS</option>
-                            <option>SHARE CERTIFICATE</option><option>SHOPS &amp; ESTABLISHMENT LICENSE</option>
-                            <option>SOP (STANDARD OPERATING PROCEDURE)</option><option>STATEMENT OF INCOME</option>
-                            <option>TAN CERTIFICATE</option><option>TDS REGISTRATION</option>
-                            <option>TAX RECEIPT</option><option>TEST REPORTS (COA)</option>
-                            <option>TELEPHONE</option><option>TRADE LICENSE</option>
-                            <option>TRADE MARK REGISTRATION</option><option>UDYAM REGISTRATION</option>
-                            <option>VENDOR REGISTRATION FORM</option><option>VOTER ID</option>
-                            <option>WHO-GMP CERTIFICATE</option><option>WORK ORDER</option>
-                        </select>
-                    </div>
-                    <div class="doc-field">
-                        <label class="form-label"><i class="fas fa-hashtag"></i> Document Number</label>
-                        <input type="text" name="docNumber" required placeholder="Enter Document Number"
-                               oninput="this.value=this.value.toUpperCase()">
-                    </div>
-                    <div class="doc-field">
-                        <label class="form-label"><i class="fas fa-fingerprint"></i> System Code</label>
+                        <label class="form-label">
+                            <i class="fas fa-fingerprint"></i>
+                            System Code
+                        </label>
                         <input type="text" name="docCode" value="${docCode}" readonly>
                     </div>
+                    
                     <div class="doc-field">
-                        <label class="form-label"><i class="fas fa-heading"></i> Document Title</label>
-                        <input type="text" name="docName" required placeholder="Enter the official document name">
+                        <label class="form-label" for="${rowId}-name">
+                            <i class="fas fa-heading"></i>
+                            Document Title
+                        </label>
+                        <input type="text" name="docName" id="${rowId}-name" required placeholder="Enter the official document name">
                     </div>
+
+<div class="doc-field">
+                        <label class="form-label" for="${rowId}-remarks">
+                            <i class="fas fa-comment-dots"></i>
+                            Document Remarks
+                        </label>
+                        <textarea name="docRemarks" id="${rowId}-remarks" placeholder="Add any metadata or notes for future processing..."></textarea>
+                    </div>
+
+
                     <div class="doc-field">
-                        <label class="form-label"><i class="fas fa-comment-dots"></i> Document Remarks</label>
-                        <textarea name="docRemarks" placeholder="Add any metadata or notes..." rows="2"></textarea>
+                        <label class="form-label" for="${rowId}-date">
+                            <i class="fas fa-calendar-day"></i>
+                            Issue Date (Optional)
+                        </label>
+                        <input type="date" name="docDate" id="${rowId}-date">
                     </div>
+
                     <div class="doc-field">
-                        <label class="form-label"><i class="fas fa-calendar-day"></i> Issue Date (Optional)</label>
-                        <input type="date" name="docDate">
+                        <label class="form-label" for="${rowId}-expiry">
+                            <i class="fas fa-hourglass-end"></i>
+                            Expiry Date (Optional)
+                        </label>
+                        <input type="date" name="docExpiry" id="${rowId}-expiry">
                     </div>
-                    <div class="doc-field">
-                        <label class="form-label"><i class="fas fa-hourglass-end"></i> Expiry Date (Optional)</label>
-                        <input type="date" name="docExpiry">
-                    </div>
+                    
+                  
                     <div class="doc-field file-upload-wrapper">
-                        <label class="form-label"><i class="fas fa-file-upload"></i> File Payload (Required)</label>
+                        <label class="form-label" for="${rowId}-file">
+                            <i class="fas fa-file-upload"></i>
+                            File Payload (Required)
+                        </label>
                         <input type="file" name="docFile" class="file-input" id="${rowId}-file" required>
+                        
                         <div class="file-control-container">
-                            <span class="file-name-display" id="${rowId}-fname">No file selected</span>
+                            <span class="file-name-display" id="${rowId}-file-name">No file selected</span>
                             <label for="${rowId}-file" class="custom-file-upload">
-                                <i class="fas fa-folder-plus"></i> SELECT FILE
+                                <i class="fas fa-folder-plus"></i>
+                                SELECT FILE
                             </label>
                         </div>
                     </div>
-                </div>`;
+                </div>
+            `;
 
-            // Wire up listeners
-            const fileInput   = row.querySelector('.file-input');
-            const fnDisplay   = row.querySelector(`#${rowId}-fname`);
-            const deleteBtn   = row.querySelector('.delete-row-btn');
-            const header      = row.querySelector('.document-row-header');
-            const nameInput   = row.querySelector('[name="docName"]');
-            const typeSelect  = row.querySelector('[name="docType"]');
-            const preview     = row.querySelector(`#${rowId}-preview`);
-            const typeMeta    = row.querySelector(`#${rowId}-tmeta`);
+            const fileInput = row.querySelector('.file-input');
+            const fileNameDisplay = row.querySelector('.file-name-display');
+            const deleteButton = row.querySelector('.delete-row-btn');
+            const header = row.querySelector('.document-row-header');
+            const nameInput = row.querySelector('[name="docName"]');
+            const namePreview = row.querySelector('.row-preview');
 
+            // 1. File Input Listener
             fileInput.addEventListener('change', function() {
                 if (this.files.length > 0) {
-                    const fn   = this.files[0].name;
-                    const kb   = (this.files[0].size / 1024).toFixed(0);
-                    fnDisplay.textContent  = (fn.length > 34 ? '...' + fn.slice(-31) : fn) + ` (${kb} KB)`;
-                    fnDisplay.style.color     = 'var(--text-color)';
-                    fnDisplay.style.fontStyle = 'normal';
+                    const fileName = this.files[0].name;
+                    fileNameDisplay.textContent = fileName.length > 35 ? '...' + fileName.slice(-32) : fileName;
+                    fileNameDisplay.style.color = 'var(--text-color)';
+                    fileNameDisplay.style.fontStyle = 'normal';
                 } else {
-                    fnDisplay.textContent     = 'No file selected';
-                    fnDisplay.style.color     = 'var(--text-secondary)';
-                    fnDisplay.style.fontStyle = 'italic';
+                    fileNameDisplay.textContent = 'No file selected';
+                    fileNameDisplay.style.color = 'var(--text-secondary)';
+                    fileNameDisplay.style.fontStyle = 'italic';
                 }
             });
 
-            deleteBtn.addEventListener('click', () => {
-                row.style.opacity    = '0';
-                row.style.transform  = 'translateX(-8px)';
-                row.style.transition = 'all 0.22s ease';
-                setTimeout(() => { row.remove(); updateRowNumbers(); }, 230);
+            // 2. Delete Button Listener
+            deleteButton.addEventListener('click', () => {
+                row.remove();
+                updateRowNumbers();
             });
-
-            header.addEventListener('click', () => row.classList.toggle('collapsed'));
-
-            nameInput.addEventListener('input', e => {
-                preview.textContent = e.target.value.trim().toUpperCase() || 'NEW DOCUMENT LAYER';
+            
+            // 3. Header Collapse/Expand Listener
+            header.addEventListener('click', () => {
+                row.classList.toggle('collapsed');
             });
-            typeSelect.addEventListener('change', e => {
-                typeMeta.textContent = e.target.value ? ` · ${e.target.value}` : '';
+            
+            // 4. Name Input Listener (Update header preview)
+            nameInput.addEventListener('input', (e) => {
+                const previewText = e.target.value.trim().toUpperCase() || 'NEW DOCUMENT LAYER';
+                namePreview.textContent = previewText;
             });
-
+            
             return row;
         }
 
-        // ── UPLOAD OVERLAY ──
-        const uploadOverlay = document.getElementById('upload-overlay');
-        const upoPct        = document.getElementById('upo-pct');
-        const upoFill       = document.getElementById('upo-fill');
-        const upoStage      = document.getElementById('upo-stage');
-        const upoDetail     = document.getElementById('upo-detail');
-        const upoDocsInfo   = document.getElementById('upo-docs-info');
-        let   upoInterval   = null;
-        let   upoCurrentPct = 0;
-
-        const UPO_STAGES = [
-            { at: 0,   stage: 'Preparing files...',        detail: 'Reading file data into memory'   },
-            { at: 15,  stage: 'Encoding payloads...',      detail: 'Converting files to Base64'       },
-            { at: 40,  stage: 'Connecting to database...', detail: 'Establishing secure channel'      },
-            { at: 55,  stage: 'Uploading documents...',    detail: 'Streaming to database'            },
-            { at: 80,  stage: 'Verifying integrity...',    detail: 'Checksum validation in progress'  },
-            { at: 95,  stage: 'Finalising...',             detail: 'Writing metadata to database'     },
-            { at: 100, stage: 'Transfer complete!',        detail: 'All documents archived securely'  },
-        ];
-
-        function upoSetPct(p) {
-            upoCurrentPct = p;
-            const r = Math.round(p);
-            upoFill.style.width = r + '%';
-            upoPct.textContent  = r + '%';
-            for (let i = UPO_STAGES.length - 1; i >= 0; i--) {
-                if (p >= UPO_STAGES[i].at) {
-                    upoStage.textContent  = UPO_STAGES[i].stage;
-                    upoDetail.textContent = UPO_STAGES[i].detail;
-                    break;
-                }
-            }
+        /**
+         * Handles the navigation for the "View Documents" button.
+         * NOW REDIRECTS TO report.html
+         */
+        function handleViewDocs() {
+            // FIX: Using './report.html' to ensure the environment recognizes it as a valid relative file path.
+            window.location.href = './report.html';
         }
 
-        function upoAdvanceTo(target, speed = 0.5) {
-            clearInterval(upoInterval);
-            upoInterval = setInterval(() => {
-                if (upoCurrentPct >= target) { clearInterval(upoInterval); return; }
-                upoSetPct(Math.min(target, upoCurrentPct + speed));
-            }, 40);
-        }
-
-        function upoShow(docCount) {
-            upoCurrentPct = 0;
-            upoSetPct(0);
-            upoDocsInfo.textContent = docCount > 1 ? `Processing ${docCount} documents` : 'Processing 1 document';
-            uploadOverlay.classList.add('active');
-            document.querySelector('.app-container').style.filter = 'blur(4px)';
-            document.querySelector('.app-container').style.pointerEvents = 'none';
-        }
-
-        function upoHide(success) {
-            clearInterval(upoInterval);
-            upoSetPct(100);
-            setTimeout(() => {
-                uploadOverlay.classList.remove('active');
-                document.querySelector('.app-container').style.filter = '';
-                document.querySelector('.app-container').style.pointerEvents = '';
-                upoCurrentPct = 0;
-            }, success ? 900 : 350);
-        }
-
-        // ── INIT ──
+        /**
+         * Initializes the page: sets up event listeners.
+         */
         function initializeUploader() {
-
+            
             addRowBtn.addEventListener('click', () => {
-                if (!companySelect.value) {
-                    showToast('Select a Company Identifier first.', 'error');
-                    companySelect.focus();
-                    return;
+                if (companySelect.value) {
+                    const newRow = createDocumentRow();
+                    documentRowsContainer.appendChild(newRow);
+                    updateRowNumbers(); 
+                } else {
+                    const messageElement = document.getElementById('statusMessage');
+                    messageElement.className = 'status-message show error';
+                    messageElement.innerHTML = `<i class="fas fa-exclamation-circle"></i> Please select a **Company Identifier** first to add a document layer.`;
+                    setTimeout(() => messageElement.classList.remove('show', 'error'), 4000);
                 }
-                const newRow = createDocumentRow();
-                documentRowsContainer.appendChild(newRow);
-                updateRowNumbers();
-                newRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             });
 
+            // Auto-add first row when company is selected
             companySelect.addEventListener('change', () => {
-                if (companySelect.value && documentRowsContainer.querySelectorAll('.document-row').length === 0) {
+                if (companySelect.value && documentRowsContainer.children.length === 0) {
                     const newRow = createDocumentRow();
                     documentRowsContainer.appendChild(newRow);
                     updateRowNumbers();
                 }
             });
+            
+            viewDocsBtn.addEventListener('click', handleViewDocs);
 
-            viewDocsBtn.addEventListener('click', () => { window.location.href = './report.html'; });
-
-            // ── SUBMIT HANDLER ──
+            // --- MAIN SUBMISSION LOGIC ---
             form.addEventListener('submit', async function(event) {
                 event.preventDefault();
+                
+                // === GOOGLE APPS SCRIPT URL (Placeholder from previous versions) ===
+                const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx29u0JO_Uxx5MK8aGeZ6yWzOEpFC8xFj5SX-eTOttzZif3oD2quhHYCqaS8O_q0qAT/exec'; 
+                // ==============================
 
-                const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx29u0JO_Uxx5MK8aGeZ6yWzOEpFC8xFj5SX-eTOttzZif3oD2quhHYCqaS8O_q0qAT/exec';
-
+                // Reset status message
                 statusMessage.className = 'status-message';
-
-                const rows = documentRowsContainer.querySelectorAll('.document-row');
-
-                if (!companySelect.value || rows.length === 0) {
-                    showToast('Select a Company and add at least one document layer.', 'error');
+                progressBar.style.width = '0%'; 
+                
+                // --- Initial Check and Loading State ---
+                if (!companySelect.value || documentRowsContainer.children.length === 0) {
+                    statusMessage.className = 'status-message show error';
+                    statusMessage.innerHTML = `<i class="fas fa-exclamation-circle"></i> **Submission Failure:** Ensure a **Company** is selected and at least one document layer is added.`;
+                    setTimeout(() => statusMessage.classList.remove('show', 'error'), 4000);
                     return;
                 }
 
-                upoShow(rows.length);
-                upoAdvanceTo(15, 0.4);
-
+                // Show 'Processing' state with loading animation
+                statusMessage.innerHTML = 'Initiating secure file transfer...';
+                statusMessage.classList.add('show', 'loading');
+                
+                // --- DATA GATHERING AND CONVERSION ---
                 let hasError = false;
+                const rows = documentRowsContainer.querySelectorAll('.document-row');
                 const totalRows = rows.length;
                 let processedRows = 0;
+                
+                // Function to update progress bar (simulated)
+                function updateProgress() {
+                    let calculatedProgress = Math.floor((processedRows / totalRows) * 50); 
+                    progressBar.style.width = Math.min(calculatedProgress, 50) + '%';
+                }
 
                 const filePromises = Array.from(rows).map(row => {
+                    // Check required fields before file conversion
                     const docNameInput = row.querySelector('[name="docName"]');
-                    const docFile      = row.querySelector('[name="docFile"]').files[0];
-
+                    const docFile = row.querySelector('[name="docFile"]').files[0];
+                    
                     if (!docNameInput.value.trim() || !docFile) {
                         hasError = true;
-                        return Promise.resolve(null);
+                        // Return a resolved promise to prevent Promise.all from failing instantly
+                        return Promise.resolve(null); 
                     }
 
                     return new Promise((resolve) => {
                         const reader = new FileReader();
                         reader.onloadend = () => {
-                            const base64Data = reader.result.split(',')[1];
-                            resolve({
-                                company:    companySelect.value.toUpperCase(),
-                                docDept:    row.querySelector('[name="docDept"]').value.toUpperCase(),
-                                docType:    row.querySelector('[name="docType"]').value.toUpperCase(),
-                                docNumber:  row.querySelector('[name="docNumber"]').value.toUpperCase(),
-                                docName:    docNameInput.value.toUpperCase(),
-                                docCode:    row.querySelector('[name="docCode"]').value,
-                                docDate:    row.querySelector('[name="docDate"]').value,
-                                docExpiry:  row.querySelector('[name="docExpiry"]').value,
-                                docRemarks: row.querySelector('[name="docRemarks"]').value.toUpperCase(),
-                                fileName:   docFile.name,
-                                mimeType:   docFile.type,
-                                fileBase64: base64Data
-                            });
+                            const base64Data = reader.result.split(',')[1]; 
+                            
+                            const data = {
+    company: companySelect.value.toUpperCase(),
+
+    docDept: row.querySelector('[name="docDept"]').value.toUpperCase(),
+    docType: row.querySelector('[name="docType"]').value.toUpperCase(),
+    docNumber: row.querySelector('[name="docNumber"]').value.toUpperCase(),
+
+    docName: docNameInput.value.toUpperCase(),
+    docCode: row.querySelector('[name="docCode"]').value,
+    docDate: row.querySelector('[name="docDate"]').value,
+docExpiry: row.querySelector('[name="docExpiry"]').value,
+    docRemarks: row.querySelector('[name="docRemarks"]').value.toUpperCase(),
+
+    fileName: docFile.name,
+    mimeType: docFile.type,
+    fileBase64: base64Data
+};
                             processedRows++;
-                            upoSetPct(15 + Math.floor((processedRows / totalRows) * 25));
+                            updateProgress();
+                            resolve(data);
                         };
                         reader.readAsDataURL(docFile);
                     });
                 });
-
+                
                 const finalDocuments = (await Promise.all(filePromises)).filter(doc => doc !== null);
-
+                
                 if (hasError || finalDocuments.length === 0) {
-                    upoHide(false);
-                    showToast('Check required fields (Title & File) in all document layers.', 'error', 5000);
+                    statusMessage.classList.remove('show', 'loading');
+                    statusMessage.classList.add('show', 'error');
+                    statusMessage.innerHTML = `<i class="fas fa-times-circle"></i> **Data Integrity Error:** Check required fields (**Document Title** and **File Payload**) in all layers.`;
+                    setTimeout(() => statusMessage.classList.remove('show', 'error'), 6000);
                     return;
                 }
+                
+                progressBar.style.width = '50%'; // Halfway point reached (Data processed)
 
-                upoAdvanceTo(55, 0.35);
-
+                // --- API CALL TO GOOGLE APPS SCRIPT ---
                 try {
-                    let simPct = upoCurrentPct;
+                    // Start animation/timer for the 50%-100% upload phase
                     const uploadSimInterval = setInterval(() => {
-                        const step = simPct < 80 ? 0.25 : 0.12;
-                        simPct = Math.min(95, simPct + step);
-                        upoSetPct(simPct);
-                    }, 40);
-
-                    // Google Apps Script requires no-cors mode when called from a browser.
-                    // We wrap the JSON payload in a form-encoded 'data' key so GAS can read
-                    // it via e.postData.contents on the server side.
-                    const formBody = 'data=' + encodeURIComponent(JSON.stringify(finalDocuments));
-
-                    await fetch(APPS_SCRIPT_URL, {
+                        let currentWidth = parseFloat(progressBar.style.width);
+                        if (currentWidth < 98) {
+                            progressBar.style.width = (currentWidth + 0.5) + '%';
+                        }
+                    }, 50);
+                    
+                    const response = await fetch(APPS_SCRIPT_URL, {
                         method: 'POST',
-                        mode: 'no-cors',
-                        body: formBody,
-                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                        body: JSON.stringify(finalDocuments), 
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8' 
+                        }
                     });
-
-                    // no-cors returns an opaque response — we can't read it,
-                    // so we treat a non-thrown fetch as success.
+                    
                     clearInterval(uploadSimInterval);
-                    upoAdvanceTo(100, 1.2);
 
-                    setTimeout(() => {
-                        upoHide(true);
-                        showToast(
-                            `${finalDocuments.length} document${finalDocuments.length > 1 ? 's' : ''} submitted to database successfully.`,
-                            'success', 5000
-                        );
-                        statusMessage.className = 'status-message show success';
-                        statusMessage.innerHTML = `<i class="fas fa-check-double"></i> Transfer Complete: ${finalDocuments.length} document${finalDocuments.length > 1 ? 's' : ''} securely archived to the database.`;
+                    const result = await response.json();
+
+                    if (result.success) {
+                        // Success state
+                        progressBar.style.width = '100%'; 
+                        statusMessage.classList.remove('loading'); 
+                        statusMessage.classList.add('success');
+                        statusMessage.innerHTML = `<i class="fas fa-check-double"></i> **Transfer Complete:** Documents securely archived. ${result.message}`;
+
+                        // Clear the form and rows on success
                         form.reset();
                         documentRowsContainer.innerHTML = '';
-                        updateRowNumbers();
-                    }, 650);
+                        updateRowNumbers(); 
+                    } else {
+                        throw new Error(result.message);
+                    }
 
                 } catch (error) {
-                    clearInterval(upoInterval);
+                    clearInterval(uploadSimInterval);
                     console.error('Submission Error:', error);
-                    upoHide(false);
-                    showToast('Upload failed. Please check your connection and try again.', 'error', 5000);
-                    statusMessage.className = 'status-message show error';
-                    statusMessage.innerHTML = `<i class="fas fa-radiation"></i> Upload failed: ${error.message}`;
+                    // Error state
+                    statusMessage.classList.remove('loading'); 
+                    statusMessage.classList.add('error');
+                    statusMessage.innerHTML = `<i class="fas fa-radiation"></i> **System Alert:** Upload failed due to network or server error. Details: ${error.message}`;
                 }
             });
-
-            updateRowNumbers();
+            
+            // Initial check to update row numbers if any were pre-rendered (not applicable here, but good practice)
+            if (documentRowsContainer.children.length > 0) {
+                 updateRowNumbers();
+            }
         }
 
         document.addEventListener('DOMContentLoaded', initializeUploader);
     </script>
+
 </body>
 </html>
