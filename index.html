@@ -536,6 +536,173 @@
             flex-grow: 1;
         }
 
+        /* ===== UPLOAD PROGRESS MODAL ===== */
+        .upload-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: fadeInSlide 0.3s ease-out;
+        }
+        .upload-modal-overlay.active {
+            display: flex;
+        }
+        .upload-modal-box {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 16px;
+            padding: 40px;
+            width: 90%;
+            max-width: 480px;
+            text-align: center;
+            box-shadow: 0 0 60px rgba(94, 234, 212, 0.12);
+            animation: modalPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes modalPop {
+            from { opacity: 0; transform: scale(0.88) translateY(20px); }
+            to   { opacity: 1; transform: scale(1)    translateY(0);    }
+        }
+        .upload-modal-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(94, 234, 212, 0.08);
+            border: 1px solid rgba(94, 234, 212, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 1.6rem;
+            color: var(--primary-color);
+        }
+        .upload-modal-icon i {
+            animation: pulse-icon 1.2s ease-in-out infinite;
+        }
+        @keyframes pulse-icon {
+            0%, 100% { transform: scale(1);    opacity: 1;   }
+            50%       { transform: scale(1.15); opacity: 0.7; }
+        }
+        .upload-modal-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 6px;
+            letter-spacing: 0.03em;
+        }
+        .upload-modal-subtitle {
+            font-size: 0.85rem;
+            color: #8b949e;
+            margin-bottom: 28px;
+            font-family: 'Courier New', monospace;
+        }
+        .upload-modal-track {
+            width: 100%;
+            height: 6px;
+            background: #21262d;
+            border-radius: 999px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+        .upload-modal-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 999px;
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary-color));
+            transition: width 0.3s ease;
+            box-shadow: 0 0 8px rgba(94, 234, 212, 0.5);
+        }
+        .upload-modal-pct {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            font-variant-numeric: tabular-nums;
+            margin-bottom: 4px;
+        }
+        .upload-modal-step {
+            font-size: 0.78rem;
+            color: #8b949e;
+            font-family: 'Courier New', monospace;
+            min-height: 18px;
+            transition: all 0.3s ease;
+        }
+        .upload-modal-docs {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            max-height: 140px;
+            overflow-y: auto;
+        }
+        .upload-modal-docs::-webkit-scrollbar { width: 4px; }
+        .upload-modal-docs::-webkit-scrollbar-track { background: transparent; }
+        .upload-modal-docs::-webkit-scrollbar-thumb { background: #30363d; border-radius: 2px; }
+        .upload-doc-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 0.8rem;
+            color: #8b949e;
+            text-align: left;
+            transition: all 0.3s ease;
+        }
+        .upload-doc-item.done {
+            border-color: rgba(74, 222, 128, 0.3);
+            color: #c9d1d9;
+        }
+        .upload-doc-item.done .doc-item-icon { color: #4ade80; }
+        .upload-doc-item.active {
+            border-color: rgba(94, 234, 212, 0.4);
+            color: var(--primary-color);
+            background: rgba(94, 234, 212, 0.04);
+        }
+        .upload-doc-item.active .doc-item-icon { color: var(--primary-color); }
+        .doc-item-icon { font-size: 0.9rem; flex-shrink: 0; }
+        .doc-item-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .doc-item-status { font-size: 0.7rem; flex-shrink: 0; }
+
+        /* Success state */
+        .upload-modal-box.success .upload-modal-icon {
+            background: rgba(74, 222, 128, 0.08);
+            border-color: rgba(74, 222, 128, 0.3);
+            color: #4ade80;
+        }
+        .upload-modal-box.success .upload-modal-icon i { animation: none; }
+        .upload-modal-box.success .upload-modal-title { color: #4ade80; }
+        .upload-modal-box.success .upload-modal-fill { background: #4ade80; box-shadow: 0 0 8px rgba(74,222,128,0.5); }
+
+        /* Error state */
+        .upload-modal-box.error-state .upload-modal-icon {
+            background: rgba(248, 113, 113, 0.08);
+            border-color: rgba(248, 113, 113, 0.3);
+            color: var(--danger-color);
+        }
+        .upload-modal-box.error-state .upload-modal-icon i { animation: none; }
+        .upload-modal-box.error-state .upload-modal-title { color: var(--danger-color); }
+
+        .upload-close-btn {
+            margin-top: 24px;
+            padding: 10px 28px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: #0d1117;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: none;
+            transition: all 0.2s ease;
+        }
+        .upload-close-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+
         /* Animations */
         @keyframes fadeInSlide {
             from { opacity: 0; transform: translateY(10px); }
@@ -580,6 +747,27 @@
     </style>
 </head>
 <body>
+
+    <!-- UPLOAD PROGRESS MODAL -->
+    <div class="upload-modal-overlay" id="uploadModalOverlay">
+        <div class="upload-modal-box" id="uploadModalBox">
+            <div class="upload-modal-icon"><i class="fas fa-cloud-upload-alt" id="uploadModalIcon"></i></div>
+            <div class="upload-modal-title" id="uploadModalTitle">Uploading Documents</div>
+            <div class="upload-modal-subtitle" id="uploadModalSubtitle">Preparing secure transfer...</div>
+
+            <div class="upload-modal-track">
+                <div class="upload-modal-fill" id="uploadModalFill"></div>
+            </div>
+            <div class="upload-modal-pct" id="uploadModalPct">0%</div>
+            <div class="upload-modal-step" id="uploadModalStep">Initializing...</div>
+
+            <div class="upload-modal-docs" id="uploadModalDocs"></div>
+
+            <button class="upload-close-btn" id="uploadCloseBtn" onclick="closeUploadModal()">
+                <i class="fas fa-check"></i> Done
+            </button>
+        </div>
+    </div>
 
     <div class="app-container">
         <header class="app-header">
@@ -678,6 +866,80 @@
         const progressBarContainer = document.getElementById('progressBarContainer');
         const progressBar = document.getElementById('progressBar');
         const viewDocsBtn = document.getElementById('viewDocsBtn');
+
+        // ── UPLOAD MODAL HELPERS ──────────────────────────────
+        function openUploadModal(docNames) {
+            const overlay   = document.getElementById('uploadModalOverlay');
+            const docsContainer = document.getElementById('uploadModalDocs');
+            const box       = document.getElementById('uploadModalBox');
+            box.className   = 'upload-modal-box';
+            document.getElementById('uploadModalTitle').textContent    = 'Uploading Documents';
+            document.getElementById('uploadModalSubtitle').textContent = 'Secure transfer in progress...';
+            document.getElementById('uploadModalIcon').className       = 'fas fa-cloud-upload-alt';
+            document.getElementById('uploadModalFill').style.width     = '0%';
+            document.getElementById('uploadModalPct').textContent      = '0%';
+            document.getElementById('uploadModalStep').textContent     = 'Initializing...';
+            document.getElementById('uploadCloseBtn').style.display    = 'none';
+
+            docsContainer.innerHTML = '';
+            docNames.forEach((name, i) => {
+                const item = document.createElement('div');
+                item.className   = 'upload-doc-item';
+                item.id          = `upload-doc-${i}`;
+                item.innerHTML   = `<i class="fas fa-file doc-item-icon"></i>
+                                    <span class="doc-item-name">${name}</span>
+                                    <span class="doc-item-status">Pending</span>`;
+                docsContainer.appendChild(item);
+            });
+
+            overlay.classList.add('active');
+        }
+
+        function setUploadProgress(pct, stepText) {
+            document.getElementById('uploadModalFill').style.width = pct + '%';
+            document.getElementById('uploadModalPct').textContent  = Math.round(pct) + '%';
+            if (stepText) document.getElementById('uploadModalStep').textContent = stepText;
+        }
+
+        function setUploadDocState(index, state) {
+            const item = document.getElementById(`upload-doc-${index}`);
+            if (!item) return;
+            const statusEl = item.querySelector('.doc-item-status');
+            const iconEl   = item.querySelector('.doc-item-icon');
+            item.className = `upload-doc-item ${state}`;
+            if (state === 'active') {
+                iconEl.className   = 'fas fa-spinner fa-spin doc-item-icon';
+                statusEl.textContent = 'Uploading...';
+                item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } else if (state === 'done') {
+                iconEl.className   = 'fas fa-check-circle doc-item-icon';
+                statusEl.textContent = 'Done';
+            }
+        }
+
+        function setUploadSuccess(count) {
+            const box = document.getElementById('uploadModalBox');
+            box.classList.add('success');
+            document.getElementById('uploadModalIcon').className       = 'fas fa-check-double';
+            document.getElementById('uploadModalTitle').textContent    = 'Upload Complete';
+            document.getElementById('uploadModalSubtitle').textContent = `${count} document${count !== 1 ? 's' : ''} archived successfully.`;
+            document.getElementById('uploadModalStep').textContent     = 'All files written to database.';
+            document.getElementById('uploadCloseBtn').style.display    = 'inline-block';
+        }
+
+        function setUploadError(msg) {
+            const box = document.getElementById('uploadModalBox');
+            box.classList.add('error-state');
+            document.getElementById('uploadModalIcon').className       = 'fas fa-exclamation-triangle';
+            document.getElementById('uploadModalTitle').textContent    = 'Upload Failed';
+            document.getElementById('uploadModalSubtitle').textContent = msg || 'An error occurred.';
+            document.getElementById('uploadModalStep').textContent     = 'Check connection and retry.';
+            document.getElementById('uploadCloseBtn').style.display    = 'inline-block';
+        }
+
+        function closeUploadModal() {
+            document.getElementById('uploadModalOverlay').classList.remove('active');
+        }
 
         // Mappings for Document Code Prefixes
         const prefixMap = {
@@ -1040,9 +1302,11 @@
                     return;
                 }
 
-                // Show 'Processing' state with loading animation
-                statusMessage.innerHTML = 'Initiating secure file transfer...';
-                statusMessage.classList.add('show', 'loading');
+                // Collect doc names for modal list
+                const docNamesList = Array.from(documentRowsContainer.querySelectorAll('[name="docName"]'))
+                    .map(i => i.value.trim().toUpperCase() || 'Unnamed Document');
+                openUploadModal(docNamesList);
+                statusMessage.classList.remove('show', 'loading', 'success', 'error');
                 
                 // --- DATA GATHERING AND CONVERSION ---
                 let hasError = false;
@@ -1107,15 +1371,20 @@ docExpiry: row.querySelector('[name="docExpiry"]').value,
                     return;
                 }
                 
-                progressBar.style.width = '50%'; // Halfway point reached (Data processed)
+                progressBar.style.width = '50%';
+                setUploadProgress(40, 'Files encoded. Sending to server...');
+                finalDocuments.forEach((_, i) => setUploadDocState(i, 'active'));
 
                 // --- API CALL TO GOOGLE APPS SCRIPT ---
                 try {
                     // Start animation/timer for the 50%-100% upload phase
+                    let simPct = 40;
                     const uploadSimInterval = setInterval(() => {
                         let currentWidth = parseFloat(progressBar.style.width);
-                        if (currentWidth < 98) {
-                            progressBar.style.width = (currentWidth + 0.5) + '%';
+                        if (currentWidth < 98) progressBar.style.width = (currentWidth + 0.5) + '%';
+                        if (simPct < 90) {
+                            simPct += 0.8;
+                            setUploadProgress(simPct, 'Transmitting to secure database...');
                         }
                     }, 50);
                     
@@ -1132,16 +1401,13 @@ docExpiry: row.querySelector('[name="docExpiry"]').value,
                     const result = await response.json();
 
                     if (result.success) {
-                        // Success state
-                        progressBar.style.width = '100%'; 
-                        statusMessage.classList.remove('loading'); 
-                        statusMessage.classList.add('success');
-                        statusMessage.innerHTML = `<i class="fas fa-check-double"></i> **Transfer Complete:** Documents securely archived. ${result.message}`;
-
-                        // Clear the form and rows on success
+                        progressBar.style.width = '100%';
+                        finalDocuments.forEach((_, i) => setUploadDocState(i, 'done'));
+                        setUploadProgress(100, 'All documents archived.');
+                        setTimeout(() => setUploadSuccess(finalDocuments.length), 400);
                         form.reset();
                         documentRowsContainer.innerHTML = '';
-                        updateRowNumbers(); 
+                        updateRowNumbers();
                     } else {
                         throw new Error(result.message);
                     }
@@ -1149,10 +1415,7 @@ docExpiry: row.querySelector('[name="docExpiry"]').value,
                 } catch (error) {
                     clearInterval(uploadSimInterval);
                     console.error('Submission Error:', error);
-                    // Error state
-                    statusMessage.classList.remove('loading'); 
-                    statusMessage.classList.add('error');
-                    statusMessage.innerHTML = `<i class="fas fa-radiation"></i> **System Alert:** Upload failed due to network or server error. Details: ${error.message}`;
+                    setUploadError(error.message);
                 }
             });
             
