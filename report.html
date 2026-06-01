@@ -888,9 +888,16 @@
 
                 html += `<tr>`;
                 html += `<td data-label="Company" class="selectable-text"><strong>${escapeHtml(d.company)}</strong></td>`;
-                html += `<td data-label="Department" class="selectable-text">${escapeHtml(d.department)}</td>`;
-                html += `<td data-label="Document Type">${escapeHtml(d.documentType)}</td>`;
-                html += `<td data-label="Document Name" class="selectable-text">${escapeHtml(d.documentName)}</td>`;
+html += `<td data-label="Department" class="selectable-text">${escapeHtml(d.department)}</td>`;
+html += `<td data-label="Document Type">${escapeHtml(d.documentType)}</td>`;
+html += `<td data-label="Document Name" class="selectable-text">
+            ${escapeHtml(d.documentName)}
+            ${d.expiryDate && d.expiryDate !== '-' 
+                ? `<span class="status-badge ${d.isExpired ? 'status-expired' : 'status-valid'}" style="margin-left:8px">
+                       ${d.isExpired ? 'EXPIRED' : 'VALID'}
+                   </span>` 
+                : ''}
+         </td>`;
                 html += `<td data-label="Action" style="text-align:center">
                             <button class="view-btn" onclick="openDetailModal('${rowId}')" title="View document details">
                                 <i class="fas fa-info-circle"></i> View Details
