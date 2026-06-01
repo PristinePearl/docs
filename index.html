@@ -669,6 +669,65 @@
         .doc-item-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .doc-item-status { font-size: 0.7rem; flex-shrink: 0; }
 
+        /* ===== FILE VALIDATOR ===== */
+        .file-meta {
+            font-size: 0.75rem;
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .file-meta-size {
+            color: #8b949e;
+            font-family: 'Courier New', monospace;
+        }
+        .file-meta-warn {
+            color: var(--warning-color);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 600;
+            animation: fadeInSlide 0.3s ease-out;
+        }
+        .file-meta-error {
+            color: var(--danger-color);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 600;
+            animation: fadeInSlide 0.3s ease-out;
+        }
+        .file-meta-ok {
+            color: var(--success-color);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            animation: fadeInSlide 0.3s ease-out;
+        }
+
+        /* ===== UPLOAD SPEED STRIP ===== */
+        .upload-speed-strip {
+            margin-top: 14px;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 10px 14px;
+            display: none;
+            gap: 10px;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            color: #8b949e;
+        }
+        .upload-speed-strip.visible { display: flex; }
+        .speed-stat { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+        .speed-stat-val { font-size: 1rem; font-weight: 700; color: var(--primary-color); font-variant-numeric: tabular-nums; }
+        .speed-stat-label { font-size: 0.65rem; color: #8b949e; text-transform: uppercase; letter-spacing: 0.05em; }
+        .speed-divider { width: 1px; height: 30px; background: #30363d; }
+
         /* Success state */
         .upload-modal-box.success .upload-modal-icon {
             background: rgba(74, 222, 128, 0.08);
@@ -760,6 +819,28 @@
             </div>
             <div class="upload-modal-pct" id="uploadModalPct">0%</div>
             <div class="upload-modal-step" id="uploadModalStep">Initializing...</div>
+
+            <div class="upload-speed-strip" id="uploadSpeedStrip">
+                <div class="speed-stat">
+                    <div class="speed-stat-val" id="speedVal">0 KB/s</div>
+                    <div class="speed-stat-label">Speed</div>
+                </div>
+                <div class="speed-divider"></div>
+                <div class="speed-stat">
+                    <div class="speed-stat-val" id="transferredVal">0 KB</div>
+                    <div class="speed-stat-label">Transferred</div>
+                </div>
+                <div class="speed-divider"></div>
+                <div class="speed-stat">
+                    <div class="speed-stat-val" id="totalSizeVal">0 KB</div>
+                    <div class="speed-stat-label">Total Size</div>
+                </div>
+                <div class="speed-divider"></div>
+                <div class="speed-stat">
+                    <div class="speed-stat-val" id="etaVal">--</div>
+                    <div class="speed-stat-label">Est. Remaining</div>
+                </div>
+            </div>
 
             <div class="upload-modal-docs" id="uploadModalDocs"></div>
 
@@ -939,6 +1020,58 @@
 
         function closeUploadModal() {
             document.getElementById('uploadModalOverlay').classList.remove('active');
+            stopSpeedTracker();
+        }
+
+        // ── SPEED TRACKER ─────────────────────────────────────
+        let speedInterval   = null;
+        let uploadStartTime = null;
+        let totalUploadBytes = 0;
+
+        function formatBytes(bytes) {
+            if (bytes < 1024)        return bytes.toFixed(0) + ' B';
+            if (bytes < 1024*1024)   return (bytes/1024).toFixed(1) + ' KB';
+            return (bytes/(1024*1024)).toFixed(2) + ' MB';
+        }
+
+        function formatSpeed(bytesPerSec) {
+            if (bytesPerSec < 1024)       return bytesPerSec.toFixed(0) + ' B/s';
+            if (bytesPerSec < 1024*1024)  return (bytesPerSec/1024).toFixed(1) + ' KB/s';
+            return (bytesPerSec/(1024*1024)).toFixed(2) + ' MB/s';
+        }
+
+        function formatETA(seconds) {
+            if (!isFinite(seconds) || seconds < 0) return '--';
+            if (seconds < 60)  return Math.ceil(seconds) + 's';
+            return Math.floor(seconds/60) + 'm ' + Math.ceil(seconds%60) + 's';
+        }
+
+        function startSpeedTracker(totalBytes) {
+            totalUploadBytes = totalBytes;
+            uploadStartTime  = Date.now();
+
+            document.getElementById('totalSizeVal').textContent = formatBytes(totalBytes);
+            document.getElementById('uploadSpeedStrip').classList.add('visible');
+
+            let lastPct = 0;
+            speedInterval = setInterval(() => {
+                const fill      = document.getElementById('uploadModalFill');
+                const currentPct = parseFloat(fill.style.width) || 0;
+                const elapsed   = (Date.now() - uploadStartTime) / 1000;
+                const transferred = (currentPct / 100) * totalBytes;
+                const speed     = elapsed > 0 ? transferred / elapsed : 0;
+                const remaining = speed > 0 ? (totalBytes - transferred) / speed : Infinity;
+
+                document.getElementById('transferredVal').textContent = formatBytes(transferred);
+                document.getElementById('speedVal').textContent       = formatSpeed(speed);
+                document.getElementById('etaVal').textContent         = currentPct >= 99 ? '✔ Done' : formatETA(remaining);
+
+                lastPct = currentPct;
+            }, 400);
+        }
+
+        function stopSpeedTracker() {
+            if (speedInterval) { clearInterval(speedInterval); speedInterval = null; }
         }
 
         // Mappings for Document Code Prefixes
@@ -1210,17 +1343,79 @@
             const nameInput = row.querySelector('[name="docName"]');
             const namePreview = row.querySelector('.row-preview');
 
-            // 1. File Input Listener
+            // 1. File Input Listener + Validator
             fileInput.addEventListener('change', function() {
+                // Remove old meta if exists
+                const oldMeta = row.querySelector('.file-meta');
+                if (oldMeta) oldMeta.remove();
+
                 if (this.files.length > 0) {
-                    const fileName = this.files[0].name;
-                    fileNameDisplay.textContent = fileName.length > 35 ? '...' + fileName.slice(-32) : fileName;
-                    fileNameDisplay.style.color = 'var(--text-color)';
-                    fileNameDisplay.style.fontStyle = 'normal';
+                    const file     = this.files[0];
+                    const fileName = file.name;
+                    const fileSize = file.size;
+                    const ext      = fileName.split('.').pop().toLowerCase();
+
+                    const BLOCKED_TYPES = ['exe','bat','sh','cmd','msi','dll','vbs','js','ps1','jar','com'];
+                    const WARN_SIZE_MB  = 10;
+                    const MAX_SIZE_MB   = 25;
+                    const sizeMB        = fileSize / (1024 * 1024);
+
+                    // Display file name
+                    fileNameDisplay.textContent  = fileName.length > 35 ? '...' + fileName.slice(-32) : fileName;
+                    fileNameDisplay.style.color      = 'var(--text-color)';
+                    fileNameDisplay.style.fontStyle  = 'normal';
+
+                    // Build meta row
+                    const meta = document.createElement('div');
+                    meta.className = 'file-meta';
+
+                    // Size badge
+                    const sizeBadge = document.createElement('span');
+                    sizeBadge.className = 'file-meta-size';
+                    sizeBadge.innerHTML = `<i class="fas fa-hdd"></i> ${sizeMB < 1 ? (fileSize/1024).toFixed(1) + ' KB' : sizeMB.toFixed(2) + ' MB'}`;
+                    meta.appendChild(sizeBadge);
+
+                    // Blocked type check
+                    if (BLOCKED_TYPES.includes(ext)) {
+                        const warn = document.createElement('span');
+                        warn.className = 'file-meta-error';
+                        warn.innerHTML = `<i class="fas fa-ban"></i> Blocked file type (.${ext}) — not allowed`;
+                        meta.appendChild(warn);
+                        fileInput.value = '';
+                        fileNameDisplay.textContent = 'No file selected';
+
+                    // Over max size
+                    } else if (sizeMB > MAX_SIZE_MB) {
+                        const warn = document.createElement('span');
+                        warn.className = 'file-meta-error';
+                        warn.innerHTML = `<i class="fas fa-times-circle"></i> File too large (max ${MAX_SIZE_MB}MB)`;
+                        meta.appendChild(warn);
+                        fileInput.value = '';
+                        fileNameDisplay.textContent = 'No file selected';
+
+                    // Warning size
+                    } else if (sizeMB > WARN_SIZE_MB) {
+                        const warn = document.createElement('span');
+                        warn.className = 'file-meta-warn';
+                        warn.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Large file — upload may be slow`;
+                        meta.appendChild(warn);
+
+                    // All good
+                    } else {
+                        const ok = document.createElement('span');
+                        ok.className = 'file-meta-ok';
+                        ok.innerHTML = `<i class="fas fa-check-circle"></i> File looks good`;
+                        meta.appendChild(ok);
+                    }
+
+                    // Insert meta below the file control container
+                    const fileControl = row.querySelector('.file-control-container');
+                    fileControl.parentNode.insertBefore(meta, fileControl.nextSibling);
+
                 } else {
-                    fileNameDisplay.textContent = 'No file selected';
-                    fileNameDisplay.style.color = 'var(--text-secondary)';
-                    fileNameDisplay.style.fontStyle = 'italic';
+                    fileNameDisplay.textContent      = 'No file selected';
+                    fileNameDisplay.style.color      = 'var(--text-secondary)';
+                    fileNameDisplay.style.fontStyle  = 'italic';
                 }
             });
 
@@ -1302,10 +1497,16 @@
                     return;
                 }
 
-                // Collect doc names for modal list
+                // Collect doc names + total size for modal
                 const docNamesList = Array.from(documentRowsContainer.querySelectorAll('[name="docName"]'))
                     .map(i => i.value.trim().toUpperCase() || 'Unnamed Document');
+
+                const totalBytes = Array.from(documentRowsContainer.querySelectorAll('[name="docFile"]'))
+                    .reduce((sum, inp) => sum + (inp.files[0] ? inp.files[0].size : 0), 0);
+
                 openUploadModal(docNamesList);
+                stopSpeedTracker();
+                startSpeedTracker(totalBytes);
                 statusMessage.classList.remove('show', 'loading', 'success', 'error');
                 
                 // --- DATA GATHERING AND CONVERSION ---
@@ -1404,6 +1605,8 @@ docExpiry: row.querySelector('[name="docExpiry"]').value,
                         progressBar.style.width = '100%';
                         finalDocuments.forEach((_, i) => setUploadDocState(i, 'done'));
                         setUploadProgress(100, 'All documents archived.');
+                        stopSpeedTracker();
+                        document.getElementById('etaVal').textContent = '✔ Done';
                         setTimeout(() => setUploadSuccess(finalDocuments.length), 400);
                         form.reset();
                         documentRowsContainer.innerHTML = '';
@@ -1415,6 +1618,7 @@ docExpiry: row.querySelector('[name="docExpiry"]').value,
                 } catch (error) {
                     clearInterval(uploadSimInterval);
                     console.error('Submission Error:', error);
+                    stopSpeedTracker();
                     setUploadError(error.message);
                 }
             });
